@@ -64,7 +64,7 @@ Pemilik website (Andre):
 - Proyek unggulan: Finora, aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran. Live demo di finora-dreverrse.vercel.app, source code di github.com/dreverrse/finora.
 
 Tentang website ini:
-- Ini website personal Andre yang dibangun dengan Next.js, berisi halaman Home (/), About (/about), Portfolio (/portfolio), Blog (/blog), dan Guestbook (/guestbook).
+- Ini website personal Andre yang dibangun dengan Next.js, berisi halaman Home (/), About (/about), Portfolio (/portfolio), dan Blog (/blog).
 - Portfolio berisi proyek Finora dengan link demo dan kode sumber.
 - Blog berisi tulisan seputar teknologi dan pengalaman pribadi, misalnya artikel "Memulai Perjalanan sebagai Developer".
 - Halaman About berisi profil, perjalanan karier, dan minat Andre.

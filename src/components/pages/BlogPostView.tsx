@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { PostContent } from "@/components/PostContent";
+import { BlogReactions } from "@/components/BlogReactions";
+import { BlogComments } from "@/components/BlogComments";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
@@ -90,6 +92,9 @@ export function BlogPostView({ post }: { post: Post }) {
           <PostContent content={content} />
         </div>
       </FadeIn>
+
+      <BlogReactions slug={post.slug} />
+      <BlogComments slug={post.slug} />
     </article>
   );
 }
