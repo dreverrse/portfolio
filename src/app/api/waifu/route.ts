@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { chatOpenRouter } from "@/lib/openrouter";
+import { SOCIAL } from "@/lib/site";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -57,11 +58,11 @@ Pemilik website (Andre):
 - Profesi: full-stack developer, fokus membangun aplikasi web modern.
 - Pendidikan: lulusan SMK Negeri 9 Semarang, jurusan Rekayasa Perangkat Lunak (RPL).
 - Lokasi: Semarang, Indonesia.
-- Email: work.andrefirmansah@gmail.com.
-- GitHub: github.com/dreverrse.
-- Twitter/X: twitter.com/dreverrse.
-- Instagram: instagram.com/dreverrse.
-- WhatsApp: wa.me/6285158599235.
+- Email: ${SOCIAL.email}.
+- GitHub: ${SOCIAL.github}.
+- Twitter/X: ${SOCIAL.twitter}.
+- Instagram: ${SOCIAL.instagram}.
+- WhatsApp: ${SOCIAL.whatsapp}.
 - Proyek unggulan: Finora, aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran. Live demo di finora-dreverrse.vercel.app, source code di github.com/dreverrse/finora.
 
 Tentang website ini:

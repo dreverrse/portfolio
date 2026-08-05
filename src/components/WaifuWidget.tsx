@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
-import { Send, X, Trash2 } from "lucide-react";
+import type { ComponentType, ReactNode } from "react";
+import { ExternalLink, Mail, Send, X, Trash2 } from "lucide-react";
+import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 
@@ -11,31 +12,89 @@ interface Message {
   content: string;
 }
 
+type Icon = ComponentType<{ className?: string }>;
+
+const EMAIL_RE = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 const URL_RE =
-  /(https?:\/\/[^\s<>"']+)|(?<![\w@.])((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"']*)?)/gi;
+  /(https?:\/\/[^\s<>"']+)|(mailto:[^\s<>"']+)|([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})|((?<![\w@.])(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"']*)?)/gi;
 const BARE_DOMAIN_RE = /(?<![\w@.])((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"']*)?)/i;
 
+function normalizeHref(raw: string): string {
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (/^mailto:/i.test(raw)) return raw;
+  if (EMAIL_RE.test(raw)) return `mailto:${raw}`;
+  return `https://${raw}`;
+}
+
+function hostOf(raw: string): string {
+  try {
+    return new URL(normalizeHref(raw)).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+}
+
+function linkInfo(
+  raw: string
+): { href: string; label: string; Icon: Icon } {
+  const href = normalizeHref(raw);
+  const host = hostOf(raw);
+  const lower = raw.toLowerCase();
+  if (/^mailto:/i.test(lower) || EMAIL_RE.test(lower)) {
+    return { href, label: "Email", Icon: Mail };
+  }
+  if (/whatsapp|wa\.me/.test(host)) {
+    return { href, label: "WhatsApp", Icon: FaWhatsapp };
+  }
+  if (/github/.test(host)) {
+    return { href, label: "GitHub", Icon: FaGithub };
+  }
+  if (/instagram/.test(host)) {
+    return { href, label: "Instagram", Icon: FaInstagram };
+  }
+  if (/twitter|x\.com/.test(host)) {
+    return { href, label: "Twitter/X", Icon: FaXTwitter };
+  }
+  if (/finora/.test(host)) {
+    return { href, label: "Finora Demo", Icon: ExternalLink };
+  }
+  return { href, label: host || raw, Icon: ExternalLink };
+}
+
+function LinkChip({ raw }: { raw: string }) {
+  const { href, label, Icon } = linkInfo(raw);
+  return (
+    <a
+      href={href}
+      title={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-current/25 bg-current/10 px-2.5 py-1.5 text-xs font-medium hover:bg-current/20 transition-colors"
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      <span>{label}</span>
+      <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-70" />
+    </a>
+  );
+}
+
 function linkify(text: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
   const parts = text.split(URL_RE);
-  return parts.map((part, i) => {
-    if (!part) return null;
-    const isUrl = /^https?:\/\//i.test(part);
-    if (isUrl || BARE_DOMAIN_RE.test(part)) {
-      const href = isUrl ? part : `https://${part}`;
-      return (
-        <a
-          key={i}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-current underline underline-offset-2 hover:opacity-80 transition-opacity"
-        >
-          {part}
-        </a>
-      );
+  parts.forEach((part, i) => {
+    if (!part) return;
+    const isToken =
+      /^https?:\/\//i.test(part) ||
+      /^mailto:/i.test(part) ||
+      EMAIL_RE.test(part) ||
+      BARE_DOMAIN_RE.test(part);
+    if (isToken) {
+      nodes.push(<LinkChip key={i} raw={part} />);
+    } else {
+      nodes.push(part);
     }
-    return part;
   });
+  return nodes;
 }
 
 const greetingKey: Record<string, string> = {

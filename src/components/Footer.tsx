@@ -5,6 +5,7 @@ import { Heart, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { MusicWidget } from "./MusicWidget";
 import { useI18n } from "@/lib/i18n";
+import { SOCIAL } from "@/lib/site";
 import type { ReactNode } from "react";
 
 type SocialItem = {
@@ -15,27 +16,27 @@ type SocialItem = {
 
 const socials: SocialItem[] = [
   {
-    href: "https://github.com/dreverrse",
+    href: SOCIAL.github,
     label: "GitHub",
     renderIcon: (cls) => <FaGithub className={cls} />,
   },
   {
-    href: "https://twitter.com/dreverrse",
+    href: SOCIAL.twitter,
     label: "Twitter",
     renderIcon: (cls) => <FaXTwitter className={cls} />,
   },
   {
-    href: "https://instagram.com/dreverrse",
+    href: SOCIAL.instagram,
     label: "Instagram",
     renderIcon: (cls) => <FaInstagram className={cls} />,
   },
   {
-    href: "https://wa.me/6285158599235",
+    href: SOCIAL.whatsapp,
     label: "WhatsApp",
     renderIcon: (cls) => <FaWhatsapp className={cls} />,
   },
   {
-    href: "mailto:work.andrefirmansah@gmail.com",
+    href: `mailto:${SOCIAL.email}`,
     label: "Email",
     renderIcon: (cls) => <Mail className={cls} />,
   },
