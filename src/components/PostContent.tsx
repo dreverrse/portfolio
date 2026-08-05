@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { CodeBlock } from "@/components/CodeBlock";
 
 const INLINE_REGEX =
-  /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
+  /(!\[[^\]]*\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
 
 function renderInline(text: string, keyBase: string): ReactNode[] {
   const parts: ReactNode[] = [];
@@ -18,7 +18,20 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
     const token = match[0];
     const key = `${keyBase}-${i}`;
 
-    if (token.startsWith("**")) {
+    if (token.startsWith("![")) {
+      const image = token.match(/!\[([^\]]*)\]\(([^)]+)\)/);
+      if (image) {
+        parts.push(
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={key}
+            src={image[2]}
+            alt={image[1]}
+            className="my-4 max-w-full rounded-xl border border-border"
+          />
+        );
+      }
+    } else if (token.startsWith("**")) {
       parts.push(
         <strong key={key} className="font-bold text-foreground">
           {token.slice(2, -2)}
@@ -195,6 +208,21 @@ export function PostContent({ content }: { content: string }) {
           {items}
         </ol>
       );
+      continue;
+    }
+
+    const imageLine = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (imageLine) {
+      blocks.push(
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={key++}
+          src={imageLine[2]}
+          alt={imageLine[1]}
+          className="my-4 max-w-full rounded-xl border border-border"
+        />
+      );
+      i++;
       continue;
     }
 

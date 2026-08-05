@@ -3,6 +3,7 @@
 import { useCallback, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { PostContent } from "@/components/PostContent";
+import { RichTextEditor } from "@/components/RichTextEditor";
 import type { StoredPost } from "@/lib/posts-store";
 import {
   Plus,
@@ -342,22 +343,14 @@ export function AdminApp({
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label htmlFor="content" className="text-sm font-medium text-muted">
-                    Isi Artikel *
-                  </label>
-                  <span className="text-xs text-muted/60">
-                    Dukung format: **tebal**, *miring*, `kode`, # judul, - list
-                  </span>
-                </div>
-                <textarea
-                  id="content"
+                <label htmlFor="content" className="text-sm font-medium text-muted mb-1.5 block">
+                  Isi Artikel *
+                </label>
+                <RichTextEditor
+                  key={editing?.slug ?? (isNew ? "new" : "none")}
                   value={form.content}
-                  onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  className={`${inputClass} resize-y font-mono text-sm leading-relaxed`}
-                  rows={14}
+                  onChange={(content) => setForm({ ...form, content })}
                   placeholder="Tulis isi artikel di sini..."
-                  required
                 />
               </div>
             </>
