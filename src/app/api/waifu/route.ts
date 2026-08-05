@@ -60,7 +60,8 @@ Pemilik website (Andre):
 - Email: work.andrefirmansah@gmail.com.
 - GitHub: github.com/dreverrse.
 - Twitter/X: twitter.com/dreverrse.
-- Instagram: instagram.com/dreverre.
+- Instagram: instagram.com/dreverrse.
+- WhatsApp: wa.me/6285158599235.
 - Proyek unggulan: Finora, aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran. Live demo di finora-dreverrse.vercel.app, source code di github.com/dreverrse/finora.
 
 Tentang website ini:

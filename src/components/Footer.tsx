@@ -1,6 +1,6 @@
 "use client";
 
-import { FaGithub, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { Heart, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { MusicWidget } from "./MusicWidget";
@@ -28,6 +28,11 @@ const socials: SocialItem[] = [
     href: "https://instagram.com/dreverrse",
     label: "Instagram",
     renderIcon: (cls) => <FaInstagram className={cls} />,
+  },
+  {
+    href: "https://wa.me/6285158599235",
+    label: "WhatsApp",
+    renderIcon: (cls) => <FaWhatsapp className={cls} />,
   },
   {
     href: "mailto:work.andrefirmansah@gmail.com",
