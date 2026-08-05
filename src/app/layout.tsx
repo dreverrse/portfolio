@@ -8,7 +8,7 @@ import { WaifuWidget } from "@/components/WaifuWidget";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { Analytics } from "@vercel/analytics/react";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -76,6 +76,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="min-h-full flex flex-col noise-bg">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: SITE_NAME,
+              url: SITE_URL,
+              description:
+                "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
+            }),
+          }}
+        />
         <LanguageProvider>
           <ClientProvider>
             <Navbar />

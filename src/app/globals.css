@@ -86,6 +86,171 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+.codeblock code {
+  color: var(--color-foreground);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.codeblock .token.comment,
+.codeblock .token.prolog,
+.codeblock .token.doctype,
+.codeblock .token.cdata {
+  color: #5c6370;
+}
+
+.codeblock .token.punctuation {
+  color: #abb2bf;
+}
+
+.codeblock .token.delimiter,
+.codeblock .token.boolean,
+.codeblock .token.keyword,
+.codeblock .token.selector,
+.codeblock .token.important,
+.codeblock .token.atrule {
+  color: #c678dd;
+}
+
+.codeblock .token.operator {
+  color: #56b6c2;
+}
+
+.codeblock .token.url,
+.codeblock .token.tag,
+.codeblock .token.attr-name,
+.codeblock .token.number,
+.codeblock .token.unit,
+.codeblock .token.hexcode {
+  color: #d19a66;
+}
+
+.codeblock .token.property,
+.codeblock .token.constant,
+.codeblock .token.symbol,
+.codeblock .token.deleted {
+  color: #e06c75;
+}
+
+.codeblock .token.string,
+.codeblock .token.char,
+.codeblock .token.attr-value,
+.codeblock .token.regex,
+.codeblock .token.variable {
+  color: #98c379;
+}
+
+.codeblock .token.function,
+.codeblock .token.function-name,
+.codeblock .token.class-name {
+  color: #61afef;
+}
+
+.codeblock .token.builtin,
+.codeblock .token.parameter {
+  color: #56b6c2;
+}
+
+.codeblock .token.template-string,
+.codeblock .token.template-punctuation {
+  color: #98c379;
+}
+
+.codeblock .token.interpolation {
+  color: #e06c75;
+}
+
+.codeblock .token.interpolation-punctuation {
+  color: #c678dd;
+}
+
+.codeblock .token.entity {
+  color: #e06c75;
+}
+
+.codeblock .token.namespace {
+  color: #e5c07b;
+}
+
+html.light .codeblock .token.comment,
+html.light .codeblock .token.prolog,
+html.light .codeblock .token.doctype,
+html.light .codeblock .token.cdata {
+  color: #6a737d;
+}
+
+html.light .codeblock .token.punctuation {
+  color: #24292f;
+}
+
+html.light .codeblock .token.delimiter,
+html.light .codeblock .token.boolean,
+html.light .codeblock .token.keyword,
+html.light .codeblock .token.selector,
+html.light .codeblock .token.important,
+html.light .codeblock .token.atrule {
+  color: #cf222e;
+}
+
+html.light .codeblock .token.operator {
+  color: #0550ae;
+}
+
+html.light .codeblock .token.url,
+html.light .codeblock .token.tag,
+html.light .codeblock .token.attr-name,
+html.light .codeblock .token.number,
+html.light .codeblock .token.unit,
+html.light .codeblock .token.hexcode {
+  color: #0550ae;
+}
+
+html.light .codeblock .token.property,
+html.light .codeblock .token.constant,
+html.light .codeblock .token.symbol,
+html.light .codeblock .token.deleted {
+  color: #e36209;
+}
+
+html.light .codeblock .token.string,
+html.light .codeblock .token.char,
+html.light .codeblock .token.attr-value,
+html.light .codeblock .token.regex,
+html.light .codeblock .token.variable {
+  color: #0a3069;
+}
+
+html.light .codeblock .token.function,
+html.light .codeblock .token.function-name,
+html.light .codeblock .token.class-name {
+  color: #8250df;
+}
+
+html.light .codeblock .token.builtin,
+html.light .codeblock .token.parameter {
+  color: #0550ae;
+}
+
+html.light .codeblock .token.template-string,
+html.light .codeblock .token.template-punctuation {
+  color: #0a3069;
+}
+
+html.light .codeblock .token.interpolation {
+  color: #e36209;
+}
+
+html.light .codeblock .token.interpolation-punctuation {
+  color: #cf222e;
+}
+
+html.light .codeblock .token.entity {
+  color: #e36209;
+}
+
+html.light .codeblock .token.namespace {
+  color: #953800;
+}
+
 .prose-dark {
   color: var(--color-foreground);
 }

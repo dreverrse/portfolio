@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CodeBlock } from "@/components/CodeBlock";
 
 const INLINE_REGEX =
   /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
@@ -119,21 +120,7 @@ export function PostContent({ content }: { content: string }) {
       }
       i++;
       blocks.push(
-        <div
-          key={key++}
-          className="my-4 rounded-lg border border-border bg-surface/60 overflow-hidden"
-        >
-          {language && (
-            <div className="px-3 py-1 text-xs font-mono uppercase tracking-wide text-highlight border-b border-border bg-surface">
-              {language}
-            </div>
-          )}
-          <pre className="p-4 overflow-x-auto text-sm leading-relaxed">
-            <code className={language ? `font-mono language-${language}` : "font-mono"}>
-              {code.join("\n")}
-            </code>
-          </pre>
-        </div>
+        <CodeBlock key={key++} code={code.join("\n")} language={language} />
       );
       continue;
     }

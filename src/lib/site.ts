@@ -1,5 +1,5 @@
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://yourdomain.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dreverrse.my.id";
 
 export const SITE_NAME = "Andre Kusuma Firmansah";
 export const SITE_DESCRIPTION =
