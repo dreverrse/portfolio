@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { FadeIn } from "@/components/FadeIn";
-import { getPostBySlug, getAllPosts } from "@/lib/blog";
+import { PostContent } from "@/components/PostContent";
+import { getPostBySlug } from "@/lib/blog";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 import Link from "next/link";
 
-export async function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({ slug: post.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -16,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "Not Found" };
 
   return {
@@ -38,10 +36,8 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
-
-  const paragraphs = post.content.split("\n\n").filter(Boolean);
 
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-24">
@@ -89,12 +85,8 @@ export default async function BlogPostPage({
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="mt-10 prose-dark space-y-5 text-foreground/90 leading-relaxed">
-          {paragraphs.map((p, i) => (
-            <p key={i} className="text-base">
-              {p}
-            </p>
-          ))}
+        <div className="mt-10">
+          <PostContent content={post.content} />
         </div>
       </FadeIn>
     </article>

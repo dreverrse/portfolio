@@ -3,4 +3,4 @@ export const SITE_URL =
 
 export const SITE_NAME = "Andre Kusuma Firmansah";
 export const SITE_DESCRIPTION =
-  "Full-stack developer — blog, portfolio, dan cerita seputar teknologi.";
+  "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.";

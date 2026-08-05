@@ -26,11 +26,12 @@ export const metadata: Metadata = {
     template: "%s | Andre Kusuma Firmansah",
   },
   description:
-    "Full-stack developer — blog, portfolio, and everything in between.",
+    "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
   metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "Andre Kusuma Firmansah",
-    description: "Full-stack developer — blog, portfolio, and everything in between.",
+    description:
+      "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
     url: SITE_URL,
     siteName: "Andre Kusuma Firmansah",
     locale: "id_ID",
@@ -39,7 +40,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Andre Kusuma Firmansah",
-    description: "Full-stack developer — blog, portfolio, and everything in between.",
+    description:
+      "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
   },
   alternates: {
     types: {

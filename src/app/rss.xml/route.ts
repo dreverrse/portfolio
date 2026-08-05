@@ -14,8 +14,8 @@ function toRfc2822(date: string): string {
   return new Date(date).toUTCString();
 }
 
-export function GET() {
-  const posts = getAllPosts();
+export async function GET() {
+  const posts = await getAllPosts();
 
   const items = posts
     .map(

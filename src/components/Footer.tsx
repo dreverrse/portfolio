@@ -1,5 +1,5 @@
 import { FaGithub, FaInstagram, FaXTwitter } from "react-icons/fa6";
-import { Heart, Mail } from "lucide-react";
+import { Heart, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { MusicWidget } from "./MusicWidget";
 
@@ -58,6 +58,13 @@ export function Footer() {
                 {s.renderIcon("h-4 w-4")}
               </Link>
             ))}
+            <Link
+              href="/admin"
+              aria-label="Admin"
+              className="p-2 rounded-lg text-muted/50 hover:text-highlight hover:bg-surface transition-all duration-200"
+            >
+              <Lock className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </div>

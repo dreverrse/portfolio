@@ -2,49 +2,72 @@ import type { Metadata } from "next";
 import { FadeIn } from "@/components/FadeIn";
 import {
   Code2,
-  Coffee,
-  Gamepad2,
-  Music,
-  BookOpen,
+  PenTool,
+  FileCode2,
+  Layout,
   MapPin,
-  GraduationCap,
   Mail,
+  Phone,
+  Award,
+  Users,
+  Briefcase,
+  Home,
+  Palette,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Tentang saya — pengalaman, minat, dan perjalanan saya.",
+  description: "Tentang saya — keahlian, pendidikan, dan pengalaman.",
 };
 
-const timeline = [
-  {
-    year: "2024 - Sekarang",
-    title: "Full-Stack Developer",
-    desc: "Mengembangkan aplikasi web dan mobile dengan teknologi modern.",
-  },
-  {
-    year: "2022 - 2024",
-    title: "Frontend Developer",
-    desc: "Membangun antarmuka web yang responsif dan interaktif.",
-  },
+const skills = [
+  { icon: Palette, label: "Adobe Photoshop" },
+  { icon: PenTool, label: "Adobe Illustrator" },
+  { icon: FileCode2, label: "HTML" },
+  { icon: Code2, label: "CSS" },
+  { icon: Code2, label: "C++" },
+  { icon: Layout, label: "WordPress" },
+];
+
+const education = [
   {
     year: "2020 - 2022",
-    title: "Junior Developer",
-    desc: "Memulai perjalanan di dunia pengembangan web.",
+    title: "SMKN 9 Kota Semarang",
+    desc: "Jurusan Rekayasa Perangkat Lunak (RPL).",
   },
   {
-    year: "SMK Negeri 9 Semarang",
-    title: "Rekayasa Perangkat Lunak (RPL)",
-    desc: "Lulusan jurusan Rekayasa Perangkat Lunak, mendalami pemrograman dasar hingga pengembangan aplikasi web dan mobile.",
+    year: "2017 - 2019",
+    title: "MTsN 2 Kota Semarang",
+    desc: "Pendidikan menengah pertama.",
+  },
+  {
+    year: "2010 - 2016",
+    title: "SDN Pandean Lamper 05",
+    desc: "Pendidikan dasar.",
   },
 ];
 
-const interests = [
-  { icon: Code2, label: "Coding" },
-  { icon: Music, label: "Music" },
-  { icon: Gamepad2, label: "Gaming" },
-  { icon: BookOpen, label: "Reading" },
-  { icon: Coffee, label: "Coffee" },
+const experiences = [
+  {
+    icon: Award,
+    text: "Gemar mengikuti acara seminar atau workshop, baik secara online maupun offline.",
+  },
+  {
+    icon: Users,
+    text: "Pernah mengikuti Organisasi MPK di SMK.",
+  },
+  {
+    icon: Briefcase,
+    text: "Pernah mengikuti Program Student Company.",
+  },
+  {
+    icon: Award,
+    text: "Pernah mengikuti kontes atau lomba, baik secara online maupun offline.",
+  },
+  {
+    icon: Code2,
+    text: "Pernah mengikuti program DISNAKER Teknisi Ponsel dan Jurusan RPL.",
+  },
 ];
 
 export default function AboutPage() {
@@ -55,11 +78,9 @@ export default function AboutPage() {
           Tentang <span className="text-foreground">Saya</span>
         </h1>
         <p className="text-muted text-lg max-w-2xl leading-relaxed">
-          Halo, saya Andre Kusuma Firmansah — full-stack developer dan lulusan
-          SMK Negeri 9 Semarang jurusan Rekayasa Perangkat Lunak (RPL). Saya
-          percaya bahwa kode yang bersih dan desain yang baik dapat mengubah
-          dunia, dan saya selalu berusaha belajar hal baru untuk menghadirkan
-          solusi terbaik.
+          Nama saya Andre Kusuma Firmansah, biasa dipanggil Andre. Saya memiliki
+          keahlian dalam bidang desain, terutama desain logo. Saya juga
+          menguasai beberapa bahasa pemrograman di antaranya HTML, CSS, dan C++.
         </p>
       </FadeIn>
 
@@ -73,10 +94,10 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
-            <GraduationCap className="h-5 w-5 text-highlight" />
+            <Phone className="h-5 w-5 text-highlight" />
             <div>
-              <p className="text-xs text-muted">Pendidikan</p>
-              <p className="text-sm font-medium">SMKN 9 Semarang · RPL</p>
+              <p className="text-xs text-muted">WhatsApp</p>
+              <p className="text-sm font-medium">+62 851-5859-9235</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
@@ -89,13 +110,35 @@ export default function AboutPage() {
         </div>
       </FadeIn>
 
+      <FadeIn delay={0.15}>
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">
+            <span className="text-foreground">Keahlian</span>
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {skills.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 text-sm text-muted hover:text-highlight hover:border-accent transition-all duration-200"
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </FadeIn>
+
       <FadeIn delay={0.2}>
         <section className="mt-16">
           <h2 className="text-2xl font-bold mb-6">
-            <span className="text-foreground">Perjalanan</span>
+            <span className="text-foreground">Pendidikan</span>
           </h2>
           <div className="space-y-0">
-            {timeline.map((item, i) => (
+            {education.map((item, i) => (
               <div
                 key={i}
                 className="relative pl-8 pb-8 border-l border-border last:pb-0"
@@ -115,21 +158,38 @@ export default function AboutPage() {
       <FadeIn delay={0.3}>
         <section className="mt-16">
           <h2 className="text-2xl font-bold mb-6">
-            <span className="text-foreground">Minat</span>
+            <span className="text-foreground">Pengalaman</span>
           </h2>
-          <div className="flex flex-wrap gap-3">
-            {interests.map((item) => {
+          <div className="space-y-3">
+            {experiences.map((item, i) => {
               const Icon = item.icon;
               return (
                 <div
-                  key={item.label}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 text-sm text-muted hover:text-highlight hover:border-accent transition-all duration-200"
+                  key={i}
+                  className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/50"
                 >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
+                  <Icon className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
+                  <p className="text-sm text-foreground/90 leading-relaxed">
+                    {item.text}
+                  </p>
                 </div>
               );
             })}
+          </div>
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.35}>
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">
+            <span className="text-foreground">Alamat</span>
+          </h2>
+          <div className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/50">
+            <Home className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
+            <p className="text-sm text-foreground/90 leading-relaxed">
+              Jl. Gajah Barat IV, RT 04 RW IX, Kel. Pandean Lamper, Kec.
+              Gayamsari, Kota Semarang.
+            </p>
           </div>
         </section>
       </FadeIn>

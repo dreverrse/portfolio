@@ -15,7 +15,7 @@ export default async function OpengraphImage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   const title = post?.title || "Artikel tidak ditemukan";
   const excerpt = post?.excerpt || "";
 
@@ -81,7 +81,7 @@ export default async function OpengraphImage({
         </div>
 
         <div style={{ fontSize: 22, color: "#555555" }}>
-          dreverrse.dev · Full-Stack Developer
+          dreverrse.dev · Desainer & Developer
         </div>
       </div>
     ),

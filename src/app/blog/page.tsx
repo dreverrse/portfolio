@@ -9,8 +9,10 @@ export const metadata: Metadata = {
   description: "Tulisan, tutorial, dan pemikiran seputar teknologi.",
 };
 
-export default function BlogPage() {
-  const posts = getAllPosts();
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
+  const posts = await getAllPosts();
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-24">

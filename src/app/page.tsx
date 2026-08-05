@@ -2,21 +2,20 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import {
   ArrowRight,
+  PenTool,
+  FileCode2,
   Code2,
-  Database,
-  Globe,
-  Smartphone,
-  Server,
+  Layout,
   Palette,
 } from "lucide-react";
 
 const skills = [
-  { icon: Code2, label: "Frontend", desc: "React, Next.js, TypeScript" },
-  { icon: Server, label: "Backend", desc: "Node.js, Python, Go" },
-  { icon: Database, label: "Database", desc: "PostgreSQL, MongoDB, Redis" },
-  { icon: Globe, label: "Web", desc: "REST API, GraphQL, WebSocket" },
-  { icon: Smartphone, label: "Mobile", desc: "React Native, Flutter" },
-  { icon: Palette, label: "Design", desc: "Figma, UI/UX Design" },
+  { icon: Palette, label: "Adobe Photoshop", desc: "Desain grafis dan manipulasi gambar" },
+  { icon: PenTool, label: "Adobe Illustrator", desc: "Desain logo dan ilustrasi vektor" },
+  { icon: FileCode2, label: "HTML", desc: "Struktur halaman web" },
+  { icon: Code2, label: "CSS", desc: "Gaya dan tampilan halaman web" },
+  { icon: Code2, label: "C++", desc: "Pemrograman dasar dan logika" },
+  { icon: Layout, label: "WordPress", desc: "Membangun dan mengelola website" },
 ];
 
 export default function Home() {
@@ -37,9 +36,9 @@ export default function Home() {
               <span className="text-foreground">Andre Kusuma Firmansah</span>
             </h1>
             <p className="mt-6 max-w-xl text-base sm:text-lg text-muted leading-relaxed">
-              Full-stack developer yang passionate dalam membangun aplikasi web
-              modern. Suka bereksperimen dengan teknologi baru dan menciptakan
-              pengalaman digital yang menarik.
+              Desainer yang berfokus pada desain logo dan penggemar pemrograman.
+              Saya menguasai HTML, CSS, dan C++, serta terbiasa menggunakan
+              Adobe Photoshop, Adobe Illustrator, dan WordPress.
             </p>
           </div>
         </FadeIn>
@@ -67,7 +66,7 @@ export default function Home() {
       <FadeIn delay={0.3}>
         <section className="mt-24">
           <h2 className="text-2xl font-bold mb-8">
-            <span className="text-foreground">Skills</span>
+            <span className="text-foreground">Keahlian</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {skills.map((skill) => {
