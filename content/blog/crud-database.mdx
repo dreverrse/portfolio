@@ -1,0 +1,145 @@
+---
+title: "Mengelola Data dengan CRUD"
+date: "2025-09-05"
+excerpt: "Tutorial membuat operasi Create, Read, Update, dan Delete pada database PostgreSQL lengkap dengan contoh SQL, Python, dan Node.js."
+tags: ["database", "sql", "tutorial", "backend"]
+image: "/images/blog/crud-database.jpg"
+---
+
+CRUD adalah empat operasi dasar pengelolaan data: Create, Read, Update, dan Delete. Hampir semua aplikasi web dibangun di atas pola ini. Mari kita pelajari implementasinya mulai dari skema database sampai kode aplikasi.
+
+## Menyiapkan Skema Database
+
+Kita akan membuat tabel `users` sederhana di PostgreSQL:
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_email ON users (email);
+```
+
+Index pada kolom `email` mempercepat pencarian dan menegakkan keunikan data.
+
+## Operasi Read dengan SQL
+
+Query paling umum adalah membaca data. Berikut contoh SELECT dengan filter dan pengurutan:
+
+```sql
+-- Ambil semua user
+SELECT * FROM users;
+
+-- Ambil satu user berdasarkan id
+SELECT * FROM users WHERE id = 1;
+
+-- Cari user berdasarkan nama
+SELECT * FROM users
+WHERE name ILIKE '%budi%'
+ORDER BY created_at DESC
+LIMIT 10;
+```
+
+## CRUD dengan Python dan SQLite
+
+Untuk prototipe cepat, SQLite cukup andal dan tidak butuh server terpisah:
+
+```python
+import sqlite3
+
+connection = sqlite3.connect("app.db")
+cursor = connection.cursor()
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE
+    )
+""")
+
+# Create
+cursor.execute("INSERT INTO users (name, email) VALUES (?, ?)", ("Budi", "budi@mail.com"))
+
+# Read
+cursor.execute("SELECT * FROM users WHERE id = ?", (1,))
+user = cursor.fetchone()
+print(user)
+
+# Update
+cursor.execute("UPDATE users SET name = ? WHERE id = ?", ("Budi Santoso", 1))
+
+# Delete
+cursor.execute("DELETE FROM users WHERE id = ?", (1,))
+
+connection.commit()
+connection.close()
+```
+
+Perhatikan penggunaan placeholder `?` — ini mencegah SQL injection.
+
+## CRUD dengan Node.js dan pg
+
+Di Node.js, library `pg` terhubung ke PostgreSQL. Contoh berikut menggunakan parameterized query untuk keamanan:
+
+```javascript
+const { Client } = require("pg");
+
+const client = new Client({
+  connectionString: "postgres://user:password@localhost:5432/app",
+});
+
+async function main() {
+  await client.connect();
+
+  const createUser = async (name, email) => {
+    const { rows } = await client.query(
+      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
+      [name, email]
+    );
+    return rows[0];
+  };
+
+  const getUser = async (id) => {
+    const { rows } = await client.query(
+      "SELECT * FROM users WHERE id = $1",
+      [id]
+    );
+    return rows[0];
+  };
+
+  const updateUser = async (id, name) => {
+    const { rows } = await client.query(
+      "UPDATE users SET name = $1 WHERE id = $2 RETURNING *",
+      [name, id]
+    );
+    return rows[0];
+  };
+
+  const deleteUser = async (id) => {
+    await client.query("DELETE FROM users WHERE id = $1", [id]);
+  };
+
+  const created = await createUser("Andi", "andi@mail.com");
+  console.log("Dibuat:", created);
+
+  await updateUser(created.id, "Andi Wijaya");
+  console.log("Setelah update:", await getUser(created.id));
+
+  await deleteUser(created.id);
+  await client.end();
+}
+
+main().catch(console.error);
+```
+
+## Kesimpulan
+
+Pola CRUD selalu sama di bahasa apapun: hubungkan ke database, lakukan query dengan parameterized statement, dan tangani hasilnya. Yang paling penting untuk diingat:
+
+- Selalu gunakan parameterized query untuk mencegah SQL injection
+- Jangan lupa menutup koneksi setelah selesai
+- Gunakan transaction saat mengubah banyak baris sekaligus

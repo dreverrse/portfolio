@@ -1,0 +1,89 @@
+---
+title: "Tips Menulis Kode yang Bersih"
+date: "2025-11-18"
+excerpt: "Belajar menulis kode yang mudah dibaca dan dipelihara: penamaan yang jelas, fungsi yang kecil, dan DRY principle dengan contoh di TypeScript dan Python."
+tags: ["clean-code", "best-practice", "typescript", "python"]
+image: "/images/blog/clean-code-tips.jpg"
+---
+
+Kode yang bersih bukan sekadar bisa jalan — kode yang baik mudah dibaca oleh orang lain (dan oleh diri kamu sendiri enam bulan lagi). Martin Fowler berkata: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand."
+
+## Gunakan Nama yang Jelas
+
+Hindari nama variabel singkatan yang ambigu. Nama yang baik menjelaskan tujuan tanpa perlu komentar.
+
+Sebelum — tidak jelas:
+
+```javascript
+const d = new Date();
+const a = [1, 2, 3].map((x) => x * 2);
+```
+
+Sesudah — langsung terbaca:
+
+```javascript
+const currentDate = new Date();
+const doubledNumbers = [1, 2, 3].map((number) => number * 2);
+```
+
+## Buat Fungsi Kecil dan Fokus
+
+Satu fungsi sebaiknya melakukan satu hal saja. Perbandingan berikut menunjukkan cara memecah fungsi yang panjang.
+
+Versi awal — terlalu banyak tugas:
+
+```python
+def process_order(order, user):
+    total = sum(item["price"] * item["quantity"] for item in order["items"])
+    if user["is_premium"]:
+        total = total * 0.9
+    else:
+        total = total * 1.05
+    order["total"] = round(total, 2)
+    order["status"] = "processed"
+    return order
+```
+
+Versi bersih — satu fungsi satu tanggung jawab:
+
+```python
+def calculate_subtotal(items):
+    return sum(item["price"] * item["quantity"] for item in items)
+
+def apply_pricing(total, is_premium):
+    multiplier = 0.9 if is_premium else 1.05
+    return round(total * multiplier, 2)
+
+def process_order(order, user):
+    subtotal = calculate_subtotal(order["items"])
+    return {
+        **order,
+        "total": apply_pricing(subtotal, user["is_premium"]),
+        "status": "processed",
+    }
+```
+
+## Jangan Ulangi Diri Sendiri (DRY)
+
+Jika kamu melihat kode yang sama di dua tempat, pertimbangkan untuk memindahkannya ke satu fungsi bersama.
+
+```typescript
+// Ulang dua kali — hindari ini
+const formatPriceIDR = (price: number): string => {
+  return "Rp " + price.toLocaleString("id-ID");
+};
+
+// Satu fungsi dipakai di banyak tempat — bagus
+function formatPrice(price: number, currency: "IDR" | "USD"): string {
+  const locale = currency === "IDR" ? "id-ID" : "en-US";
+  const prefix = currency === "IDR" ? "Rp " : "$";
+  return prefix + price.toLocaleString(locale);
+}
+
+console.log(formatPrice(15000, "IDR")); // Rp 15.000
+console.log(formatPrice(99, "USD"));    // $99
+```
+
+## Kesimpulan
+
+Menulis kode yang bersih adalah keterampilan yang terus diasah. Mulailah dari hal kecil: nama yang jelas, fungsi yang fokus, dan jangan duplikasi. Kode yang bersih lebih mudah diuji, diperbaiki, dan diperbarui — menghemat waktu dalam jangka panjang.

@@ -1,0 +1,111 @@
+---
+title: "Cara Deploy Website ke Vercel"
+date: "2026-01-08"
+excerpt: "Langkah-langkah deploy website Next.js ke Vercel, termasuk auto-deploy dari GitHub, konfigurasi environment variable, dan vercel.json."
+tags: ["deploy", "vercel", "devops", "nextjs"]
+image: "/images/blog/deploy-vercel.jpg"
+---
+
+Setelah website selesai dibangun, langkah selanjutnya adalah mendeploynya agar bisa diakses publik. Vercel adalah platform yang sangat cocok untuk proyek Next.js karena dukungan serverless dan auto-deploy yang seamless.
+
+## Persiapkan Project
+
+Pastikan project kamu memiliki skrip `dev`, `build`, dan `start` di `package.json`:
+
+```json
+{
+  "name": "my-portfolio",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
+```
+
+## Deploy dengan Vercel CLI
+
+Cara tercepat untuk mencoba adalah dengan Vercel CLI. Login lalu jalankan perintah deploy:
+
+```bash
+# Install CLI secara global
+npm install -g vercel
+
+# Login ke akun Vercel
+vercel login
+
+# Deploy ke environment preview
+vercel
+
+# Deploy ke production
+vercel --prod
+```
+
+Saat pertama kali menjalankan `vercel`, CLI akan menanyakan nama project dan beberapa pengaturan. Jawab sesuai kebutuhan, lalu salin URL yang muncul.
+
+## Auto-Deploy dari GitHub
+
+Untuk auto-deploy, hubungkan repository di dashboard Vercel:
+
+1. Masuk ke https://vercel.com dan pilih "Add New Project"
+2. Import repository dari GitHub
+3. Vercel akan mendeteksi framework otomatis
+4. Tambahkan environment variable di bagian "Environment Variables"
+5. Klik "Deploy"
+
+Setelah itu, setiap kali kamu melakukan `git push` ke branch utama, Vercel otomatis membangun dan mendeploy versi terbaru:
+
+```bash
+git add .
+git commit -m "Update konten blog"
+git push origin main
+```
+
+## Environment Variable di Vercel CLI
+
+Untuk project yang memakai secret seperti API key, definisikan environment variable:
+
+```bash
+# Pull environment variable dari Vercel ke file .env.local
+vercel env pull .env.local
+
+# Tambah environment variable baru
+vercel env add OPENROUTER_API_KEY production
+```
+
+## Konfigurasi dengan vercel.json
+
+Beberapa pengaturan bisa dikontrol lewat file `vercel.json`:
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ],
+  "regions": ["sin1"]
+}
+```
+
+File ini berguna untuk mengatur security headers, region serverless, dan fungsi-fungsi lanjutan lainnya.
+
+## Kesimpulan
+
+Deploy ke Vercel sangat mudah berkat integrasi GitHub dan dukungan penuh untuk Next.js. Setelah berhasil, jangan lupa:
+
+- Konfigurasi custom domain di dashboard
+- Pantau performa di tab "Analytics"
+- Siapkan environment variable untuk production
+
+Selamat mendeploy website kamu!

@@ -57,6 +57,17 @@ export function BlogPostView({ post }: { post: Post }) {
           {t("blog.back")}
         </Link>
 
+        {post.image && (
+          <div className="relative h-56 sm:h-72 w-full overflow-hidden rounded-xl border border-border mb-8">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.image}
+              alt={title}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
+
         <header>
           <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
             {title}

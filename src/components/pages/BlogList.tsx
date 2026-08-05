@@ -70,43 +70,55 @@ export function BlogList({ posts }: { posts: Post[] }) {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="block p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover group"
+              className="block rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover group overflow-hidden"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <h2 className="font-semibold text-lg text-foreground group-hover:text-highlight transition-colors">
-                  {lang === "en"
-                    ? translations[post.slug]?.title || post.title
-                    : post.title}
-                </h2>
-                <div className="flex items-center gap-3 text-xs text-muted">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {formatDate(post.date, lang)}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {post.readingTime} {t("blog.readingTime")}
-                  </span>
-                </div>
-              </div>
-              <p className="text-sm text-muted mt-2 line-clamp-2">
-                {lang === "en"
-                  ? translations[post.slug]?.excerpt || post.excerpt
-                  : post.excerpt}
-              </p>
-              {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-accent/20 text-highlight border border-accent/30"
-                    >
-                      <Tag className="h-2.5 w-2.5" />
-                      {tag}
-                    </span>
-                  ))}
+              {post.image && (
+                <div className="relative h-40 sm:h-44 w-full overflow-hidden border-b border-border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
               )}
+              <div className="p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <h2 className="font-semibold text-lg text-foreground group-hover:text-highlight transition-colors">
+                    {lang === "en"
+                      ? translations[post.slug]?.title || post.title
+                      : post.title}
+                  </h2>
+                  <div className="flex items-center gap-3 text-xs text-muted">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(post.date, lang)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {post.readingTime} {t("blog.readingTime")}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-sm text-muted mt-2 line-clamp-2">
+                  {lang === "en"
+                    ? translations[post.slug]?.excerpt || post.excerpt
+                    : post.excerpt}
+                </p>
+                {post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-accent/20 text-highlight border border-accent/30"
+                      >
+                        <Tag className="h-2.5 w-2.5" />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </Link>
           ))}
         </div>

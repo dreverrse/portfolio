@@ -7,6 +7,7 @@ export interface StoredPost {
   excerpt: string;
   tags: string[];
   content: string;
+  image?: string;
 }
 
 interface PostRow {
@@ -16,6 +17,7 @@ interface PostRow {
   excerpt: string;
   tags: string[] | null;
   content: string;
+  image?: string;
 }
 
 const memoryStore: Record<string, StoredPost> = {};
@@ -40,6 +42,7 @@ function rowToPost(row: PostRow): StoredPost {
     excerpt: row.excerpt,
     tags: row.tags || [],
     content: row.content,
+    image: row.image || undefined,
   };
 }
 
@@ -51,6 +54,7 @@ function postToRow(post: StoredPost): PostRow {
     excerpt: post.excerpt,
     tags: post.tags,
     content: post.content,
+    image: post.image,
   };
 }
 

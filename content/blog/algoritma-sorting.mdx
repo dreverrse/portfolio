@@ -1,0 +1,130 @@
+---
+title: "Memahami Algoritma Sorting"
+date: "2025-07-22"
+excerpt: "Belajar algoritma pengurutan bubble sort, merge sort, dan quick sort dengan contoh kode di JavaScript, Python, dan C."
+tags: ["algoritma", "pemrograman", "python", "komputer"]
+image: "/images/blog/algoritma-sorting.jpg"
+---
+
+Algoritma sorting adalah fondasi dari banyak sistem: dari mencari data di database sampai mengurutkan daftar di aplikasi e-commerce. Memahami cara kerja setiap algoritma membantu kamu memilih yang tepat dan memahami kompleksitas waktu.
+
+## Mengapa Sorting Penting?
+
+Data yang terurut lebih mudah dicari. Pencarian biner (binary search) hanya bisa bekerja pada data yang sudah diurutkan. Itulah kenapa hampir semua bahasa pemrograman menyediakan fungsi sorting bawaan seperti `Array.prototype.sort()` di JavaScript atau `sorted()` di Python.
+
+## Bubble Sort dengan JavaScript
+
+Bubble sort membandingkan elemen bersebelahan dan menukarnya jika urutannya salah. Meski sederhana, kompleksitas waktunya O(n²) sehingga lambat untuk data besar.
+
+```javascript
+function bubbleSort(arr) {
+  const a = [...arr];
+  let swapped;
+
+  do {
+    swapped = false;
+    for (let i = 0; i < a.length - 1; i++) {
+      if (a[i] > a[i + 1]) {
+        [a[i], a[i + 1]] = [a[i + 1], a[i]];
+        swapped = true;
+      }
+    }
+  } while (swapped);
+
+  return a;
+}
+
+console.log(bubbleSort([5, 2, 9, 1, 7])); // [1, 2, 5, 7, 9]
+```
+
+## Merge Sort dengan Python
+
+Merge sort menggunakan teknik divide and conquer: membagi array menjadi dua, mengurutkan masing-masing, lalu menggabungkannya. Kompleksitasnya O(n log n) dan stabil.
+
+```python
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+
+    result = []
+    i = j = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+print(merge_sort([38, 27, 43, 3, 9, 82, 10]))  # [3, 9, 10, 27, 38, 43, 82]
+```
+
+## Quick Sort dengan C
+
+Quick sort juga divide and conquer, tapi memilih pivot untuk membagi data. Rata-rata sangat cepat (O(n log n)) dan banyak dipakai di library bawaan.
+
+```c
+#include <stdio.h>
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return i + 1;
+}
+
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    quickSort(arr, 0, n - 1);
+
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+## Perbandingan Kompleksitas
+
+Berikut perbandingan singkat kompleksitas waktu ketiga algoritma:
+
+- **Bubble Sort** — terbaik O(n), rata-rata O(n²), terburuk O(n²)
+- **Merge Sort** — terbaik O(n log n), rata-rata O(n log n), terburuk O(n log n)
+- **Quick Sort** — terbaik O(n log n), rata-rata O(n log n), terburuk O(n²)
+
+## Kesimpulan
+
+Untuk proyek nyata, gunakan fungsi sorting bawaan bahasa pemrograman kamu — sudah dioptimalkan dengan baik. Memahami algoritma ini lebih berguna untuk menghadapi pertanyaan wawancara dan memahami konsep divide and conquer yang dipakai di banyak algoritma lain.

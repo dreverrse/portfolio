@@ -40,6 +40,7 @@ function getLocalPosts(): Post[] {
         excerpt: data.excerpt || "",
         tags: data.tags || [],
         content,
+        image: typeof data.image === "string" ? data.image : undefined,
       });
     });
 }
@@ -72,5 +73,6 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     excerpt: data.excerpt || "",
     tags: data.tags || [],
     content,
+    image: typeof data.image === "string" ? data.image : undefined,
   });
 }

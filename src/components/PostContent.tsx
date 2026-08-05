@@ -67,11 +67,25 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
 }
 
 function restoreBlocks(text: string): string {
-  let out = text.replace(/\\r/g, "").replace(/\\n/g, "\n");
-  out = out.replace(/\s+(#{1,6}\s)/g, "\n$1");
-  out = out.replace(/\s+([-*]\s+(?:\*\*)?[A-Z*])/g, "\n$1");
-  out = out.replace(/\n{3,}/g, "\n\n");
-  return out;
+  const out = text.replace(/\\r/g, "").replace(/\\n/g, "\n");
+  const restored: string[] = [];
+  let inFence = false;
+  for (const line of out.split("\n")) {
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      restored.push(line);
+      continue;
+    }
+    if (inFence) {
+      restored.push(line);
+      continue;
+    }
+    let next = line;
+    next = next.replace(/\s+(#{1,6}\s)/g, "\n$1");
+    next = next.replace(/\s+([-*]\s+(?:\*\*)?[A-Z*])/g, "\n$1");
+    restored.push(next);
+  }
+  return restored.join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
 export function PostContent({ content }: { content: string }) {
@@ -91,6 +105,36 @@ export function PostContent({ content }: { content: string }) {
     if (/^-{3,}$/.test(line.trim())) {
       blocks.push(<hr key={key++} className="my-8 border-border" />);
       i++;
+      continue;
+    }
+
+    if (line.trimStart().startsWith("```")) {
+      const fence = line.trimStart().match(/^```\s*(\w+)?\s*$/);
+      const language = fence?.[1] || "";
+      const code: string[] = [];
+      i++;
+      while (i < lines.length && !lines[i].trimStart().startsWith("```")) {
+        code.push(lines[i]);
+        i++;
+      }
+      i++;
+      blocks.push(
+        <div
+          key={key++}
+          className="my-4 rounded-lg border border-border bg-surface/60 overflow-hidden"
+        >
+          {language && (
+            <div className="px-3 py-1 text-xs font-mono uppercase tracking-wide text-highlight border-b border-border bg-surface">
+              {language}
+            </div>
+          )}
+          <pre className="p-4 overflow-x-auto text-sm leading-relaxed">
+            <code className={language ? `font-mono language-${language}` : "font-mono"}>
+              {code.join("\n")}
+            </code>
+          </pre>
+        </div>
+      );
       continue;
     }
 
