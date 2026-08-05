@@ -125,7 +125,8 @@ function looksIndonesian(text: string): boolean {
   for (const word of IDN_WORDS) {
     const re = new RegExp(`\\b${word}\\b`, "gi");
     while (re.exec(text) !== null) count++;
-  }  return count >= 5;
+  }
+  return count >= 5;
 }
 
 function validateTranslation(reply: string, mode: TranslationMode): boolean {

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { LoadingScreen } from "./LoadingScreen";
 
-export function ClientProvider({ children }: { children: React.ReactNode }) {
+export function ClientProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const handleComplete = useCallback(() => {

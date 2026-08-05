@@ -8,7 +8,7 @@ import { WaifuWidget } from "@/components/WaifuWidget";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { Analytics } from "@vercel/analytics/react";
-import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,23 +26,20 @@ export const metadata: Metadata = {
     default: "Andre Kusuma Firmansah",
     template: "%s | Andre Kusuma Firmansah",
   },
-  description:
-    "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
+  description: SITE_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "Andre Kusuma Firmansah",
-    description:
-      "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
     url: SITE_URL,
-    siteName: "Andre Kusuma Firmansah",
+    siteName: SITE_NAME,
     locale: "id_ID",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Andre Kusuma Firmansah",
-    description:
-      "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
   },
   alternates: {
     types: {
@@ -84,8 +81,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               "@type": "WebSite",
               name: SITE_NAME,
               url: SITE_URL,
-              description:
-                "Desainer & developer — blog, portfolio, dan cerita seputar desain dan teknologi.",
+              description: SITE_DESCRIPTION,
             }),
           }}
         />

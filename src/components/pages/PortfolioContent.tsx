@@ -12,7 +12,6 @@ const projects = [
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     demo: "https://finora-dreverrse.vercel.app/",
     github: "https://github.com/dreverrse/finora",
-    image: null,
   },
 ];
 

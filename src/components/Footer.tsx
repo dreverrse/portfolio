@@ -5,11 +5,12 @@ import { Heart, Mail, Lock } from "lucide-react";
 import Link from "next/link";
 import { MusicWidget } from "./MusicWidget";
 import { useI18n } from "@/lib/i18n";
+import type { ReactNode } from "react";
 
 type SocialItem = {
   href: string;
   label: string;
-  renderIcon: (className: string) => React.ReactNode;
+  renderIcon: (className: string) => ReactNode;
 };
 
 const socials: SocialItem[] = [

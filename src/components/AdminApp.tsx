@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { PostContent } from "@/components/PostContent";
 import type { StoredPost } from "@/lib/posts-store";
@@ -88,7 +88,7 @@ export function AdminApp({
     }
   }, []);
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: FormEvent) {
     e.preventDefault();
     setLoginLoading(true);
     setLoginError("");
@@ -133,7 +133,7 @@ export function AdminApp({
     setPreview(false);
   }
 
-  async function handleSave(e: React.FormEvent) {
+  async function handleSave(e: FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError("");
