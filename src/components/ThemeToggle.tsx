@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const THEME_KEY = "theme";
 const THEME_EVENT = "themechange";
@@ -27,6 +28,7 @@ function getServerSnapshot() {
 }
 
 export function ThemeToggle() {
+  const { t } = useI18n();
   const isLight = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function toggle() {
@@ -39,7 +41,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      aria-label={isLight ? "Aktifkan mode gelap" : "Aktifkan mode terang"}
+      aria-label={isLight ? t("theme.dark") : t("theme.light")}
       className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
     >
       {isLight ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}

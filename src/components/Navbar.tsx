@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   Home,
@@ -13,19 +14,36 @@ import {
   MessageSquare,
   Menu,
   X,
+  Globe,
 } from "lucide-react";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/about", label: "About", icon: User },
-  { href: "/portfolio", label: "Portfolio", icon: Briefcase },
-  { href: "/blog", label: "Blog", icon: FileText },
-  { href: "/guestbook", label: "Guestbook", icon: MessageSquare },
+  { href: "/", labelKey: "nav.home", icon: Home },
+  { href: "/about", labelKey: "nav.about", icon: User },
+  { href: "/portfolio", labelKey: "nav.portfolio", icon: Briefcase },
+  { href: "/blog", labelKey: "nav.blog", icon: FileText },
+  { href: "/guestbook", labelKey: "nav.guestbook", icon: MessageSquare },
 ];
+
+function LanguageToggle() {
+  const { lang, setLang, t } = useI18n();
+  const next: "id" | "en" = lang === "id" ? "en" : "id";
+  return (
+    <button
+      onClick={() => setLang(next)}
+      aria-label={t("lang.switch")}
+      className="flex items-center gap-1 p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
+    >
+      <Globe className="h-4 w-4" />
+      <span className="text-xs font-semibold">{lang.toUpperCase()}</span>
+    </button>
+  );
+}
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useI18n();
 
   return (
     <nav className="fixed top-4 left-4 right-4 z-50">
@@ -54,18 +72,19 @@ export function Navbar() {
                     )}
                   >
                     <Icon className="h-4 w-4" />
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 );
               })}
             </div>
 
             <div className="flex items-center gap-1">
+              <LanguageToggle />
               <ThemeToggle />
               <button
                 className="md:hidden p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Toggle menu"
+                aria-label={t("nav.toggleMenu")}
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
@@ -89,7 +108,7 @@ export function Navbar() {
                     )}
                   >
                     <Icon className="h-4 w-4" />
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 );
               })}

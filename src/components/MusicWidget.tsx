@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Music, ExternalLink } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 interface Track {
   name: string;
@@ -13,6 +14,7 @@ interface Track {
 }
 
 export function MusicWidget() {
+  const { t } = useI18n();
   const [track, setTrack] = useState<Track | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,8 +59,8 @@ export function MusicWidget() {
           <Music className="h-5 w-5 text-muted" />
         </div>
         <div>
-          <p className="text-sm text-muted">Belum ada lagu yang diputar</p>
-          <p className="text-xs text-muted/60">Nanti muncul di sini lewat Last.fm</p>
+          <p className="text-sm text-muted">{t("music.empty")}</p>
+          <p className="text-xs text-muted/60">{t("music.hint")}</p>
         </div>
       </div>
     );

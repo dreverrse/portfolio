@@ -3,11 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Send, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
+
+const greetingKey: Record<string, string> = {
+  pagi: "waifu.greeting.morning",
+  siang: "waifu.greeting.noon",
+  sore: "waifu.greeting.afternoon",
+  malam: "waifu.greeting.night",
+};
 
 function getTimePart(): string {
   const hour = new Date().getHours();
@@ -17,20 +25,10 @@ function getTimePart(): string {
   return "malam";
 }
 
-function fallbackGreeting(): string {
-  const part = getTimePart();
-  const map: Record<string, string> = {
-    pagi: "Selamat pagi",
-    siang: "Selamat siang",
-    sore: "Selamat sore",
-    malam: "Selamat malam",
-  };
-  return `${map[part]}, aku Megumi. Bosen nggak di sini? Kita ngobrol aja kalau kamu mau.`;
-}
-
 const STORAGE_KEY = "waifu-chat";
 
 export function WaifuWidget() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
     try {
@@ -64,10 +62,17 @@ export function WaifuWidget() {
     try {
       const res = await fetch(`/api/waifu?part=${getTimePart()}`);
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Gagal memanggil API");
+      if (!res.ok) throw new Error(data?.error || t("waifu.errApi"));
       setMessages([{ role: "assistant", content: data.reply }]);
     } catch {
-      setMessages([{ role: "assistant", content: fallbackGreeting() }]);
+      setMessages([
+        {
+          role: "assistant",
+          content: t("waifu.greeting.text", {
+            part: t(greetingKey[getTimePart()]),
+          }),
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -95,10 +100,10 @@ export function WaifuWidget() {
         body: JSON.stringify({ messages: next }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Gagal memanggil API");
+      if (!res.ok) throw new Error(data?.error || t("waifu.errApi"));
       setMessages((m) => [...m, { role: "assistant", content: data.reply }]);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Terjadi kesalahan");
+      setError(e instanceof Error ? e.message : t("waifu.errGeneric"));
     } finally {
       setLoading(false);
     }
@@ -114,7 +119,7 @@ export function WaifuWidget() {
     <>
       <button
         onClick={toggleOpen}
-        aria-label="Chat dengan Katou Megumi"
+        aria-label={t("waifu.aria")}
         className="fixed bottom-5 right-5 z-[90] flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-highlight/80 transition-colors"
       >
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
@@ -134,11 +139,11 @@ export function WaifuWidget() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground">Katou Megumi</p>
-              <p className="text-xs text-muted">online · waifu AI</p>
+              <p className="text-xs text-muted">{t("waifu.online")}</p>
             </div>
             <button
               onClick={clearChat}
-              aria-label="Hapus chat"
+              aria-label={t("waifu.delete")}
               className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -166,7 +171,7 @@ export function WaifuWidget() {
             {loading && (
               <div className="flex justify-start">
                 <div className="rounded-2xl rounded-bl-sm border border-border bg-surface px-3.5 py-2 text-sm text-muted">
-                  Megumi sedang mengetik
+                  {t("waifu.typing")}
                   <span className="animate-pulse">…</span>
                 </div>
               </div>
@@ -185,13 +190,13 @@ export function WaifuWidget() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ketik pesan..."
+              placeholder={t("waifu.placeholder")}
               className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              aria-label="Kirim pesan"
+              aria-label={t("waifu.send")}
               className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-accent text-white hover:bg-highlight/80 transition-colors disabled:opacity-40"
             >
               <Send className="h-4 w-4" />

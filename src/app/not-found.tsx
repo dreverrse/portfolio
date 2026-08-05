@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { useI18n } from "@/lib/i18n";
 import { Compass, Home, ArrowRight } from "lucide-react";
 
 export default function NotFound() {
+  const { t } = useI18n();
+
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-20 sm:py-32">
       <div className="relative flex flex-col items-center text-center">
@@ -24,12 +29,11 @@ export default function NotFound() {
             </h1>
 
             <p className="mt-4 font-mono text-sm text-accent tracking-widest uppercase">
-              Page not found
+              {t("notfound.title")}
             </p>
 
             <p className="mt-6 max-w-md text-base sm:text-lg text-muted leading-relaxed">
-              Halaman yang kamu cari kayaknya tersesat, atau emang belum pernah
-              ada di sini. Jangan khawatir, yang penting kamu ketemu.
+              {t("notfound.desc")}
             </p>
           </div>
         </FadeIn>
@@ -41,13 +45,13 @@ export default function NotFound() {
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-medium text-sm hover:bg-highlight/80 transition-all duration-200 glow-hover"
             >
               <Home className="h-4 w-4" />
-              Kembali ke Beranda
+              {t("notfound.home")}
             </Link>
             <Link
               href="/portfolio"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-medium text-sm hover:bg-surface hover:border-accent transition-all duration-200"
             >
-              Lihat Portfolio
+              {t("notfound.portfolio")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

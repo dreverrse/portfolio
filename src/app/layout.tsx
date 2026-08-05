@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ClientProvider } from "@/components/ClientProvider";
+import { LanguageProvider } from "@/lib/i18n";
 import { WaifuWidget } from "@/components/WaifuWidget";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
@@ -70,19 +71,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");var l=t==="light";document.documentElement.classList.toggle("light",l);}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");var l=t==="light";document.documentElement.classList.toggle("light",l);var lg=localStorage.getItem("lang");if(lg==="en"||lg==="id"){document.documentElement.lang=lg;}}catch(e){}})();`,
           }}
         />
       </head>
       <body className="min-h-full flex flex-col noise-bg">
-        <ClientProvider>
-          <Navbar />
-          <ScrollProgress />
-          <main className="flex-1 pt-24 relative z-10">{children}</main>
-          <Footer />
-          <BackToTop />
-          <WaifuWidget />
-        </ClientProvider>
+        <LanguageProvider>
+          <ClientProvider>
+            <Navbar />
+            <ScrollProgress />
+            <main className="flex-1 pt-24 relative z-10">{children}</main>
+            <Footer />
+            <BackToTop />
+            <WaifuWidget />
+          </ClientProvider>
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

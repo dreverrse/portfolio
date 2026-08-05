@@ -7,14 +7,14 @@ import { getStoredPosts, type StoredPost } from "@/lib/posts-store";
 const POSTS_DIR = path.join(process.cwd(), "content/blog");
 
 export interface Post extends StoredPost {
-  readingTime: string;
+  readingTime: number;
 }
 
 function toPost(data: StoredPost): Post {
   const stats = readingTime(data.content);
   return {
     ...data,
-    readingTime: stats.text.replace("min read", " menit baca"),
+    readingTime: Math.max(1, Math.ceil(stats.minutes)),
   };
 }
 
