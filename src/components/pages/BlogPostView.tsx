@@ -39,8 +39,10 @@ export function BlogPostView({ post }: { post: Post }) {
     };
   }, [lang, post.slug]);
 
-  const title = translation?.title || post.title;
-  const content = translation?.content || post.content;
+  const title =
+    lang === "en" ? translation?.title || post.title : post.title;
+  const content =
+    lang === "en" ? translation?.content || post.content : post.content;
 
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-24">

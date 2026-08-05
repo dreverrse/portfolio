@@ -74,7 +74,9 @@ export function BlogList({ posts }: { posts: Post[] }) {
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h2 className="font-semibold text-lg text-foreground group-hover:text-highlight transition-colors">
-                  {translations[post.slug]?.title || post.title}
+                  {lang === "en"
+                    ? translations[post.slug]?.title || post.title
+                    : post.title}
                 </h2>
                 <div className="flex items-center gap-3 text-xs text-muted">
                   <span className="flex items-center gap-1">
@@ -88,7 +90,9 @@ export function BlogList({ posts }: { posts: Post[] }) {
                 </div>
               </div>
               <p className="text-sm text-muted mt-2 line-clamp-2">
-                {translations[post.slug]?.excerpt || post.excerpt}
+                {lang === "en"
+                  ? translations[post.slug]?.excerpt || post.excerpt
+                  : post.excerpt}
               </p>
               {post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3">
