@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { Send, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
@@ -8,6 +9,33 @@ import { useI18n } from "@/lib/i18n";
 interface Message {
   role: "user" | "assistant";
   content: string;
+}
+
+const URL_RE =
+  /(https?:\/\/[^\s<>"']+)|(?<![\w@.])((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"']*)?)/gi;
+const BARE_DOMAIN_RE = /(?<![\w@.])((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"']*)?)/i;
+
+function linkify(text: string): ReactNode[] {
+  const parts = text.split(URL_RE);
+  return parts.map((part, i) => {
+    if (!part) return null;
+    const isUrl = /^https?:\/\//i.test(part);
+    if (isUrl || BARE_DOMAIN_RE.test(part)) {
+      const href = isUrl ? part : `https://${part}`;
+      return (
+        <a
+          key={i}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-current underline underline-offset-2 hover:opacity-80 transition-opacity"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
 }
 
 const greetingKey: Record<string, string> = {
@@ -169,7 +197,7 @@ export function WaifuWidget() {
                       : "rounded-2xl rounded-bl-sm border border-border bg-surface text-foreground"
                   )}
                 >
-                  {m.content}
+                  {linkify(m.content)}
                 </div>
               </div>
             ))}
