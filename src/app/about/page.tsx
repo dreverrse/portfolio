@@ -47,6 +47,14 @@ const education = [
   },
 ];
 
+const jobs = [
+  {
+    year: "2022 - Sekarang",
+    title: "ISA Grafika",
+    desc: "Bekerja sebagai Staff Production.",
+  },
+];
+
 const experiences = [
   {
     icon: Award,
@@ -139,6 +147,29 @@ export default function AboutPage() {
           </h2>
           <div className="space-y-0">
             {education.map((item, i) => (
+              <div
+                key={i}
+                className="relative pl-8 pb-8 border-l border-border last:pb-0"
+              >
+                <div className="absolute left-0 top-0 -translate-x-1/2 h-3 w-3 rounded-full bg-highlight border-2 border-background" />
+                <p className="text-xs text-highlight font-medium mb-1">
+                  {item.year}
+                </p>
+                <h3 className="font-semibold">{item.title}</h3>
+                <p className="text-sm text-muted mt-1">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.25}>
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">
+            <span className="text-foreground">Pekerjaan</span>
+          </h2>
+          <div className="space-y-0">
+            {jobs.map((item, i) => (
               <div
                 key={i}
                 className="relative pl-8 pb-8 border-l border-border last:pb-0"
