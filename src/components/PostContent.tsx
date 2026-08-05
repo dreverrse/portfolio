@@ -66,8 +66,16 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
   return parts;
 }
 
+function restoreBlocks(text: string): string {
+  let out = text.replace(/\\r/g, "").replace(/\\n/g, "\n");
+  out = out.replace(/\s+(#{1,6}\s)/g, "\n$1");
+  out = out.replace(/\s+([-*]\s+(?:\*\*)?[A-Z*])/g, "\n$1");
+  out = out.replace(/\n{3,}/g, "\n\n");
+  return out;
+}
+
 export function PostContent({ content }: { content: string }) {
-  const lines = content.split("\n");
+  const lines = restoreBlocks(content).split("\n");
   const blocks: ReactNode[] = [];
   let i = 0;
   let key = 0;

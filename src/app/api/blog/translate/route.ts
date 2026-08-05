@@ -44,5 +44,7 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ translations });
+  return NextResponse.json({ translations }, {
+    headers: { "cache-control": "no-store" },
+  });
 }
