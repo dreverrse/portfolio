@@ -71,6 +71,7 @@ const translations = {
       "Aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran dalam satu dashboard yang rapi dan mudah digunakan.",
     "blog.description":
       "Tulisan seputar teknologi, programming, dan pengalaman pribadi.",
+    "blog.readMore": "Baca selengkapnya",
     "blog.empty": "Belum ada artikel.",
     "blog.emptySub": "Buat artikel baru di folder content/blog/",
     "blog.back": "Kembali ke Blog",
@@ -167,6 +168,7 @@ const translations = {
       "A web app for managing finances to track income, expenses, and budgets in one clean and easy-to-use dashboard.",
     "blog.description":
       "Posts about technology, programming, and personal experiences.",
+    "blog.readMore": "Read more",
     "blog.empty": "No posts yet.",
     "blog.emptySub": "Create a new post in the content/blog/ folder",
     "blog.back": "Back to Blog",

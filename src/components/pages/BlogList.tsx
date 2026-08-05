@@ -5,11 +5,23 @@ import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
-import { Calendar, Clock, Tag } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
 
 interface PostTranslation {
   title?: string;
   excerpt?: string;
+}
+
+function localized(
+  post: Post,
+  translations: Record<string, PostTranslation>,
+  lang: string
+): { title: string; excerpt: string } {
+  const tr = lang === "en" ? translations[post.slug] : undefined;
+  return {
+    title: tr?.title || post.title,
+    excerpt: tr?.excerpt || post.excerpt,
+  };
 }
 
 export function BlogList({ posts }: { posts: Post[] }) {
@@ -42,87 +54,137 @@ export function BlogList({ posts }: { posts: Post[] }) {
     };
   }, [lang, posts]);
 
-  return (
-    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-24">
-      <FadeIn>
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-          <span className="text-foreground">{t("nav.blog")}</span>
-        </h1>
-        <p className="text-muted text-lg max-w-2xl leading-relaxed">
-          {t("blog.description")}
-        </p>
-      </FadeIn>
+  const [featured, ...rest] = posts;
 
-      <FadeIn delay={0.1}>
-        <div className="mt-12 space-y-4">
-          {posts.length === 0 && (
-            <div className="text-center py-16 rounded-xl border border-border bg-card/30">
-              <p className="text-muted text-lg">{t("blog.empty")}</p>
-              <p className="text-sm text-muted/60 mt-2">
-                {t("blog.emptySub")}{" "}
-                <code className="px-1.5 py-0.5 rounded bg-surface text-highlight text-xs">
-                  content/blog/
-                </code>
-              </p>
-            </div>
-          )}
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="block rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover group overflow-hidden"
-            >
-              {post.image && (
-                <div className="relative h-40 sm:h-44 w-full overflow-hidden border-b border-border">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              )}
-              <div className="p-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <h2 className="font-semibold text-lg text-foreground group-hover:text-highlight transition-colors">
-                    {lang === "en"
-                      ? translations[post.slug]?.title || post.title
-                      : post.title}
-                  </h2>
-                  <div className="flex items-center gap-3 text-xs text-muted">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(post.date, lang)}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {post.readingTime} {t("blog.readingTime")}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-muted mt-2 line-clamp-2">
-                  {lang === "en"
-                    ? translations[post.slug]?.excerpt || post.excerpt
-                    : post.excerpt}
-                </p>
-                {post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-accent/20 text-highlight border border-accent/30"
-                      >
-                        <Tag className="h-2.5 w-2.5" />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Link>
-          ))}
+  return (
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
+      <FadeIn>
+        <div className="mb-12">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">
+            Blog
+          </span>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+            {t("nav.blog")}
+          </h1>
+          <p className="mt-4 text-lg text-muted max-w-2xl leading-relaxed">
+            {t("blog.description")}
+          </p>
         </div>
       </FadeIn>
+
+      {posts.length === 0 && (
+        <FadeIn delay={0.1}>
+          <div className="text-center py-16 rounded-xl border border-border bg-card/30">
+            <p className="text-muted text-lg">{t("blog.empty")}</p>
+            <p className="text-sm text-muted/60 mt-2">
+              {t("blog.emptySub")}{" "}
+              <code className="px-1.5 py-0.5 rounded bg-surface text-highlight text-xs">
+                content/blog/
+              </code>
+            </p>
+          </div>
+        </FadeIn>
+      )}
+
+      {featured && (
+        <FadeIn delay={0.1}>
+          <Link
+            href={`/blog/${featured.slug}`}
+            className="group grid md:grid-cols-[1.1fr_1fr] overflow-hidden rounded-2xl border border-border bg-card/50 hover:border-accent transition-all duration-300 glow-hover"
+          >
+            {featured.image && (
+              <div className="relative aspect-[16/10] md:aspect-auto md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-border">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={featured.image}
+                  alt={localized(featured, translations, lang).title}
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            )}
+            <div className="flex flex-col justify-center p-6 sm:p-8">
+              {featured.tags[0] && (
+                <span className="text-xs font-semibold uppercase tracking-widest text-highlight">
+                  {featured.tags[0]}
+                </span>
+              )}
+              <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-foreground group-hover:text-highlight transition-colors leading-snug">
+                {localized(featured, translations, lang).title}
+              </h2>
+              <p className="mt-3 text-muted leading-relaxed line-clamp-3">
+                {localized(featured, translations, lang).excerpt}
+              </p>
+              <div className="mt-6 flex items-center gap-4 text-xs text-muted">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {formatDate(featured.date, lang)}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5" />
+                  {featured.readingTime} {t("blog.readingTime")}
+                </span>
+              </div>
+              <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-highlight">
+                {t("blog.readMore")}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </Link>
+        </FadeIn>
+      )}
+
+      {rest.length > 0 && (
+        <FadeIn delay={0.15}>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.map((post) => {
+              const { title, excerpt } = localized(post, translations, lang);
+              return (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
+                >
+                  {post.image && (
+                    <div className="relative aspect-video w-full overflow-hidden border-b border-border">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={post.image}
+                        alt={title}
+                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-1 flex-col p-5">
+                    <div className="flex items-center justify-between gap-2">
+                      {post.tags[0] ? (
+                        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-highlight">
+                          <Tag className="h-3 w-3" />
+                          {post.tags[0]}
+                        </span>
+                      ) : (
+                        <span />
+                      )}
+                      <span className="text-xs text-muted">
+                        {formatDate(post.date, lang)}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 font-semibold text-lg text-foreground group-hover:text-highlight transition-colors leading-snug">
+                      {title}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted line-clamp-2">
+                      {excerpt}
+                    </p>
+                    <div className="mt-auto pt-4 flex items-center gap-1.5 text-xs text-muted">
+                      <Clock className="h-3 w-3" />
+                      {post.readingTime} {t("blog.readingTime")}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </FadeIn>
+      )}
     </div>
   );
 }
