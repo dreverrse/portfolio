@@ -17,6 +17,7 @@ const memoryCache = new Map<string, Translation>();
 const SYSTEM_PROMPT = `Kamu adalah penerjemah profesional bahasa Indonesia ke bahasa Inggris. Terjemahan harus natural, akurat, dan enak dibaca.
 Aturan:
 - Pertahankan semua sintaks Markdown persis seperti aslinya (heading, bold, italic, daftar, tautan, kutipan, blok kode). Jangan ubah struktur, hanya terjemahkan teksnya.
+- Gunakan baris baru (newline) yang sama persis dengan sumber: setiap heading dan item daftar harus dimulai pada baris baru. JANGAN pernah menulis karakter backslash-n; gunakan baris baru asli.
 - Jangan menerjemahkan nama produk, nama orang, URL, atau tag.
 - Balas HANYA dengan JSON yang valid, tanpa teks atau penjelasan lain.`;
 
@@ -99,6 +100,19 @@ Judul asli: ${post.title}
 Ringkasan asli: ${post.excerpt}`;
 }
 
+function normalizeMarkdown(text: string): string {
+  let out = text.replace(/\\r/g, "").replace(/\\n/g, "\n");
+  out = out.replace(/\s+(#{1,6}\s)/g, "\n$1");
+  out = out.replace(/\s+(\d+[.)]\s)/g, "\n$1");
+  out = out.replace(/\s+([-*]\s+(?:\*\*)?[A-Z*])/g, "\n$1");
+  out = out.replace(/\n{3,}/g, "\n\n");
+  return out.trim();
+}
+
+function normalizeInline(text: string): string {
+  return text.replace(/\\r/g, "").replace(/\\n/g, "\n").trim();
+}
+
 export async function translatePost(
   post: Post,
   mode: TranslationMode
@@ -121,15 +135,20 @@ export async function translatePost(
   }
 
   const translation: Translation = {
-    title: typeof parsed.title === "string" ? parsed.title.trim() : post.title,
+    title:
+      typeof parsed.title === "string" && parsed.title.trim()
+        ? normalizeInline(parsed.title)
+        : post.title,
     excerpt:
-      typeof parsed.excerpt === "string" ? parsed.excerpt.trim() : post.excerpt,
+      typeof parsed.excerpt === "string" && parsed.excerpt.trim()
+        ? normalizeInline(parsed.excerpt)
+        : post.excerpt,
   };
 
   if (mode === "full") {
     translation.content =
       typeof parsed.content === "string" && parsed.content.trim()
-        ? parsed.content.trim()
+        ? normalizeMarkdown(parsed.content)
         : post.content;
   }
 
