@@ -1,10 +1,6 @@
-import { kv } from "@vercel/kv";
+import { SUPABASE_ENABLED, getSupabase } from "@/lib/supabase";
 import { chatOpenRouter } from "@/lib/openrouter";
 import type { Post } from "@/lib/blog";
-
-const KV_ENABLED = Boolean(
-  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-);
 
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 30;
 
@@ -49,10 +45,16 @@ function extractJson(raw: string): Record<string, unknown> | null {
 }
 
 async function getCache(key: string): Promise<Translation | null> {
-  if (KV_ENABLED) {
+  if (SUPABASE_ENABLED) {
     try {
-      const value = await kv.get<Translation>(key);
-      if (value) return value;
+      const { data, error } = await getSupabase()
+        .from("translation_cache")
+        .select("value")
+        .eq("key", key)
+        .gt("expires_at", new Date().toISOString())
+        .maybeSingle();
+      if (error) throw error;
+      if (data) return data.value as Translation;
     } catch {
       // fall through ke memory
     }
@@ -61,9 +63,15 @@ async function getCache(key: string): Promise<Translation | null> {
 }
 
 async function setCache(key: string, value: Translation): Promise<void> {
-  if (KV_ENABLED) {
+  if (SUPABASE_ENABLED) {
     try {
-      await kv.set(key, value, { ex: CACHE_TTL_SECONDS });
+      const expiresAt = new Date(
+        Date.now() + CACHE_TTL_SECONDS * 1000
+      ).toISOString();
+      const { error } = await getSupabase()
+        .from("translation_cache")
+        .upsert({ key, value, expires_at: expiresAt }, { onConflict: "key" });
+      if (error) throw error;
       return;
     } catch {
       // fall through ke memory

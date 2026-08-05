@@ -1,10 +1,4 @@
-import { kv } from "@vercel/kv";
-
-const KV_ENABLED = Boolean(
-  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-);
-
-const STORAGE_KEY = "blog:posts";
+import { SUPABASE_ENABLED, getSupabase } from "@/lib/supabase";
 
 export interface StoredPost {
   slug: string;
@@ -12,6 +6,15 @@ export interface StoredPost {
   date: string;
   excerpt: string;
   tags: string[];
+  content: string;
+}
+
+interface PostRow {
+  slug: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  tags: string[] | null;
   content: string;
 }
 
@@ -29,11 +32,55 @@ export function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
+function rowToPost(row: PostRow): StoredPost {
+  return {
+    slug: row.slug,
+    title: row.title,
+    date: row.date,
+    excerpt: row.excerpt,
+    tags: row.tags || [],
+    content: row.content,
+  };
+}
+
+function postToRow(post: StoredPost): PostRow {
+  return {
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    excerpt: post.excerpt,
+    tags: post.tags,
+    content: post.content,
+  };
+}
+
+function isConflict(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: string }).code === "23505"
+  );
+}
+
+function isNoRow(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: string }).code === "PGRST116"
+  );
+}
+
 export async function getStoredPosts(): Promise<StoredPost[]> {
-  if (KV_ENABLED) {
+  if (SUPABASE_ENABLED) {
     try {
-      const data = await kv.get<StoredPost[]>(STORAGE_KEY);
-      return Array.isArray(data) ? data : [];
+      const { data, error } = await getSupabase()
+        .from("admin_posts")
+        .select("*")
+        .order("date", { ascending: false });
+      if (error) throw error;
+      return (data || []).map(rowToPost);
     } catch {
       return Object.values(memoryStore);
     }
@@ -41,27 +88,25 @@ export async function getStoredPosts(): Promise<StoredPost[]> {
   return Object.values(memoryStore);
 }
 
-export async function saveStoredPosts(posts: StoredPost[]): Promise<void> {
-  if (KV_ENABLED) {
-    try {
-      await kv.set(STORAGE_KEY, posts);
-      return;
-    } catch {
-      // fall through ke memory
-    }
-  }
-  for (const key of Object.keys(memoryStore)) {
-    if (!posts.some((p) => p.slug === key)) delete memoryStore[key];
-  }
-  for (const post of posts) memoryStore[post.slug] = post;
-}
-
 export async function createStoredPost(
   input: StoredPost
 ): Promise<StoredPost | null> {
-  const posts = await getStoredPosts();
-  if (posts.some((p) => p.slug === input.slug)) return null;
-  await saveStoredPosts([...posts, input]);
+  if (SUPABASE_ENABLED) {
+    try {
+      const { data, error } = await getSupabase()
+        .from("admin_posts")
+        .insert(postToRow(input))
+        .select()
+        .single();
+      if (error) throw error;
+      return rowToPost(data);
+    } catch (err) {
+      if (isConflict(err)) return null;
+      // fall through ke memory
+    }
+  }
+  if (memoryStore[input.slug]) return null;
+  memoryStore[input.slug] = input;
   return input;
 }
 
@@ -69,20 +114,43 @@ export async function updateStoredPost(
   slug: string,
   input: Partial<StoredPost>
 ): Promise<StoredPost | null> {
-  const posts = await getStoredPosts();
-  const index = posts.findIndex((p) => p.slug === slug);
-  if (index === -1) return null;
-  const updated: StoredPost = { ...posts[index], ...input, slug };
-  const next = [...posts];
-  next[index] = updated;
-  await saveStoredPosts(next);
+  if (SUPABASE_ENABLED) {
+    try {
+      const { data, error } = await getSupabase()
+        .from("admin_posts")
+        .update(input)
+        .eq("slug", slug)
+        .select()
+        .single();
+      if (error) throw error;
+      return rowToPost(data);
+    } catch (err) {
+      if (isNoRow(err)) return null;
+      // fall through ke memory
+    }
+  }
+  if (!memoryStore[slug]) return null;
+  const updated: StoredPost = { ...memoryStore[slug], ...input, slug };
+  memoryStore[slug] = updated;
   return updated;
 }
 
 export async function deleteStoredPost(slug: string): Promise<boolean> {
-  const posts = await getStoredPosts();
-  const next = posts.filter((p) => p.slug !== slug);
-  if (next.length === posts.length) return false;
-  await saveStoredPosts(next);
+  if (SUPABASE_ENABLED) {
+    try {
+      const { data, error } = await getSupabase()
+        .from("admin_posts")
+        .delete()
+        .eq("slug", slug)
+        .select();
+      if (error) throw error;
+      if ((data || []).length === 0) return false;
+      return true;
+    } catch {
+      // fall through ke memory
+    }
+  }
+  if (!memoryStore[slug]) return false;
+  delete memoryStore[slug];
   return true;
 }

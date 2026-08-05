@@ -1,10 +1,5 @@
-import { kv } from "@vercel/kv";
+import { SUPABASE_ENABLED, getSupabase } from "@/lib/supabase";
 
-const KV_ENABLED = Boolean(
-  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-);
-
-const STORAGE_KEY = "guestbook";
 const MAX_ENTRIES = 200;
 
 export interface GuestEntry {
@@ -17,30 +12,42 @@ export interface GuestEntry {
 const memoryStore: GuestEntry[] = [];
 
 export async function getEntries(limit = 100): Promise<GuestEntry[]> {
-  if (KV_ENABLED) {
+  if (SUPABASE_ENABLED) {
     try {
-      const data = await kv.get<GuestEntry[]>(STORAGE_KEY);
-      return (Array.isArray(data) ? data : []).slice(0, limit);
+      const { data, error } = await getSupabase()
+        .from("guestbook_entries")
+        .select("id, name, message, created_at")
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data || []).map((row) => ({
+        id: row.id,
+        name: row.name,
+        message: row.message,
+        createdAt: row.created_at,
+      }));
     } catch {
-      return [];
+      // fall through ke memory
     }
   }
   return memoryStore.slice(0, limit);
 }
 
 export async function addEntry(entry: GuestEntry): Promise<void> {
-  if (KV_ENABLED) {
+  if (SUPABASE_ENABLED) {
     try {
-      const current = await kv.get<GuestEntry[]>(STORAGE_KEY);
-      const next = [entry, ...(Array.isArray(current) ? current : [])].slice(
-        0,
-        MAX_ENTRIES
-      );
-      await kv.set(STORAGE_KEY, next);
+      const { error } = await getSupabase().from("guestbook_entries").insert({
+        id: entry.id,
+        name: entry.name,
+        message: entry.message,
+        created_at: entry.createdAt,
+      });
+      if (error) throw error;
       return;
     } catch {
       // fall through ke memory
     }
   }
   memoryStore.unshift(entry);
+  memoryStore.length = Math.min(memoryStore.length, MAX_ENTRIES);
 }
