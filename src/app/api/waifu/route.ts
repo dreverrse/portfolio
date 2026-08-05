@@ -1,8 +1,20 @@
 import { NextResponse } from "next/server";
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
+const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-const BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+const DEFAULT_MODELS = [
+  "meta-llama/llama-3.3-70b-instruct",
+  "deepseek/deepseek-chat",
+  "google/gemini-2.0-flash-001",
+  "openai/gpt-4o-mini",
+];
+
+const MODELS = (
+  process.env.OPENROUTER_MODELS || DEFAULT_MODELS.join(",")
+)
+  .split(",")
+  .map((m) => m.trim())
+  .filter(Boolean);
 
 const MAX_MESSAGE_LENGTH = 4000;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -67,7 +79,7 @@ Pemilik website (Andre):
 - Proyek unggulan: Finora, aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran. Live demo di finora-dreverrse.vercel.app, source code di github.com/dreverrse/finora.
 
 Tentang website ini:
-- Ini website personal Andre yang dibangun dengan Next.js, berisi halaman Home (/), About (/about), Portfolio (/portfolio), dan Blog (/blog).
+- Ini website personal Andre yang dibangun dengan Next.js, berisi halaman Home (/), About (/about), Portfolio (/portfolio), Blog (/blog), dan Guestbook (/guestbook).
 - Portfolio berisi proyek Finora dengan link demo dan kode sumber.
 - Blog berisi tulisan seputar teknologi dan pengalaman pribadi, misalnya artikel "Memulai Perjalanan sebagai Developer".
 - Halaman About berisi profil, perjalanan karier, dan minat Andre.
@@ -89,64 +101,73 @@ Tuntutan:
 - Sesekali celetukan khas Megumi atau pertanyaan ringan, boleh pakai emoji secukupnya.
 - Jangan mengulang kalimat yang sudah pernah kamu buat sebelumnya.`;
 
-type GeminiResult =
+type ChatResult =
   | { ok: true; reply: string }
   | { ok: false; status: number; error: string };
 
-async function callGemini(
+async function callOpenRouter(
   systemPrompt: string,
-  contents: { role: string; parts: { text: string }[] }[]
-): Promise<GeminiResult> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  messages: { role: string; content: string }[]
+): Promise<ChatResult> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     return {
       ok: false,
       status: 500,
-      error: "Server belum dikonfigurasi. Tambahkan GEMINI_API_KEY di .env.local",
+      error: "Server belum dikonfigurasi. Tambahkan OPENROUTER_API_KEY di .env.local",
     };
   }
 
-  try {
-    const res = await fetch(
-      `${BASE_URL}/models/${MODEL}:generateContent?key=${apiKey}`,
-      {
+  const lastError: { status: number; error: string } = {
+    status: 502,
+    error: "Semua model gagal",
+  };
+
+  for (const model of MODELS) {
+    try {
+      const res = await fetch(OPENROUTER_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
         cache: "no-store",
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          contents,
-          generationConfig: { temperature: 0.95, maxOutputTokens: 600 },
+          model,
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          temperature: 0.95,
+          max_tokens: 600,
         }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        lastError.status = res.status;
+        lastError.error =
+          data?.error?.message ||
+          data?.message ||
+          `OpenRouter error (${res.status})`;
+        continue;
       }
-    );
 
-    const data = await res.json();
-    if (!res.ok) {
-      return {
-        ok: false,
-        status: res.status,
-        error: data?.error?.message || "Gemini API error",
-      };
+      const data = await res.json();
+      const reply = data?.choices?.[0]?.message?.content?.trim();
+      if (!reply) {
+        lastError.status = 502;
+        lastError.error = "Tidak ada balasan dari model";
+        continue;
+      }
+
+      return { ok: true, reply };
+    } catch (err) {
+      lastError.status = 500;
+      lastError.error =
+        err instanceof Error ? err.message : "Gagal terhubung ke OpenRouter";
+      continue;
     }
-
-    const reply = data?.candidates?.[0]?.content?.parts
-      ?.map((p: { text?: string }) => p.text || "")
-      .join("")
-      .trim();
-
-    if (!reply) {
-      return { ok: false, status: 502, error: "Tidak ada balasan dari model" };
-    }
-
-    return { ok: true, reply };
-  } catch (err) {
-    return {
-      ok: false,
-      status: 500,
-      error: err instanceof Error ? err.message : "Gagal terhubung ke Gemini",
-    };
   }
+
+  return { ok: false, status: lastError.status, error: lastError.error };
 }
 
 export async function GET(request: Request) {
@@ -158,8 +179,8 @@ export async function GET(request: Request) {
   const valid = ["pagi", "siang", "sore", "malam"];
   const p = valid.includes(part) ? part : "malam";
 
-  const result = await callGemini(GREETING_PROMPT(p), [
-    { role: "user", parts: [{ text: "Tulis sambutanmu." }] },
+  const result = await callOpenRouter(GREETING_PROMPT(p), [
+    { role: "user", content: "Tulis sambutanmu." },
   ]);
 
   if (!result.ok) {
@@ -181,25 +202,27 @@ export async function POST(request: Request) {
 
   const messages = Array.isArray(body.messages) ? body.messages.slice(-20) : [];
 
-  const contents = messages
+  const chatMessages = messages
     .filter((m) => m && typeof m.content === "string")
     .map((m) => ({
-      role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.content }],
+      role: m.role === "user" ? "user" : "assistant",
+      content: m.content,
     }));
 
-  if (contents.length === 0) {
+  if (chatMessages.length === 0) {
     return NextResponse.json({ error: "Tidak ada pesan" }, { status: 400 });
   }
 
-  if (contents.some((m) => m.parts[0].text.length > MAX_MESSAGE_LENGTH)) {
+  if (
+    chatMessages.some((m) => m.content.length > MAX_MESSAGE_LENGTH)
+  ) {
     return NextResponse.json(
       { error: `Pesan terlalu panjang (maks ${MAX_MESSAGE_LENGTH} karakter)` },
       { status: 400 }
     );
   }
 
-  const result = await callGemini(PERSONA, contents);
+  const result = await callOpenRouter(PERSONA, chatMessages);
 
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: result.status });
