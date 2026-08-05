@@ -113,6 +113,37 @@ function normalizeInline(text: string): string {
   return text.replace(/\\r/g, "").replace(/\\n/g, "\n").trim();
 }
 
+const IDN_WORDS = [
+  "yang", "dan", "dari", "untuk", "dengan", "adalah", "tidak", "ini",
+  "itu", "saya", "juga", "sudah", "masih", "pada", "akan", "oleh",
+  "bahwa", "dalam", "ketika", "karena", "agar", "supaya", "lalu",
+  "setelah", "serta", "seperti", "merupakan",
+];
+
+function looksIndonesian(text: string): boolean {
+  let count = 0;
+  for (const word of IDN_WORDS) {
+    const re = new RegExp(`\\b${word}\\b`, "gi");
+    while (re.exec(text) !== null) count++;
+  }  return count >= 5;
+}
+
+function validateTranslation(reply: string, mode: TranslationMode): boolean {
+  const parsed = extractJson(reply);
+  if (!parsed) return false;
+  const title = parsed.title;
+  const excerpt = parsed.excerpt;
+  if (typeof title !== "string" || !title.trim()) return false;
+  if (typeof excerpt !== "string" || !excerpt.trim()) return false;
+  if (looksIndonesian(title)) return false;
+  if (mode === "full") {
+    const content = parsed.content;
+    if (typeof content !== "string" || !content.trim()) return false;
+    if (looksIndonesian(content)) return false;
+  }
+  return true;
+}
+
 export async function translatePost(
   post: Post,
   mode: TranslationMode
@@ -124,7 +155,11 @@ export async function translatePost(
 
   const reply = await chatOpenRouter(SYSTEM_PROMPT, [
     { role: "user", content: buildPrompt(post, mode) },
-  ], { temperature: 0.2, maxTokens: mode === "full" ? 4000 : 1000 });
+  ], {
+    temperature: 0.2,
+    maxTokens: mode === "full" ? 4000 : 1000,
+    validate: (raw) => validateTranslation(raw, mode),
+  });
 
   const parsed = extractJson(reply);
 

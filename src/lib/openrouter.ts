@@ -1,10 +1,10 @@
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 const DEFAULT_MODELS = [
-  "meta-llama/llama-3.3-70b-instruct",
   "deepseek/deepseek-chat",
-  "google/gemini-2.0-flash-001",
   "openai/gpt-4o-mini",
+  "meta-llama/llama-3.3-70b-instruct",
+  "google/gemini-2.0-flash-001",
 ];
 
 const MODELS = (
@@ -24,6 +24,7 @@ export interface OpenRouterMessage {
 export interface OpenRouterOptions {
   temperature?: number;
   maxTokens?: number;
+  validate?: (reply: string) => boolean;
 }
 
 export async function chatOpenRouter(
@@ -69,6 +70,11 @@ export async function chatOpenRouter(
       const reply = data?.choices?.[0]?.message?.content?.trim();
       if (!reply) {
         lastError = new Error("Tidak ada balasan dari model");
+        continue;
+      }
+
+      if (options.validate && !options.validate(reply)) {
+        lastError = new Error("Output model tidak memenuhi validasi");
         continue;
       }
 
