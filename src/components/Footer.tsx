@@ -21,7 +21,7 @@ const socials: SocialItem[] = [
     renderIcon: (cls) => <FaXTwitter className={cls} />,
   },
   {
-    href: "https://instagram.com/dreverre",
+    href: "https://instagram.com/dreverrse",
     label: "Instagram",
     renderIcon: (cls) => <FaInstagram className={cls} />,
   },
