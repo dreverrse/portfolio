@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Send, X, Trash2 } from "lucide-react";
+import { Send, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 
@@ -122,7 +122,12 @@ export function WaifuWidget() {
         aria-label={t("waifu.aria")}
         className="fixed bottom-5 right-5 z-[90] flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-highlight/80 transition-colors"
       >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {open ? (
+          <X className="h-6 w-6" />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src="/avatars/waifu-icon.jpg" alt="" className="h-9 w-9 rounded-full object-cover" />
+        )}
       </button>
 
       {open && (
