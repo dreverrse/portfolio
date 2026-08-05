@@ -1,13 +1,46 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
 import { Calendar, Clock, Tag } from "lucide-react";
 
+interface PostTranslation {
+  title?: string;
+  excerpt?: string;
+}
+
 export function BlogList({ posts }: { posts: Post[] }) {
   const { lang, t } = useI18n();
+  const [translations, setTranslations] = useState<
+    Record<string, PostTranslation>
+  >({});
+
+  useEffect(() => {
+    let cancelled = false;
+    if (lang === "en" && posts.length > 0) {
+      fetch("/api/blog/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slugs: posts.map((p) => p.slug),
+          mode: "list",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!cancelled && data?.translations) {
+            setTranslations(data.translations);
+          }
+        })
+        .catch(() => {});
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [lang, posts]);
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-24">
@@ -41,7 +74,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h2 className="font-semibold text-lg text-foreground group-hover:text-highlight transition-colors">
-                  {post.title}
+                  {translations[post.slug]?.title || post.title}
                 </h2>
                 <div className="flex items-center gap-3 text-xs text-muted">
                   <span className="flex items-center gap-1">
@@ -55,7 +88,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
                 </div>
               </div>
               <p className="text-sm text-muted mt-2 line-clamp-2">
-                {post.excerpt}
+                {translations[post.slug]?.excerpt || post.excerpt}
               </p>
               {post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3">

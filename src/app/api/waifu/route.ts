@@ -1,20 +1,5 @@
 import { NextResponse } from "next/server";
-
-const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-
-const DEFAULT_MODELS = [
-  "meta-llama/llama-3.3-70b-instruct",
-  "deepseek/deepseek-chat",
-  "google/gemini-2.0-flash-001",
-  "openai/gpt-4o-mini",
-];
-
-const MODELS = (
-  process.env.OPENROUTER_MODELS || DEFAULT_MODELS.join(",")
-)
-  .split(",")
-  .map((m) => m.trim())
-  .filter(Boolean);
+import { chatOpenRouter } from "@/lib/openrouter";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -105,69 +90,23 @@ type ChatResult =
   | { ok: true; reply: string }
   | { ok: false; status: number; error: string };
 
-async function callOpenRouter(
+async function getReply(
   systemPrompt: string,
-  messages: { role: string; content: string }[]
+  messages: { role: "user" | "assistant"; content: string }[]
 ): Promise<ChatResult> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
+  try {
+    const reply = await chatOpenRouter(systemPrompt, messages, {
+      temperature: 0.95,
+    });
+    return { ok: true, reply };
+  } catch (err) {
     return {
       ok: false,
-      status: 500,
-      error: "Server belum dikonfigurasi. Tambahkan OPENROUTER_API_KEY di .env.local",
+      status: 502,
+      error:
+        err instanceof Error ? err.message : "Gagal terhubung ke OpenRouter",
     };
   }
-
-  const lastError: { status: number; error: string } = {
-    status: 502,
-    error: "Semua model gagal",
-  };
-
-  for (const model of MODELS) {
-    try {
-      const res = await fetch(OPENROUTER_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        cache: "no-store",
-        body: JSON.stringify({
-          model,
-          messages: [{ role: "system", content: systemPrompt }, ...messages],
-          temperature: 0.95,
-          max_tokens: 600,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        lastError.status = res.status;
-        lastError.error =
-          data?.error?.message ||
-          data?.message ||
-          `OpenRouter error (${res.status})`;
-        continue;
-      }
-
-      const data = await res.json();
-      const reply = data?.choices?.[0]?.message?.content?.trim();
-      if (!reply) {
-        lastError.status = 502;
-        lastError.error = "Tidak ada balasan dari model";
-        continue;
-      }
-
-      return { ok: true, reply };
-    } catch (err) {
-      lastError.status = 500;
-      lastError.error =
-        err instanceof Error ? err.message : "Gagal terhubung ke OpenRouter";
-      continue;
-    }
-  }
-
-  return { ok: false, status: lastError.status, error: lastError.error };
 }
 
 export async function GET(request: Request) {
@@ -179,7 +118,7 @@ export async function GET(request: Request) {
   const valid = ["pagi", "siang", "sore", "malam"];
   const p = valid.includes(part) ? part : "malam";
 
-  const result = await callOpenRouter(GREETING_PROMPT(p), [
+  const result = await getReply(GREETING_PROMPT(p), [
     { role: "user", content: "Tulis sambutanmu." },
   ]);
 
@@ -202,7 +141,7 @@ export async function POST(request: Request) {
 
   const messages = Array.isArray(body.messages) ? body.messages.slice(-20) : [];
 
-  const chatMessages = messages
+  const chatMessages: ChatMessage[] = messages
     .filter((m) => m && typeof m.content === "string")
     .map((m) => ({
       role: m.role === "user" ? "user" : "assistant",
@@ -222,7 +161,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = await callOpenRouter(PERSONA, chatMessages);
+  const result = await getReply(PERSONA, chatMessages);
 
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: result.status });

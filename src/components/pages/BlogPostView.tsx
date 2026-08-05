@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { PostContent } from "@/components/PostContent";
@@ -7,8 +8,39 @@ import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 
+interface PostTranslation {
+  title?: string;
+  excerpt?: string;
+  content?: string;
+}
+
 export function BlogPostView({ post }: { post: Post }) {
   const { lang, t } = useI18n();
+  const [translation, setTranslation] = useState<PostTranslation | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (lang === "en") {
+      fetch("/api/blog/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slugs: [post.slug], mode: "full" }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!cancelled && data?.translations?.[post.slug]) {
+            setTranslation(data.translations[post.slug]);
+          }
+        })
+        .catch(() => {});
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [lang, post.slug]);
+
+  const title = translation?.title || post.title;
+  const content = translation?.content || post.content;
 
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-24">
@@ -23,7 +55,7 @@ export function BlogPostView({ post }: { post: Post }) {
 
         <header>
           <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
-            {post.title}
+            {title}
           </h1>
           <div className="flex items-center gap-4 mt-4 text-sm text-muted">
             <span className="flex items-center gap-1.5">
@@ -53,7 +85,7 @@ export function BlogPostView({ post }: { post: Post }) {
 
       <FadeIn delay={0.1}>
         <div className="mt-10">
-          <PostContent content={post.content} />
+          <PostContent content={content} />
         </div>
       </FadeIn>
     </article>
