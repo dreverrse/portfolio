@@ -1,40 +1,25 @@
 import { NextResponse } from "next/server";
 import { chatOpenRouter } from "@/lib/openrouter";
 import { SOCIAL } from "@/lib/site";
+import { getClientIp, rateLimit } from "@/lib/ratelimit";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX = 10;
 
-const rateLimits = new Map<string, number[]>();
-
-function getClientIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  return request.headers.get("x-real-ip") || "unknown";
-}
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const timestamps = (rateLimits.get(key) || []).filter(
-    (t) => now - t < RATE_LIMIT_WINDOW_MS
-  );
-
-  if (timestamps.length >= RATE_LIMIT_MAX) {
-    rateLimits.set(key, timestamps);
-    return true;
-  }
-
-  timestamps.push(now);
-  rateLimits.set(key, timestamps);
-  return false;
-}
-
-function rateLimitResponse(request: Request): NextResponse | null {
-  if (isRateLimited(getClientIp(request))) {
+async function rateLimitResponse(request: Request): Promise<NextResponse | null> {
+  const result = await rateLimit(getClientIp(request), {
+    limit: RATE_LIMIT_MAX,
+    windowMs: RATE_LIMIT_WINDOW_MS,
+    prefix: "rl:waifu",
+  });
+  if (!result.success) {
     return NextResponse.json(
       { error: "Terlalu banyak permintaan. Coba lagi nanti." },
-      { status: 429 }
+      {
+        status: 429,
+        headers: { "Retry-After": `${Math.ceil((result.reset - Date.now()) / 1000)}` },
+      }
     );
   }
   return null;
@@ -112,7 +97,7 @@ async function getReply(
 }
 
 export async function GET(request: Request) {
-  const blocked = rateLimitResponse(request);
+  const blocked = await rateLimitResponse(request);
   if (blocked) return blocked;
 
   const { searchParams } = new URL(request.url);
@@ -131,7 +116,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const blocked = rateLimitResponse(request);
+  const blocked = await rateLimitResponse(request);
   if (blocked) return blocked;
 
   let body: { messages?: ChatMessage[] };

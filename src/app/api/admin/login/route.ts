@@ -4,8 +4,29 @@ import {
   createSessionToken,
   verifyPassword,
 } from "@/lib/admin-auth";
+import { getClientIp, rateLimit } from "@/lib/ratelimit";
+
+const LOGIN_WINDOW_MS = 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 5;
 
 export async function POST(request: Request) {
+  const blocked = await rateLimit(getClientIp(request), {
+    limit: LOGIN_MAX_ATTEMPTS,
+    windowMs: LOGIN_WINDOW_MS,
+    prefix: "rl:admin-login",
+  });
+  if (!blocked.success) {
+    return NextResponse.json(
+      {
+        error: "Terlalu banyak percobaan login. Coba lagi beberapa saat.",
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": `${Math.ceil((blocked.reset - Date.now()) / 1000)}` },
+      }
+    );
+  }
+
   let body: { password?: string };
   try {
     body = await request.json();

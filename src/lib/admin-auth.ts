@@ -9,7 +9,13 @@ function getAdminPassword(): string {
 }
 
 function getSecret(): string {
-  return process.env.ADMIN_SECRET || getAdminPassword() || "dev-only-secret";
+  const secret = process.env.ADMIN_SECRET || getAdminPassword();
+  if (!secret) {
+    throw new Error(
+      "Admin auth belum dikonfigurasi. Set ADMIN_SECRET (atau ADMIN_PASSWORD) di environment."
+    );
+  }
+  return secret;
 }
 
 function sign(payload: string): string {

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
 export function proxy() {
   const response = NextResponse.next();
 
@@ -19,14 +21,18 @@ export function proxy() {
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      IS_PRODUCTION
+        ? "script-src 'self' 'unsafe-inline'"
+        : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' https://lastfm.freetls.fastly.net https://cdn.last.fm data: blob:",
       "font-src 'self'",
       "connect-src 'self'",
-      "frame-ancestors 'none'",
+      "object-src 'none'",
       "base-uri 'self'",
+      "frame-ancestors 'none'",
       "form-action 'self'",
+      ...(IS_PRODUCTION ? ["upgrade-insecure-requests"] : []),
     ].join("; ")
   );
 
