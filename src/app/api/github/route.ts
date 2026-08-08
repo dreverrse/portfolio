@@ -15,9 +15,13 @@ let cache: { stats: GitHubStats; fetchedAt: number } | null = null;
 async function fetchStats(): Promise<GitHubStats | null> {
   try {
     const [userRes, reposRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${USERNAME}`, { cache: "no-store" }),
+      fetch(`https://api.github.com/users/${USERNAME}`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(8000),
+      }),
       fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100`, {
         cache: "no-store",
+        signal: AbortSignal.timeout(8000),
       }),
     ]);
     if (!userRes.ok || !reposRes.ok) return null;
