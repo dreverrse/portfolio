@@ -50,7 +50,7 @@ export function HomeContent() {
             <div className="flex justify-center lg:justify-end">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/avatars/profile-placeholder.png"
+                src="/avatars/profile.webp"
                 alt={t("home.profileAlt")}
                 className="h-40 w-40 sm:h-52 sm:w-52 lg:h-64 lg:w-64 rounded-full object-cover border-2 border-accent/30 shadow-lg glow-hover"
               />

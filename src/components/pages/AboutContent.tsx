@@ -70,7 +70,7 @@ export function AboutContent() {
         <div className="flex flex-col items-center text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/avatars/profile-placeholder.png"
+            src="/avatars/profile.webp"
             alt={t("home.profileAlt")}
             className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover border-2 border-accent/30 shadow-lg mb-6"
           />
