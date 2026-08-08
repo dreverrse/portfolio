@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { GitHubStats } from "@/components/GitHubStats";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import {
@@ -32,18 +33,28 @@ export function HomeContent() {
         <div className="hidden sm:block absolute -bottom-32 -right-32 h-96 w-96 bg-highlight/5 rounded-full blur-3xl pointer-events-none" />
 
         <FadeIn>
-          <div className="relative">
-            <p className="text-sm font-medium text-highlight mb-4 tracking-wider uppercase">
-              {t("home.welcome")}
-            </p>
-            <h1 className="text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
-              <span className="text-foreground">{t("home.hello")}</span>
-              <br />
-              <span className="text-foreground">Andre Kusuma Firmansah</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-base sm:text-lg text-muted leading-relaxed">
-              {t("home.tagline")}
-            </p>
+          <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+            <div>
+              <p className="text-sm font-medium text-highlight mb-4 tracking-wider uppercase">
+                {t("home.welcome")}
+              </p>
+              <h1 className="text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
+                <span className="text-foreground">{t("home.hello")}</span>
+                <br />
+                <span className="text-foreground">Andre Kusuma Firmansah</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base sm:text-lg text-muted leading-relaxed">
+                {t("home.tagline")}
+              </p>
+            </div>
+            <div className="flex justify-center lg:justify-end">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/avatars/profile-placeholder.png"
+                alt={t("home.profileAlt")}
+                className="h-40 w-40 sm:h-52 sm:w-52 lg:h-64 lg:w-64 rounded-full object-cover border-2 border-accent/30 shadow-lg glow-hover"
+              />
+            </div>
           </div>
         </FadeIn>
 
@@ -89,6 +100,10 @@ export function HomeContent() {
           </Stagger>
         </section>
       </FadeIn>
+
+      <div className="mt-24">
+        <GitHubStats />
+      </div>
 
       <FadeIn delay={0.4}>
         <section className="mt-24 p-8 rounded-2xl border border-border bg-card/30 text-center">

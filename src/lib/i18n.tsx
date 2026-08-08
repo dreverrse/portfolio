@@ -40,6 +40,7 @@ const translations = {
     "home.collabDesc":
       "Punya project menarik atau sekadar ingin ngobrol? Jangan ragu untuk menghubungi saya.",
     "home.contact": "Hubungi Saya",
+    "home.profileAlt": "Foto profil Andre",
     "about.title": "Tentang Saya",
     "about.intro":
       "Nama saya Andre Kusuma Firmansah, biasa dipanggil Andre. Saya memiliki keahlian dalam bidang desain, terutama desain logo. Saya juga menguasai beberapa bahasa pemrograman di antaranya HTML, CSS, dan C++.",
@@ -67,13 +68,20 @@ const translations = {
       "Kumpulan proyek yang telah saya kerjakan. Setiap proyek merupakan pembelajaran baru dan tantangan yang menarik.",
     "portfolio.demo": "Demo",
     "portfolio.code": "Kode",
-    "project.finora":
-      "Aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran dalam satu dashboard yang rapi dan mudah digunakan.",
+    "portfolio.back": "Kembali ke Portofolio",
     "blog.description":
       "Tulisan seputar teknologi, programming, dan pengalaman pribadi.",
+    "github.title": "GitHub Stats",
+    "github.repos": "Repositori",
+    "github.stars": "Total Stars",
+    "github.followers": "Followers",
+    "github.languages": "Bahasa",
     "blog.readMore": "Baca selengkapnya",
     "blog.empty": "Belum ada artikel.",
     "blog.emptySub": "Buat artikel baru di folder content/blog/",
+    "blog.searchPlaceholder": "Cari artikel…",
+    "blog.searchEmpty": "Tidak ada artikel yang cocok dengan pencarian.",
+    "blog.allTags": "Semua",
     "blog.back": "Kembali ke Blog",
     "blog.readingTime": "menit baca",
     "blog.reactions": "Reaksi",
@@ -138,6 +146,7 @@ const translations = {
     "home.collabDesc":
       "Have an interesting project or just want to chat? Don't hesitate to reach out.",
     "home.contact": "Contact Me",
+    "home.profileAlt": "Andre's profile photo",
     "about.title": "About Me",
     "about.intro":
       "My name is Andre Kusuma Firmansah, usually called Andre. I have skills in design, especially logo design. I also know several programming languages including HTML, CSS, and C++.",
@@ -164,13 +173,20 @@ const translations = {
       "A collection of projects I've worked on. Every project is a new learning experience and an interesting challenge.",
     "portfolio.demo": "Demo",
     "portfolio.code": "Code",
-    "project.finora":
-      "A web app for managing finances to track income, expenses, and budgets in one clean and easy-to-use dashboard.",
+    "portfolio.back": "Back to Portfolio",
     "blog.description":
       "Posts about technology, programming, and personal experiences.",
+    "github.title": "GitHub Stats",
+    "github.repos": "Repositories",
+    "github.stars": "Total Stars",
+    "github.followers": "Followers",
+    "github.languages": "Languages",
     "blog.readMore": "Read more",
     "blog.empty": "No posts yet.",
     "blog.emptySub": "Create a new post in the content/blog/ folder",
+    "blog.searchPlaceholder": "Search articles…",
+    "blog.searchEmpty": "No articles match your search.",
+    "blog.allTags": "All",
     "blog.back": "Back to Blog",
     "blog.readingTime": "min read",
     "blog.reactions": "Reactions",

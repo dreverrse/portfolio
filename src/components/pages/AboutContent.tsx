@@ -67,12 +67,20 @@ export function AboutContent() {
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-24">
       <FadeIn>
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-          {t("about.title")}
-        </h1>
-        <p className="text-muted text-lg max-w-2xl leading-relaxed">
-          {t("about.intro")}
-        </p>
+        <div className="flex flex-col items-center text-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/avatars/profile-placeholder.png"
+            alt={t("home.profileAlt")}
+            className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover border-2 border-accent/30 shadow-lg mb-6"
+          />
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+            {t("about.title")}
+          </h1>
+          <p className="text-muted text-lg max-w-2xl leading-relaxed">
+            {t("about.intro")}
+          </p>
+        </div>
       </FadeIn>
 
       <FadeIn delay={0.1}>
