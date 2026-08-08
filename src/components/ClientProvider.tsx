@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, type ReactNode } from "react";
+import { MotionConfig } from "framer-motion";
 import { LoadingScreen } from "./LoadingScreen";
 
 export function ClientProvider({ children }: { children: ReactNode }) {
@@ -13,11 +14,13 @@ export function ClientProvider({ children }: { children: ReactNode }) {
   return (
     <>
       {loading && <LoadingScreen onComplete={handleComplete} />}
-      <div
-        className={loading ? "opacity-0 h-screen overflow-hidden" : "opacity-100 transition-opacity duration-500"}
-      >
-        {children}
-      </div>
+      <MotionConfig reducedMotion="user">
+        <div
+          className={loading ? "opacity-0 h-screen overflow-hidden" : "opacity-100 transition-opacity duration-500"}
+        >
+          {children}
+        </div>
+      </MotionConfig>
     </>
   );
 }
