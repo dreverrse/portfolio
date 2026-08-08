@@ -4,6 +4,7 @@ import { useCallback, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { PostContent } from "@/components/PostContent";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { LoginCard } from "@/components/LoginCard";
 import type { StoredPost } from "@/lib/posts-store";
 import {
   Plus,
@@ -61,7 +62,6 @@ export function AdminApp({
 }) {
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(initiallyAuthenticated);
-  const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -89,8 +89,7 @@ export function AdminApp({
     }
   }, []);
 
-  async function handleLogin(e: FormEvent) {
-    e.preventDefault();
+  async function handleLogin(password: string) {
     setLoginLoading(true);
     setLoginError("");
     try {
@@ -99,8 +98,8 @@ export function AdminApp({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      setPassword("");
       setAuthenticated(true);
+      router.refresh();
     } catch (err) {
       setLoginError(err instanceof Error ? err.message : "Login gagal");
     } finally {
@@ -184,40 +183,11 @@ export function AdminApp({
 
   if (!authenticated) {
     return (
-      <div className="mx-auto max-w-md px-4 sm:px-6 py-24">
-        <div className="rounded-2xl border border-border bg-card/50 p-8">
-          <h1 className="text-2xl font-bold mb-1">Login Admin</h1>
-          <p className="text-sm text-muted mb-6">
-            Masukkan password untuk mengelola artikel blog.
-          </p>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label htmlFor="password" className={labelClass}>
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={inputClass}
-                placeholder="••••••••"
-                autoFocus
-                required
-              />
-            </div>
-            {loginError && <p className="text-sm text-red-500">{loginError}</p>}
-            <button
-              type="submit"
-              className={`${btnPrimary} w-full justify-center`}
-              disabled={loginLoading || !password}
-            >
-              {loginLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-              Masuk
-            </button>
-          </form>
-        </div>
-      </div>
+      <LoginCard
+        error={loginError}
+        loading={loginLoading}
+        onSubmit={handleLogin}
+      />
     );
   }
 
