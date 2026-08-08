@@ -70,6 +70,11 @@ const translations = {
     "portfolio.back": "Kembali ke Portofolio",
     "blog.description":
       "Tulisan seputar teknologi, programming, dan pengalaman pribadi.",
+    "github.title": "GitHub Stats",
+    "github.repos": "Repositori",
+    "github.stars": "Total Stars",
+    "github.followers": "Followers",
+    "github.languages": "Bahasa",
     "blog.readMore": "Baca selengkapnya",
     "blog.empty": "Belum ada artikel.",
     "blog.emptySub": "Buat artikel baru di folder content/blog/",
@@ -166,6 +171,11 @@ const translations = {
     "portfolio.back": "Back to Portfolio",
     "blog.description":
       "Posts about technology, programming, and personal experiences.",
+    "github.title": "GitHub Stats",
+    "github.repos": "Repositories",
+    "github.stars": "Total Stars",
+    "github.followers": "Followers",
+    "github.languages": "Languages",
     "blog.readMore": "Read more",
     "blog.empty": "No posts yet.",
     "blog.emptySub": "Create a new post in the content/blog/ folder",

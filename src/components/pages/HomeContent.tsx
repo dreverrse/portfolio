@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { GitHubStats } from "@/components/GitHubStats";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import {
@@ -89,6 +90,10 @@ export function HomeContent() {
           </Stagger>
         </section>
       </FadeIn>
+
+      <div className="mt-24">
+        <GitHubStats />
+      </div>
 
       <FadeIn delay={0.4}>
         <section className="mt-24 p-8 rounded-2xl border border-border bg-card/30 text-center">
