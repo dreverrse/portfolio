@@ -1,6 +1,7 @@
 "use client";
 
 import { FadeIn } from "@/components/FadeIn";
+import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import { ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
@@ -30,9 +31,9 @@ export function PortfolioContent() {
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <Stagger className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {projects.map((project, i) => (
-            <div
+            <StaggerItem
               key={i}
               className="group flex flex-col p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
             >
@@ -76,9 +77,9 @@ export function PortfolioContent() {
                   </a>
                 )}
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </FadeIn>
     </div>
   );

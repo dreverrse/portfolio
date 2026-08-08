@@ -1,6 +1,7 @@
 "use client";
 
 import { FadeIn } from "@/components/FadeIn";
+import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import {
   Code2,
@@ -75,29 +76,29 @@ export function AboutContent() {
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
+        <Stagger className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <StaggerItem className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
             <MapPin className="h-5 w-5 text-highlight" />
             <div>
               <p className="text-xs text-muted">{t("about.location")}</p>
               <p className="text-sm font-medium">Semarang, Indonesia</p>
             </div>
-          </div>
-          <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
+          </StaggerItem>
+          <StaggerItem className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
             <Phone className="h-5 w-5 text-highlight" />
             <div>
               <p className="text-xs text-muted">{t("about.whatsapp")}</p>
               <p className="text-sm font-medium">+62 851-5859-9235</p>
             </div>
-          </div>
-          <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
+          </StaggerItem>
+          <StaggerItem className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
             <Mail className="h-5 w-5 text-highlight" />
             <div>
               <p className="text-xs text-muted">{t("about.email")}</p>
               <p className="text-sm font-medium break-all">work.andrefirmansah@gmail.com</p>
             </div>
-          </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
       </FadeIn>
 
       <FadeIn delay={0.15}>
@@ -105,20 +106,20 @@ export function AboutContent() {
           <h2 className="text-2xl font-bold mb-6">
             <span className="text-foreground">{t("about.skills")}</span>
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <Stagger className="flex flex-wrap gap-3">
             {skills.map((item) => {
               const Icon = item.icon;
               return (
-                <div
+                <StaggerItem
                   key={item.label}
                   className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 text-sm text-muted hover:text-highlight hover:border-accent transition-all duration-200"
                 >
                   <Icon className="h-4 w-4" />
                   {item.label}
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
         </section>
       </FadeIn>
 
@@ -127,21 +128,18 @@ export function AboutContent() {
           <h2 className="text-2xl font-bold mb-6">
             <span className="text-foreground">{t("about.education")}</span>
           </h2>
-          <div className="space-y-0">
+          <Stagger className="space-y-0">
             {education.map((item, i) => (
-              <div
-                key={i}
-                className="relative pl-8 pb-8 border-l border-border last:pb-0"
-              >
+              <StaggerItem key={i} className="relative pl-8 pb-8 border-l border-border last:pb-0">
                 <div className="absolute left-0 top-0 -translate-x-1/2 h-3 w-3 rounded-full bg-highlight border-2 border-background" />
                 <p className="text-xs text-highlight font-medium mb-1">
                   {item.year}
                 </p>
                 <h3 className="font-semibold">{item.title}</h3>
                 <p className="text-sm text-muted mt-1">{t(item.descKey)}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </section>
       </FadeIn>
 
@@ -150,21 +148,18 @@ export function AboutContent() {
           <h2 className="text-2xl font-bold mb-6">
             <span className="text-foreground">{t("about.jobs")}</span>
           </h2>
-          <div className="space-y-0">
+          <Stagger className="space-y-0">
             {jobs.map((item, i) => (
-              <div
-                key={i}
-                className="relative pl-8 pb-8 border-l border-border last:pb-0"
-              >
+              <StaggerItem key={i} className="relative pl-8 pb-8 border-l border-border last:pb-0">
                 <div className="absolute left-0 top-0 -translate-x-1/2 h-3 w-3 rounded-full bg-highlight border-2 border-background" />
                 <p className="text-xs text-highlight font-medium mb-1">
                   {item.yearKey.replace("{present}", t("about.present"))}
                 </p>
                 <h3 className="font-semibold">{item.title}</h3>
                 <p className="text-sm text-muted mt-1">{t(item.descKey)}</p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </section>
       </FadeIn>
 
@@ -173,22 +168,19 @@ export function AboutContent() {
           <h2 className="text-2xl font-bold mb-6">
             <span className="text-foreground">{t("about.experience")}</span>
           </h2>
-          <div className="space-y-3">
+          <Stagger className="space-y-3">
             {experiences.map((item, i) => {
               const Icon = item.icon;
               return (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/50"
-                >
+                <StaggerItem key={i} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/50">
                   <Icon className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
                   <p className="text-sm text-foreground/90 leading-relaxed">
                     {t(item.textKey)}
                   </p>
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
         </section>
       </FadeIn>
 

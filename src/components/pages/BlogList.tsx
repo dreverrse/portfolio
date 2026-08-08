@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
@@ -135,54 +136,55 @@ export function BlogList({ posts }: { posts: Post[] }) {
 
       {rest.length > 0 && (
         <FadeIn delay={0.15}>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {rest.map((post) => {
               const { title, excerpt } = localized(post, translations, lang);
               return (
-                <Link
+                <StaggerItem
                   key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
+                  className="overflow-hidden rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
                 >
-                  {post.image && (
-                    <div className="relative aspect-video w-full overflow-hidden border-b border-border">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={post.image}
-                        alt={title}
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col p-5">
-                    <div className="flex items-center justify-between gap-2">
-                      {post.tags[0] ? (
-                        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-highlight">
-                          <Tag className="h-3 w-3" />
-                          {post.tags[0]}
+                  <Link href={`/blog/${post.slug}`} className="group flex h-full flex-col">
+                    {post.image && (
+                      <div className="relative aspect-video w-full overflow-hidden border-b border-border">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={post.image}
+                          alt={title}
+                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        {post.tags[0] ? (
+                          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-highlight">
+                            <Tag className="h-3 w-3" />
+                            {post.tags[0]}
+                          </span>
+                        ) : (
+                          <span />
+                        )}
+                        <span className="text-xs text-muted">
+                          {formatDate(post.date, lang)}
                         </span>
-                      ) : (
-                        <span />
-                      )}
-                      <span className="text-xs text-muted">
-                        {formatDate(post.date, lang)}
-                      </span>
+                      </div>
+                      <h3 className="mt-3 font-semibold text-lg text-foreground group-hover:text-highlight transition-colors leading-snug">
+                        {title}
+                      </h3>
+                      <p className="mt-2 text-sm text-muted line-clamp-2">
+                        {excerpt}
+                      </p>
+                      <div className="mt-auto pt-4 flex items-center gap-1.5 text-xs text-muted">
+                        <Clock className="h-3 w-3" />
+                        {post.readingTime} {t("blog.readingTime")}
+                      </div>
                     </div>
-                    <h3 className="mt-3 font-semibold text-lg text-foreground group-hover:text-highlight transition-colors leading-snug">
-                      {title}
-                    </h3>
-                    <p className="mt-2 text-sm text-muted line-clamp-2">
-                      {excerpt}
-                    </p>
-                    <div className="mt-auto pt-4 flex items-center gap-1.5 text-xs text-muted">
-                      <Clock className="h-3 w-3" />
-                      {post.readingTime} {t("blog.readingTime")}
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
         </FadeIn>
       )}
     </div>

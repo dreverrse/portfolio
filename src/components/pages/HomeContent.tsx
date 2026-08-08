@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import {
   ArrowRight,
@@ -71,21 +72,21 @@ export function HomeContent() {
           <h2 className="text-2xl font-bold mb-8">
             <span className="text-foreground">{t("home.skills")}</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {skills.map((skill) => {
               const Icon = skill.icon;
               return (
-                <div
+                <StaggerItem
                   key={skill.label}
                   className="group p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
                 >
                   <Icon className="h-8 w-8 text-highlight mb-3 group-hover:scale-110 transition-transform duration-300" />
                   <h3 className="font-semibold text-foreground">{skill.label}</h3>
                   <p className="text-sm text-muted mt-1">{t(skill.descKey)}</p>
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
         </section>
       </FadeIn>
 
