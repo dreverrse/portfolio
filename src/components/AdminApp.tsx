@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { PostContent } from "@/components/PostContent";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { LoginCard } from "@/components/LoginCard";
+import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import type { StoredPost } from "@/lib/posts-store";
 import {
   Plus,
@@ -179,6 +180,20 @@ export function AdminApp({
     } finally {
       setSaving(false);
     }
+  }
+
+  function handleUseDraft(draft: { title: string; excerpt: string; content: string }) {
+    setTab("posts");
+    setIsNew(true);
+    setEditing(null);
+    setPreview(false);
+    setForm({
+      title: draft.title,
+      date: new Date().toISOString().slice(0, 10),
+      excerpt: draft.excerpt,
+      tags: "",
+      content: draft.content,
+    });
   }
 
   async function handleDelete(slug: string) {
@@ -443,11 +458,7 @@ export function AdminApp({
         </>
       )}
 
-      {tab === "ai" && (
-        <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
-          AI Assistant segera hadir.
-        </div>
-      )}
+      {tab === "ai" && <AiAssistantPanel onUseDraft={handleUseDraft} />}
       {tab === "dashboard" && (
         <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
           Dashboard segera hadir.
