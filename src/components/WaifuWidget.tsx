@@ -207,13 +207,15 @@ export function WaifuWidget() {
       <button
         onClick={toggleOpen}
         aria-label={t("waifu.aria")}
-        className="fixed bottom-5 right-5 z-[90] flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg shadow-accent/30 hover:bg-highlight/80 transition-colors"
+        className="fixed bottom-5 right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30 hover:scale-105 transition-transform"
       >
         {open ? (
-          <X className="h-6 w-6" />
+          <span className="flex h-full w-full items-center justify-center bg-accent text-white">
+            <X className="h-6 w-6" />
+          </span>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src="/avatars/waifu-icon.jpg" alt="" className="h-9 w-9 rounded-full object-cover" />
+          <img src="/avatars/waifu-bubble.jpg" alt="" className="h-full w-full object-cover" />
         )}
       </button>
 
