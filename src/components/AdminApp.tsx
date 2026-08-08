@@ -15,6 +15,10 @@ import {
   EyeOff,
   Loader2,
   ArrowLeft,
+  FileText,
+  Sparkles,
+  BarChart3,
+  Activity,
 } from "lucide-react";
 
 interface PostForm {
@@ -24,6 +28,15 @@ interface PostForm {
   tags: string;
   content: string;
 }
+
+type AdminTab = "posts" | "ai" | "dashboard" | "status";
+
+const TABS: { id: AdminTab; label: string; icon: typeof FileText }[] = [
+  { id: "posts", label: "Posts", icon: FileText },
+  { id: "ai", label: "AI Assistant", icon: Sparkles },
+  { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+  { id: "status", label: "Status", icon: Activity },
+];
 
 const EMPTY_FORM: PostForm = {
   title: "",
@@ -75,6 +88,7 @@ export function AdminApp({
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [tab, setTab] = useState<AdminTab>("posts");
 
   const loadPosts = useCallback(async () => {
     setLoadingPosts(true);
@@ -214,197 +228,234 @@ export function AdminApp({
         </div>
       </div>
 
-      {(isNew || editing) && (
-        <form
-          onSubmit={handleSave}
-          className="rounded-2xl border border-border bg-card/50 p-6 space-y-5 mb-10"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">
-              {isNew ? "Tulis Artikel Baru" : `Edit: ${editing?.title}`}
-            </h2>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setPreview(!preview)}
-                className={btnGhost}
-              >
-                {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                {preview ? "Tulis" : "Pratinjau"}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditing(null);
-                  setIsNew(false);
-                }}
-                className={btnGhost}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Batal
-              </button>
-            </div>
-          </div>
+      <div className="mb-8 flex flex-wrap gap-2">
+        {TABS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            onClick={() => setTab(id)}
+            className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+              tab === id
+                ? "border-accent bg-accent/10 text-highlight"
+                : "border-border text-muted hover:border-accent hover:text-foreground"
+            }`}
+          >
+            <Icon className="h-4 w-4" />
+            {label}
+          </button>
+        ))}
+      </div>
 
-          {preview ? (
-            <div className="rounded-xl border border-border bg-background p-6">
-              <h1 className="text-2xl sm:text-3xl font-bold">{form.title || "Tanpa Judul"}</h1>
-              <p className="text-sm text-muted mt-2">{form.date}</p>
-              <div className="mt-4">
-                <PostContent content={form.content || "Belum ada isi artikel."} />
-              </div>
-            </div>
-          ) : (
-            <>
-              <div>
-                <label htmlFor="title" className={labelClass}>
-                  Judul *
-                </label>
-                <input
-                  id="title"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className={inputClass}
-                  placeholder="Judul artikel"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="date" className={labelClass}>
-                    Tanggal
-                  </label>
-                  <input
-                    id="date"
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    className={inputClass}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="tags" className={labelClass}>
-                    Tag (pisahkan dengan koma)
-                  </label>
-                  <input
-                    id="tags"
-                    value={form.tags}
-                    onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                    className={inputClass}
-                    placeholder="contoh: programming, tutorial"
-                  />
+      {tab === "posts" && (
+        <>
+          {(isNew || editing) && (
+            <form
+              onSubmit={handleSave}
+              className="rounded-2xl border border-border bg-card/50 p-6 space-y-5 mb-10"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">
+                  {isNew ? "Tulis Artikel Baru" : `Edit: ${editing?.title}`}
+                </h2>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPreview(!preview)}
+                    className={btnGhost}
+                  >
+                    {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {preview ? "Tulis" : "Pratinjau"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditing(null);
+                      setIsNew(false);
+                    }}
+                    className={btnGhost}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Batal
+                  </button>
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="excerpt" className={labelClass}>
-                  Ringkasan
-                </label>
-                <textarea
-                  id="excerpt"
-                  value={form.excerpt}
-                  onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-                  className={`${inputClass} resize-y`}
-                  rows={2}
-                  placeholder="Ringkasan singkat artikel (opsional)"
-                />
-              </div>
+              {preview ? (
+                <div className="rounded-xl border border-border bg-background p-6">
+                  <h1 className="text-2xl sm:text-3xl font-bold">{form.title || "Tanpa Judul"}</h1>
+                  <p className="text-sm text-muted mt-2">{form.date}</p>
+                  <div className="mt-4">
+                    <PostContent content={form.content || "Belum ada isi artikel."} />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <label htmlFor="title" className={labelClass}>
+                      Judul *
+                    </label>
+                    <input
+                      id="title"
+                      value={form.title}
+                      onChange={(e) => setForm({ ...form, title: e.target.value })}
+                      className={inputClass}
+                      placeholder="Judul artikel"
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label htmlFor="content" className="text-sm font-medium text-muted mb-1.5 block">
-                  Isi Artikel *
-                </label>
-                <RichTextEditor
-                  key={editing?.slug ?? (isNew ? "new" : "none")}
-                  value={form.content}
-                  onChange={(content) => setForm({ ...form, content })}
-                  placeholder="Tulis isi artikel di sini..."
-                />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="date" className={labelClass}>
+                        Tanggal
+                      </label>
+                      <input
+                        id="date"
+                        type="date"
+                        value={form.date}
+                        onChange={(e) => setForm({ ...form, date: e.target.value })}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="tags" className={labelClass}>
+                        Tag (pisahkan dengan koma)
+                      </label>
+                      <input
+                        id="tags"
+                        value={form.tags}
+                        onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                        className={inputClass}
+                        placeholder="contoh: programming, tutorial"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="excerpt" className={labelClass}>
+                      Ringkasan
+                    </label>
+                    <textarea
+                      id="excerpt"
+                      value={form.excerpt}
+                      onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+                      className={`${inputClass} resize-y`}
+                      rows={2}
+                      placeholder="Ringkasan singkat artikel (opsional)"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="content" className="text-sm font-medium text-muted mb-1.5 block">
+                      Isi Artikel *
+                    </label>
+                    <RichTextEditor
+                      key={editing?.slug ?? (isNew ? "new" : "none")}
+                      value={form.content}
+                      onChange={(content) => setForm({ ...form, content })}
+                      placeholder="Tulis isi artikel di sini..."
+                    />
+                  </div>
+                </>
+              )}
+
+              {error && <p className="text-sm text-red-500">{error}</p>}
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditing(null);
+                    setIsNew(false);
+                  }}
+                  className={btnGhost}
+                >
+                  Batal
+                </button>
+                <button type="submit" className={btnPrimary} disabled={saving}>
+                  {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {isNew ? "Publish Artikel" : "Simpan Perubahan"}
+                </button>
               </div>
-            </>
+            </form>
           )}
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && !isNew && !editing && (
+            <p className="text-sm text-red-500 mb-4">{error}</p>
+          )}
 
-          <div className="flex justify-end gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                setEditing(null);
-                setIsNew(false);
-              }}
-              className={btnGhost}
-            >
-              Batal
-            </button>
-            <button type="submit" className={btnPrimary} disabled={saving}>
-              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isNew ? "Publish Artikel" : "Simpan Perubahan"}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {error && !isNew && !editing && (
-        <p className="text-sm text-red-500 mb-4">{error}</p>
-      )}
-
-      {loadingPosts ? (
-        <div className="flex items-center justify-center py-20 text-muted">
-          <Loader2 className="h-5 w-5 animate-spin" />
-        </div>
-      ) : posts.length === 0 && !isNew && !editing ? (
-        <div className="text-center py-16 rounded-xl border border-border bg-card/30">
-          <p className="text-muted text-lg">Belum ada artikel.</p>
-          <button onClick={startCreate} className={`${btnPrimary} mt-4`}>
-            <Plus className="h-4 w-4" />
-            Tulis Artikel Pertama
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {posts.map((post) => (
-            <div
-              key={post.slug}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-xl border border-border bg-card/50"
-            >
-              <div className="min-w-0">
-                <h3 className="font-semibold truncate">{post.title}</h3>
-                <p className="text-xs text-muted mt-1">
-                  {new Date(post.date).toLocaleDateString("id-ID", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                  {post.tags.length > 0 &&
-                    ` · ${post.tags.map((t) => `#${t}`).join(" ")}`}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => startEdit(post)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted hover:text-highlight hover:border-accent transition-colors"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(post.slug)}
-                  disabled={deleting === post.slug}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-red-400 hover:border-red-500 transition-colors disabled:opacity-50"
-                >
-                  {deleting === post.slug ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-3.5 w-3.5" />
-                  )}
-                  Hapus
-                </button>
-              </div>
+          {loadingPosts ? (
+            <div className="flex items-center justify-center py-20 text-muted">
+              <Loader2 className="h-5 w-5 animate-spin" />
             </div>
-          ))}
+          ) : posts.length === 0 && !isNew && !editing ? (
+            <div className="text-center py-16 rounded-xl border border-border bg-card/30">
+              <p className="text-muted text-lg">Belum ada artikel.</p>
+              <button onClick={startCreate} className={`${btnPrimary} mt-4`}>
+                <Plus className="h-4 w-4" />
+                Tulis Artikel Pertama
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {posts.map((post) => (
+                <div
+                  key={post.slug}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-xl border border-border bg-card/50"
+                >
+                  <div className="min-w-0">
+                    <h3 className="font-semibold truncate">{post.title}</h3>
+                    <p className="text-xs text-muted mt-1">
+                      {new Date(post.date).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                      {post.tags.length > 0 &&
+                        ` · ${post.tags.map((t) => `#${t}`).join(" ")}`}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => startEdit(post)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted hover:text-highlight hover:border-accent transition-colors"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(post.slug)}
+                      disabled={deleting === post.slug}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-red-400 hover:border-red-500 transition-colors disabled:opacity-50"
+                    >
+                      {deleting === post.slug ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-3.5 w-3.5" />
+                      )}
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === "ai" && (
+        <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
+          AI Assistant segera hadir.
+        </div>
+      )}
+      {tab === "dashboard" && (
+        <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
+          Dashboard segera hadir.
+        </div>
+      )}
+      {tab === "status" && (
+        <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
+          Status segera hadir.
         </div>
       )}
     </div>
