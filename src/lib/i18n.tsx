@@ -40,6 +40,7 @@ const translations = {
     "home.collabDesc":
       "Punya project menarik atau sekadar ingin ngobrol? Jangan ragu untuk menghubungi saya.",
     "home.contact": "Hubungi Saya",
+    "home.profileAlt": "Foto profil Andre",
     "about.title": "Tentang Saya",
     "about.intro":
       "Nama saya Andre Kusuma Firmansah, biasa dipanggil Andre. Saya memiliki keahlian dalam bidang desain, terutama desain logo. Saya juga menguasai beberapa bahasa pemrograman di antaranya HTML, CSS, dan C++.",
@@ -142,6 +143,7 @@ const translations = {
     "home.collabDesc":
       "Have an interesting project or just want to chat? Don't hesitate to reach out.",
     "home.contact": "Contact Me",
+    "home.profileAlt": "Andre's profile photo",
     "about.title": "About Me",
     "about.intro":
       "My name is Andre Kusuma Firmansah, usually called Andre. I have skills in design, especially logo design. I also know several programming languages including HTML, CSS, and C++.",
