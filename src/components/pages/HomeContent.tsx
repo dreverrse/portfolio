@@ -33,7 +33,7 @@ export function HomeContent() {
         <div className="hidden sm:block absolute -bottom-32 -right-32 h-96 w-96 bg-highlight/5 rounded-full blur-3xl pointer-events-none" />
 
         <FadeIn>
-          <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+          <div className="relative">
             <div>
               <p className="text-sm font-medium text-highlight mb-4 tracking-wider uppercase">
                 {t("home.welcome")}
@@ -46,14 +46,6 @@ export function HomeContent() {
               <p className="mt-6 max-w-xl text-base sm:text-lg text-muted leading-relaxed">
                 {t("home.tagline")}
               </p>
-            </div>
-            <div className="flex justify-center lg:justify-end">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/avatars/profile.webp"
-                alt={t("home.profileAlt")}
-                className="h-40 w-40 sm:h-52 sm:w-52 lg:h-64 lg:w-64 rounded-full object-cover border-2 border-accent/30 shadow-lg glow-hover"
-              />
             </div>
           </div>
         </FadeIn>
