@@ -3,8 +3,10 @@
 import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { Heart, Mail, Lock } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { MusicWidget } from "./MusicWidget";
 import { useI18n } from "@/lib/i18n";
+import { springTransition } from "@/lib/motion";
 import { SOCIAL } from "@/lib/site";
 import type { ReactNode } from "react";
 
@@ -66,7 +68,13 @@ export function Footer() {
                 aria-label={s.label}
                 className="p-2 rounded-lg text-muted hover:text-highlight hover:bg-surface transition-all duration-200"
               >
-                {s.renderIcon("h-4 w-4")}
+                <motion.span
+                  whileHover={{ y: -2, scale: 1.15 }}
+                  transition={springTransition}
+                  className="inline-flex"
+                >
+                  {s.renderIcon("h-4 w-4")}
+                </motion.span>
               </Link>
             ))}
             <Link

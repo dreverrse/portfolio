@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { springTransition } from "@/lib/motion";
 
 export function BackToTop() {
   const { t } = useI18n();
@@ -20,17 +21,20 @@ export function BackToTop() {
   }, []);
 
   return (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      aria-label={t("backtotop.aria")}
-      className={cn(
-        "fixed bottom-5 left-5 z-[70] h-11 w-11 rounded-full border border-border bg-card/80 backdrop-blur-md flex items-center justify-center text-muted hover:text-highlight hover:border-accent transition-all duration-300 glow-hover",
-        visible
-          ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 translate-y-3 pointer-events-none"
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label={t("backtotop.aria")}
+          initial={{ opacity: 0, y: 16, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 12, scale: 0.9 }}
+          transition={springTransition}
+          className="fixed bottom-5 left-5 z-[70] h-11 w-11 rounded-full border border-border bg-card/80 backdrop-blur-md flex items-center justify-center text-muted hover:text-highlight hover:border-accent transition-colors duration-300 glow-hover"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </motion.button>
       )}
-    >
-      <ArrowUp className="h-5 w-5" />
-    </button>
+    </AnimatePresence>
   );
 }

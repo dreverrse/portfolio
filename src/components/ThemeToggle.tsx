@@ -1,8 +1,10 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { EASE } from "@/lib/motion";
 
 const THEME_KEY = "theme";
 const THEME_EVENT = "themechange";
@@ -44,7 +46,18 @@ export function ThemeToggle() {
       aria-label={isLight ? t("theme.dark") : t("theme.light")}
       className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
     >
-      {isLight ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={isLight ? "moon" : "sun"}
+          initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
+          animate={{ rotate: 0, opacity: 1, scale: 1 }}
+          exit={{ rotate: 90, opacity: 0, scale: 0.6 }}
+          transition={{ duration: 0.25, ease: EASE }}
+          className="inline-flex"
+        >
+          {isLight ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+        </motion.span>
+      </AnimatePresence>
     </button>
   );
 }
