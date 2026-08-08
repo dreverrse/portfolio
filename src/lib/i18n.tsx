@@ -67,6 +67,7 @@ const translations = {
       "Kumpulan proyek yang telah saya kerjakan. Setiap proyek merupakan pembelajaran baru dan tantangan yang menarik.",
     "portfolio.demo": "Demo",
     "portfolio.code": "Kode",
+    "portfolio.back": "Kembali ke Portofolio",
     "blog.description":
       "Tulisan seputar teknologi, programming, dan pengalaman pribadi.",
     "blog.readMore": "Baca selengkapnya",
@@ -162,6 +163,7 @@ const translations = {
       "A collection of projects I've worked on. Every project is a new learning experience and an interesting challenge.",
     "portfolio.demo": "Demo",
     "portfolio.code": "Code",
+    "portfolio.back": "Back to Portfolio",
     "blog.description":
       "Posts about technology, programming, and personal experiences.",
     "blog.readMore": "Read more",
