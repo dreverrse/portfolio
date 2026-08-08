@@ -131,6 +131,7 @@ export function AdminApp({
   }
 
   function startCreate() {
+    setTab("posts");
     setEditing(null);
     setIsNew(true);
     setForm(EMPTY_FORM);

@@ -8,7 +8,6 @@ import {
   MessageSquare,
   Languages,
   Users,
-  Star,
   Music,
   Loader2,
   RefreshCw,
