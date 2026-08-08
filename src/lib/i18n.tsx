@@ -23,6 +23,7 @@ const translations = {
     "footer.madeWith": "Dibuat dengan",
     "footer.by": "oleh",
     "footer.admin": "Admin",
+    "footer.apiDocs": "API",
     "home.welcome": "Selamat datang di ruangku",
     "home.hello": "Halo, saya",
     "home.tagline":
@@ -129,6 +130,7 @@ const translations = {
     "footer.madeWith": "Made with",
     "footer.by": "by",
     "footer.admin": "Admin",
+    "footer.apiDocs": "API",
     "home.welcome": "Welcome to my space",
     "home.hello": "Hello, I'm",
     "home.tagline":
