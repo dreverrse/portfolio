@@ -1,11 +1,11 @@
-# Design: Admin Power-Up — AI Assistant, Dashboard, Public API, Status Monitor
+# Design: Admin Power-Up — AI Assistant, Dashboard, Public API, Status Monitor, Login Redesign
 
 Tanggal: 2026-08-08
 Status: Disetujui
 
 ## Ringkasan
 
-Menambah 4 fitur pada situs personal, semuanya terpusat di bagian admin yang
+Menambah 5 fitur pada situs personal, semuanya terpusat di bagian admin yang
 sudah ada (login + CRUD artikel blog):
 
 1. **AI Content Assistant** — bantuan menulis pakai OpenRouter (sudah ada di
@@ -17,6 +17,8 @@ sudah ada (login + CRUD artikel blog):
    dengan halaman dokumentasi interaktif di `/api-docs`.
 4. **Status Monitor Situs** — panel admin yang mengecek kesehatan + latency
    semua integrasi eksternal (GitHub, Last.fm, waifu, OpenRouter, Supabase).
+5. **Redesign Login Admin** — halaman login diubah dari kartu polos menjadi
+   desain Mix: glassmorphism + gradient ring + animasi entry bertahap.
 
 Semua fitur mengikuti pola yang sudah ada, **tanpa dependency baru**, dan
 mendukung Supabase aktif dengan fallback memory (pola `posts-store`).
@@ -141,13 +143,38 @@ terakhir). Tombol refresh.
 **UI:** kartu per integrasi (hijau/merah/abu), latency dalam ms, tombol
 refresh.
 
+## 5. Redesign Login Admin
+
+**Lokasi:** blok `if (!authenticated)` di `src/components/AdminApp.tsx`
+(layout login saat ini kartu polos). Dirender sebagai `LoginCard.tsx`
+(komponen baru di `src/components/`) agar `AdminApp.tsx` tetap ringkas.
+
+**Desain Mix (glassmorphism + gradient ring + animasi entry bertahap):**
+
+- **Latar:** layer blur dengan dua blob gradient (`bg-accent/10`,
+  `bg-highlight/5`, `blur-3xl`, `rounded-full`) — pola yang sama dengan hero
+  di `HomeContent.tsx`; `absolute` + `pointer-events-none`.
+- **Kartu:** `backdrop-blur`, `bg-card/50`, `border border-border`,
+  `rounded-2xl`, shadow halus.
+- **Gradient ring:** border tipis dengan `background-image` gradient
+  accent→highlight di salah satu sisi (mis. ring atas/top-border gradient),
+  `glow-hover` pada tombol.
+- **Animasi entry bertahap:** pakai framer-motion (sudah ada via `FadeIn`)
+  atau `motion.div` langsung — title muncul dulu, lalu form, lalu tombol
+  (stagger delay kecil: 0, 0.1, 0.2).
+- **Ikon:** `Lock` dari lucide-react di samping heading, ukuran konsisten.
+- **Input & tombol:** pakai `inputClass`/`btnPrimary` yang sudah ada,
+  `Loader2 animate-spin` saat loading, pesan error `text-red-500`.
+- **Perilaku tidak berubah:** submit tetap `POST /api/admin/login`, autoFocus
+  password, required.
+
 ## Testing & Verifikasi
 
 - Project tidak punya framework test. Verifikasi: `npx tsc --noEmit`,
   `npm run lint`, `npm run build` semuanya exit 0.
 - Manual: login admin → coba tiap tab; `/api-docs` → coba tiap endpoint;
   pastikan `/api/v1/posts` bisa diakses tanpa auth dan memberikan 401 untuk
-  area admin.
+  area admin; cek login page baru (animasi, glow, error state).
 - Pastikan tidak ada dependency baru (cek `package.json` tidak berubah).
 
 ## Out of Scope
