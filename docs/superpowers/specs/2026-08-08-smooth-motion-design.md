@@ -37,7 +37,8 @@ Pendekatan: framer-motion untuk scroll reveal & micro-interaction, React `<ViewT
 - Bungkus konten tiap halaman dengan `ViewTransition` yang memetakan `transitionTypes`:
   - `nav-forward`: geser kiri (masuk lebih dalam, mis. home → portfolio/blog/about).
   - `nav-back`: geser kanan (kembali ke atas, mis. blog post → blog list, halaman → home).
-  - default: none (crossfade default / tanpa arah).
+  - default: none — navigasi tanpa type (back button browser, router.refresh)
+    langsung ganti tanpa slide (browser default).
 - Tag `next/link` dengan `transitionTypes={["nav-forward"]}` / `["nav-back"]`:
   - Navbar links: home = `nav-back`, lainnya = `nav-forward`.
   - Blog post: "kembali ke blog" = `nav-back`.
