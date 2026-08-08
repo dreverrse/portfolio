@@ -1,22 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
+import type { Project } from "@/lib/projects";
 import { ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
 
-const projects = [
-  {
-    title: "Finora",
-    descKey: "project.finora",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-    demo: "https://finora-dreverrse.vercel.app/",
-    github: "https://github.com/dreverrse/finora",
-  },
-];
-
-export function PortfolioContent() {
+export function PortfolioContent({ projects }: { projects: Project[] }) {
   const { t } = useI18n();
 
   return (
@@ -32,17 +24,19 @@ export function PortfolioContent() {
 
       <FadeIn delay={0.1}>
         <Stagger className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects.map((project, i) => (
+          {projects.map((project) => (
             <StaggerItem
-              key={i}
+              key={project.slug}
               className="group flex flex-col p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
             >
               <div className="flex-1">
-                <h3 className="font-semibold text-foreground group-hover:text-highlight transition-colors">
-                  {project.title}
-                </h3>
+                <Link href={`/portfolio/${project.slug}`} className="block">
+                  <h3 className="font-semibold text-foreground group-hover:text-highlight transition-colors">
+                    {project.title}
+                  </h3>
+                </Link>
                 <p className="text-sm text-muted mt-2 leading-relaxed">
-                  {t(project.descKey)}
+                  {project.excerpt}
                 </p>
               </div>
               <div className="mt-4 flex flex-wrap gap-1.5">
@@ -56,15 +50,17 @@ export function PortfolioContent() {
                 ))}
               </div>
               <div className="mt-4 flex items-center gap-3 pt-3 border-t border-border">
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-highlight transition-colors"
-                >
-                  <ExternalLink className="h-3.5 w-3.5" />
-                  {t("portfolio.demo")}
-                </a>
+                {project.demo && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-highlight transition-colors"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t("portfolio.demo")}
+                  </a>
+                )}
                 {project.github && (
                   <a
                     href={project.github}

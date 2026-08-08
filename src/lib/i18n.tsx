@@ -67,8 +67,6 @@ const translations = {
       "Kumpulan proyek yang telah saya kerjakan. Setiap proyek merupakan pembelajaran baru dan tantangan yang menarik.",
     "portfolio.demo": "Demo",
     "portfolio.code": "Kode",
-    "project.finora":
-      "Aplikasi web pengelola keuangan untuk memantau pemasukan, pengeluaran, dan anggaran dalam satu dashboard yang rapi dan mudah digunakan.",
     "blog.description":
       "Tulisan seputar teknologi, programming, dan pengalaman pribadi.",
     "blog.readMore": "Baca selengkapnya",
@@ -164,8 +162,6 @@ const translations = {
       "A collection of projects I've worked on. Every project is a new learning experience and an interesting challenge.",
     "portfolio.demo": "Demo",
     "portfolio.code": "Code",
-    "project.finora":
-      "A web app for managing finances to track income, expenses, and budgets in one clean and easy-to-use dashboard.",
     "blog.description":
       "Posts about technology, programming, and personal experiences.",
     "blog.readMore": "Read more",
