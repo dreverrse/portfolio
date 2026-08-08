@@ -6,6 +6,7 @@ import { PostContent } from "@/components/PostContent";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { LoginCard } from "@/components/LoginCard";
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
+import { AdminDashboard } from "@/components/AdminDashboard";
 import type { StoredPost } from "@/lib/posts-store";
 import {
   Plus,
@@ -459,11 +460,7 @@ export function AdminApp({
       )}
 
       {tab === "ai" && <AiAssistantPanel onUseDraft={handleUseDraft} />}
-      {tab === "dashboard" && (
-        <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
-          Dashboard segera hadir.
-        </div>
-      )}
+      {tab === "dashboard" && <AdminDashboard />}
       {tab === "status" && (
         <div className="rounded-2xl border border-border bg-card/30 p-10 text-center text-muted">
           Status segera hadir.
