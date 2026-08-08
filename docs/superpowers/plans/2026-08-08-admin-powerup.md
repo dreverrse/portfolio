@@ -2068,3 +2068,20 @@ Tulis ringkasan verifikasi ke `docs/superpowers/plans/2026-08-08-admin-powerup.m
 - [ ] **Step 4: Laporkan**
 
 Laporkan ke controller: build exit 0, daftar route baru, dan catatan manual check.
+
+---
+
+## Hasil Verifikasi Akhir
+
+- **Build:** `npm run build` exit 0 (Next.js 16.3.0, Turbopack). Compiled successfully, TypeScript passed, 23 halaman statis di-generate.
+- **Route baru terdaftar:**
+  - `/api-docs`
+  - `/api/v1/posts`, `/api/v1/posts/[slug]`, `/api/v1/stats`, `/api/v1/site/status`
+  - `/api/admin/ai`, `/api/admin/stats`, `/api/admin/status`
+  - (plus existing `/api/admin/login`, `/api/admin/logout`, `/api/admin/posts`)
+- **Git sanity:** `git status --short` bersih; `git diff --stat package.json` kosong — tidak ada dependency baru.
+- **Manual check untuk user:**
+  - Login admin di `/admin` (email/password yang berlaku).
+  - Tiap tab di panel admin: Posts | AI Assistant | Dashboard | Status.
+  - `/api-docs` terbuka tanpa autentikasi.
+  - `/api/v1/posts` bisa diakses tanpa auth (read-only public API).

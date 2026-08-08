@@ -1,7 +1,7 @@
 "use client";
 
 import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
-import { Heart, Mail, Lock } from "lucide-react";
+import { Heart, Mail, Lock, Code2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MusicWidget } from "./MusicWidget";
@@ -83,6 +83,14 @@ export function Footer() {
               className="p-2 rounded-lg text-muted/50 hover:text-highlight hover:bg-surface transition-all duration-200"
             >
               <Lock className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/api-docs"
+              aria-label={t("footer.apiDocs")}
+              className="p-2 rounded-lg text-muted/50 hover:text-highlight hover:bg-surface transition-all duration-200"
+            >
+              <Code2 className="h-4 w-4" />
+              {t("footer.apiDocs")}
             </Link>
           </div>
         </div>
