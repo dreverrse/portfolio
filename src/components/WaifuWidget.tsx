@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
 import { ExternalLink, Mail, Send, X, Trash2 } from "lucide-react";
 import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { springTransition } from "@/lib/motion";
 
 interface Message {
   role: "user" | "assistant";
@@ -204,10 +206,15 @@ export function WaifuWidget() {
 
   return (
     <>
-      <button
+      <motion.button
         onClick={toggleOpen}
         aria-label={t("waifu.aria")}
-        className="fixed bottom-5 right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30 hover:scale-105 transition-transform"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={springTransition}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.94 }}
+        className="fixed bottom-5 right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
       >
         {open ? (
           <span className="flex h-full w-full items-center justify-center bg-accent text-white">
@@ -217,10 +224,17 @@ export function WaifuWidget() {
           // eslint-disable-next-line @next/next/no-img-element
           <img src="/avatars/waifu-bubble.jpg" alt="" className="h-full w-full object-cover" />
         )}
-      </button>
+      </motion.button>
 
-      {open && (
-        <div className="fixed bottom-24 right-5 z-[90] flex w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-card/95 shadow-2xl shadow-accent/10 backdrop-blur-xl">
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.97 }}
+            transition={springTransition}
+            className="fixed bottom-24 right-5 z-[90] flex w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-card/95 shadow-2xl shadow-accent/10 backdrop-blur-xl"
+          >
           <header className="flex items-center gap-3 border-b border-border bg-surface/50 px-4 py-3">
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -296,8 +310,9 @@ export function WaifuWidget() {
               <Send className="h-4 w-4" />
             </button>
           </form>
-        </div>
-      )}
+        </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
