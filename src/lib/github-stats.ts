@@ -1,6 +1,8 @@
 const USERNAME = "dreverrse";
 const CACHE_TTL_MS = 10 * 60 * 1000;
 
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
 export interface GitHubStats {
   followers: number;
   publicRepos: number;
@@ -12,14 +14,22 @@ let cache: { stats: GitHubStats; fetchedAt: number } | null = null;
 
 async function fetchGitHubStats(): Promise<GitHubStats | null> {
   try {
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github+json",
+    };
+    if (GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
+    }
     const [userRes, reposRes] = await Promise.all([
       fetch(`https://api.github.com/users/${USERNAME}`, {
         cache: "no-store",
         signal: AbortSignal.timeout(8000),
+        headers,
       }),
       fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100`, {
         cache: "no-store",
         signal: AbortSignal.timeout(8000),
+        headers,
       }),
     ]);
     if (!userRes.ok || !reposRes.ok) return null;
