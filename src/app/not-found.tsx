@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { useI18n } from "@/lib/i18n";
-import { Compass, Home, ArrowRight } from "lucide-react";
+import { Home, ArrowRight } from "lucide-react";
+import LottiePlayer from "@/components/LottiePlayer";
 
 export default function NotFound() {
   const { t } = useI18n();
@@ -17,9 +18,10 @@ export default function NotFound() {
         <FadeIn>
           <div className="relative flex flex-col items-center">
             <div className="animate-float">
-              <div className="h-16 w-16 rounded-2xl border border-accent/40 bg-accent/10 flex items-center justify-center glow">
-                <Compass className="h-8 w-8 text-accent" />
-              </div>
+              <LottiePlayer
+                src="/lottie/404-compass.lottie"
+                className="h-52 w-52 sm:h-56 sm:w-56"
+              />
             </div>
 
             <h1 className="mt-8 font-mono text-7xl sm:text-9xl font-bold tracking-tighter">
