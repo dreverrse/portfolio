@@ -44,7 +44,7 @@ Browser (client)                 Server (Vercel)                 OpenCode Zen
 | `src/app/api/admin/chat/route.ts` | POST. Auth → validasi body (max 4000 char/pesan, max 20 pesan) → panggil `zen.chat()` → `{reply}`. |
 | `src/app/admin/chat/page.tsx` | Server component, cek auth, metadata noindex, render `<AiChat/>`. |
 | `src/components/AiChat.tsx` | Client. State: `messages[]`, `loading`. Kirim → append user msg → POST → append assistant. Render Markdown via `PostContent`. Auto-scroll. Tombol "Bersihkan". |
-| `src/components/Navbar.tsx` | Tambah link "Chat" (icon MessageSquare). |
+| `src/components/Navbar.tsx` | Tambah link "Chat" (icon MessageSquare) di navbar **publik** → `/admin/chat`. Kalau belum login, halaman redirect ke `/admin`. |
 
 ## 3. Alur data
 
@@ -71,4 +71,10 @@ Browser (client)                 Server (Vercel)                 OpenCode Zen
 - `npx tsc --noEmit` + `npm run lint`.
 - Manual: login admin → buka `/admin/chat` → kirim pesan → cek balasan
   markdown.
-- Tanpa login → halaman redirect / API 401.
+- Tanpa login → halaman redirect ke `/admin` / API 401.
+
+## 6. Keputusan yang dikonfirmasi
+
+- Link "Chat" di navbar **publik** (opsi 1). Belum login → `/admin/chat`
+  redirect ke `/admin`.
+- Khusus admin: halaman & route API mengecek cookie `blog_admin`.
