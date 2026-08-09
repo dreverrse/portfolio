@@ -20,7 +20,7 @@ export default function NotFound() {
             <div className="animate-float">
               <LottiePlayer
                 src="/lottie/lost.json"
-                className="h-52 w-52 sm:h-56 sm:w-56"
+                className="h-64 w-64 sm:h-72 sm:w-72"
               />
             </div>
 
