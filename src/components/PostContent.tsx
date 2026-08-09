@@ -4,6 +4,14 @@ import { CodeBlock } from "@/components/CodeBlock";
 const INLINE_REGEX =
   /(!\[[^\]]*\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
 
+const SAFE_SCHEME = /^(https?:|mailto:|tel:|#|\/)/i;
+
+function safeHref(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed || !SAFE_SCHEME.test(trimmed)) return "#";
+  return trimmed;
+}
+
 function renderInline(text: string, keyBase: string): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
@@ -25,7 +33,7 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={key}
-            src={image[2]}
+            src={safeHref(image[2])}
             alt={image[1]}
             className="my-4 max-w-full rounded-xl border border-border"
           />
@@ -52,7 +60,7 @@ function renderInline(text: string, keyBase: string): ReactNode[] {
         parts.push(
           <a
             key={key}
-            href={link[2]}
+            href={safeHref(link[2])}
             target="_blank"
             rel="noopener noreferrer"
             className="text-highlight hover:underline"
@@ -217,7 +225,7 @@ export function PostContent({ content }: { content: string }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           key={key++}
-          src={imageLine[2]}
+          src={safeHref(imageLine[2])}
           alt={imageLine[1]}
           className="my-4 max-w-full rounded-xl border border-border"
         />

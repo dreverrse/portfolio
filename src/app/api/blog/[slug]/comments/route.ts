@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { addComment, getComments } from "@/lib/blog-engagement";
+import { isValidSlug } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  if (!isValidSlug(slug)) {
+    return NextResponse.json({ comments: [] });
+  }
   const comments = await getComments(slug);
   return NextResponse.json({ comments });
 }
@@ -20,6 +24,9 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  if (!isValidSlug(slug)) {
+    return NextResponse.json({ error: "Slug tidak valid" }, { status: 400 });
+  }
 
   let body: unknown;
   try {

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BlogPostView } from "@/components/pages/BlogPostView";
 import { getPostBySlug } from "@/lib/blog";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { escapeJsonLd } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -114,11 +115,11 @@ export default async function BlogPostPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: escapeJsonLd(JSON.stringify(jsonLd)) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: escapeJsonLd(JSON.stringify(breadcrumbLd)) }}
       />
       <BlogPostView post={post} />
     </>

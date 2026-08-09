@@ -3,6 +3,7 @@ import {
   getReactions,
   toggleReaction,
 } from "@/lib/blog-engagement";
+import { isValidSlug } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  if (!isValidSlug(slug)) {
+    return NextResponse.json({ counts: {}, mine: [] });
+  }
   const url = new URL(_request.url);
   const userId = validUserId(url.searchParams.get("userId"));
   const result = await getReactions(slug, userId);
@@ -34,6 +38,9 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
+  if (!isValidSlug(slug)) {
+    return NextResponse.json({ error: "Slug tidak valid" }, { status: 400 });
+  }
 
   let body: unknown;
   try {

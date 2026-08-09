@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
 import { getStoredPosts, type StoredPost } from "@/lib/posts-store";
+import { isValidSlug } from "@/lib/utils";
 
 const POSTS_DIR = path.join(process.cwd(), "content/blog");
 
@@ -56,6 +57,8 @@ export async function getAllPosts(): Promise<Post[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  if (!isValidSlug(slug)) return null;
+
   const stored = await getStoredPosts();
   const found = stored.find((p) => p.slug === slug);
   if (found) return toPost(found);

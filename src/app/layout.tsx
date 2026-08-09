@@ -9,6 +9,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { Analytics } from "@vercel/analytics/react";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
+import { escapeJsonLd } from "@/lib/utils";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -76,13 +77,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: SITE_NAME,
-              url: SITE_URL,
-              description: SITE_DESCRIPTION,
-            }),
+            __html: escapeJsonLd(
+              JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: SITE_NAME,
+                url: SITE_URL,
+                description: SITE_DESCRIPTION,
+              })
+            ),
           }}
         />
         <LanguageProvider>

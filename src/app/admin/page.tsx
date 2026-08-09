@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [authenticated, posts] = await Promise.all([
-    isAuthenticated(),
-    getStoredPosts(),
-  ]);
+  const authenticated = await isAuthenticated();
+  if (!authenticated) {
+    return <AdminApp initiallyAuthenticated={false} initialPosts={[]} />;
+  }
+  const posts = await getStoredPosts();
   return <AdminApp initiallyAuthenticated={authenticated} initialPosts={posts} />;
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ProjectDetailView } from "@/components/pages/ProjectDetailView";
 import { getProjectBySlug } from "@/lib/projects";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { escapeJsonLd } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -110,11 +111,11 @@ export default async function ProjectDetailPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: escapeJsonLd(JSON.stringify(jsonLd)) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: escapeJsonLd(JSON.stringify(breadcrumbLd)) }}
       />
       <ProjectDetailView project={project} />
     </>
