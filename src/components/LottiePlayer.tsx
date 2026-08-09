@@ -13,6 +13,7 @@ export default function LottiePlayer({ src, className }: LottiePlayerProps) {
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    DotLottie.setWasmUrl("/lottie/dotlottie-player.wasm");
     const dotLottie = new DotLottie({
       canvas: canvasRef.current,
       src,

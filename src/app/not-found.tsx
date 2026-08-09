@@ -19,7 +19,7 @@ export default function NotFound() {
           <div className="relative flex flex-col items-center">
             <div className="animate-float">
               <LottiePlayer
-                src="/lottie/404-compass.lottie"
+                src="/lottie/lost.json"
                 className="h-52 w-52 sm:h-56 sm:w-56"
               />
             </div>
