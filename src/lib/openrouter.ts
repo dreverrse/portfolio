@@ -3,8 +3,8 @@ const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODELS = [
   "deepseek/deepseek-chat",
   "openai/gpt-4o-mini",
+  "google/gemini-2.5-flash",
   "meta-llama/llama-3.3-70b-instruct",
-  "google/gemini-2.0-flash-001",
 ];
 
 const MODELS = (
@@ -39,7 +39,7 @@ export async function chatOpenRouter(
     );
   }
 
-  let lastError: unknown = new Error("Semua model gagal");
+  const failures: string[] = [];
 
   for (const model of MODELS) {
     try {
@@ -60,8 +60,8 @@ export async function chatOpenRouter(
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        lastError = new Error(
-          data?.error?.message || `OpenRouter error (${res.status})`
+        failures.push(
+          `${model}: ${data?.error?.message || `HTTP ${res.status}`}`
         );
         continue;
       }
@@ -69,23 +69,27 @@ export async function chatOpenRouter(
       const data = await res.json();
       const reply = data?.choices?.[0]?.message?.content?.trim();
       if (!reply) {
-        lastError = new Error("Tidak ada balasan dari model");
+        failures.push(`${model}: tidak ada balasan`);
         continue;
       }
 
       if (options.validate && !options.validate(reply)) {
-        lastError = new Error("Output model tidak memenuhi validasi");
+        failures.push(`${model}: output tidak memenuhi validasi`);
         continue;
       }
 
       return reply;
     } catch (err) {
-      lastError = err;
+      failures.push(
+        `${model}: ${err instanceof Error ? err.message : "error jaringan"}`
+      );
       continue;
     }
   }
 
-  throw lastError instanceof Error
-    ? lastError
-    : new Error("Gagal terhubung ke OpenRouter");
+  throw new Error(
+    failures.length > 0
+      ? `Semua model gagal: ${failures.join(" | ")}`
+      : "Tidak ada model yang dikonfigurasi"
+  );
 }

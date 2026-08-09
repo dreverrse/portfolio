@@ -8,6 +8,8 @@ import {
   translateStoredPost,
 } from "@/lib/ai-assistant";
 
+export const maxDuration = 60;
+
 const AI_WINDOW_MS = 5 * 60 * 1000;
 const AI_MAX = 20;
 
