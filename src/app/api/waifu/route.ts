@@ -87,11 +87,11 @@ async function getReply(
     });
     return { ok: true, reply };
   } catch (err) {
+    console.error("waifu chat error:", err);
     return {
       ok: false,
       status: 502,
-      error:
-        err instanceof Error ? err.message : "Gagal terhubung ke OpenRouter",
+      error: "Gagal terhubung ke layanan AI. Coba lagi nanti.",
     };
   }
 }

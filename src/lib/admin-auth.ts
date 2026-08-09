@@ -1,7 +1,10 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 
-const COOKIE_NAME = "blog_admin";
+const COOKIE_NAME =
+  process.env.NODE_ENV === "production"
+    ? "__Host-blog_admin"
+    : "blog_admin";
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 
 function getAdminPassword(): string {

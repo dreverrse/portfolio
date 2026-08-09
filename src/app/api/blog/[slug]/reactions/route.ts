@@ -3,11 +3,14 @@ import {
   getReactions,
   toggleReaction,
 } from "@/lib/blog-engagement";
+import { getClientIp, rateLimit } from "@/lib/ratelimit";
 import { isValidSlug } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 const MAX_USER_ID_LENGTH = 64;
+const WINDOW_MS = 60 * 1000;
+const MAX_REQUESTS = 30;
 
 function validUserId(value: unknown): string {
   if (typeof value !== "string") return "";
@@ -40,6 +43,18 @@ export async function POST(
   const { slug } = await params;
   if (!isValidSlug(slug)) {
     return NextResponse.json({ error: "Slug tidak valid" }, { status: 400 });
+  }
+
+  const blocked = await rateLimit(getClientIp(request), {
+    limit: MAX_REQUESTS,
+    windowMs: WINDOW_MS,
+    prefix: "rl:blog-reactions",
+  });
+  if (!blocked.success) {
+    return NextResponse.json(
+      { error: "Terlalu banyak permintaan. Coba lagi nanti." },
+      { status: 429 }
+    );
   }
 
   let body: unknown;

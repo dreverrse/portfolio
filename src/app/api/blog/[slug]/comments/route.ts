@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { addComment, getComments } from "@/lib/blog-engagement";
+import { getClientIp, rateLimit } from "@/lib/ratelimit";
 import { isValidSlug } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 const MAX_NAME_LENGTH = 30;
 const MAX_MESSAGE_LENGTH = 500;
+const WINDOW_MS = 10 * 60 * 1000;
+const MAX_REQUESTS = 10;
 
 export async function GET(
   _request: Request,
@@ -26,6 +29,18 @@ export async function POST(
   const { slug } = await params;
   if (!isValidSlug(slug)) {
     return NextResponse.json({ error: "Slug tidak valid" }, { status: 400 });
+  }
+
+  const blocked = await rateLimit(getClientIp(request), {
+    limit: MAX_REQUESTS,
+    windowMs: WINDOW_MS,
+    prefix: "rl:blog-comments",
+  });
+  if (!blocked.success) {
+    return NextResponse.json(
+      { error: "Terlalu banyak komentar. Coba lagi nanti." },
+      { status: 429 }
+    );
   }
 
   let body: unknown;

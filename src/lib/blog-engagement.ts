@@ -20,6 +20,15 @@ const memoryCounts = new Map<string, Record<string, number>>();
 const memoryMine = new Map<string, string[]>();
 const memoryComments = new Map<string, BlogComment[]>();
 
+function isUniqueViolation(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: string }).code === "23505"
+  );
+}
+
 export async function getReactions(
   postSlug: string,
   userId: string
@@ -77,7 +86,10 @@ export async function toggleReaction(
         .insert({ post_slug: postSlug, reaction, user_id: userId });
       if (insError) throw insError;
       return { active: true };
-    } catch {
+    } catch (err) {
+      if (isUniqueViolation(err)) {
+        return { active: true };
+      }
       // fall through ke memory
     }
   }
