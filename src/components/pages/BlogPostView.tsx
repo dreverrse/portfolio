@@ -9,7 +9,6 @@ import { BlogComments } from "@/components/BlogComments";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface PostTranslation {
   title?: string;
@@ -57,6 +56,7 @@ export function BlogPostView({ post }: { post: Post }) {
           <ArrowLeft className="h-4 w-4" />
           {t("blog.back")}
         </Link>
+
         {post.image && (
           <div className="relative h-56 sm:h-72 w-full overflow-hidden rounded-xl border border-border mb-8">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -85,14 +85,13 @@ export function BlogPostView({ post }: { post: Post }) {
           {post.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-4">
               {post.tags.map((tag) => (
-                <Badge
+                <span
                   key={tag}
-                  variant="outline"
-                  className="gap-1 rounded-full bg-accent/20 text-highlight"
+                  className="flex items-center gap-1 px-2.5 py-0.5 text-xs rounded-full bg-accent/20 text-highlight border border-accent/30"
                 >
                   <Tag className="h-2.5 w-2.5" />
                   {tag}
-                </Badge>
+                </span>
               ))}
             </div>
           )}

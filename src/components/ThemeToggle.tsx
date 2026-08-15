@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { EASE } from "@/lib/motion";
-import { Button } from "@/components/ui/button";
 
 const THEME_KEY = "theme";
 const THEME_EVENT = "themechange";
@@ -42,11 +41,10 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button
+    <button
       onClick={toggle}
       aria-label={isLight ? t("theme.dark") : t("theme.light")}
-      variant="ghost"
-      className="p-2 text-muted"
+      className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -60,6 +58,6 @@ export function ThemeToggle() {
           {isLight ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
         </motion.span>
       </AnimatePresence>
-    </Button>
+    </button>
   );
 }

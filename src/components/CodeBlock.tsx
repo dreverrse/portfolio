@@ -13,7 +13,6 @@ import "prismjs/components/prism-sql";
 import "prismjs/components/prism-bash";
 import "prismjs/components/prism-json";
 import "prismjs/components/prism-yaml";
-import { Card } from "@/components/ui/card";
 
 const ALIASES: Record<string, string> = {
   js: "javascript",
@@ -63,15 +62,15 @@ export function CodeBlock({
   }
 
   return (
-    <Card className="codeblock my-4 overflow-hidden border-border bg-surface/60">
+    <div className="codeblock my-4 rounded-lg border border-border bg-surface/60 overflow-hidden">
       {lang && (
-        <div className="border-b border-border bg-surface px-3 py-1 font-mono text-xs uppercase tracking-wide text-highlight">
+        <div className="px-3 py-1 text-xs font-mono uppercase tracking-wide text-highlight border-b border-border bg-surface">
           {lang}
         </div>
       )}
       <pre className="p-4 overflow-x-auto text-sm leading-relaxed">
         <code dangerouslySetInnerHTML={{ __html: html }} />
       </pre>
-    </Card>
+    </div>
   );
 }

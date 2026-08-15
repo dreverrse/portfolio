@@ -7,9 +7,6 @@ import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
 import { ArrowRight, Calendar, Clock, Search, Tag } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 
 interface PostTranslation {
   title?: string;
@@ -97,32 +94,38 @@ export function BlogList({ posts }: { posts: Post[] }) {
           <div className="mb-8 space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-              <Input
+              <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t("blog.searchPlaceholder")}
-                className="bg-card/50 pl-10"
+                className="w-full rounded-xl border border-border bg-card/50 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
               />
             </div>
             {allTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                <Badge
+                <button
                   onClick={() => setActiveTag(null)}
-                  variant={activeTag === null ? "default" : "outline"}
-                  className="cursor-pointer select-none px-3 py-1 rounded-full"
+                  className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                    activeTag === null
+                      ? "bg-accent text-white border-accent"
+                      : "bg-card/50 border-border text-muted hover:text-highlight hover:border-accent"
+                  }`}
                 >
                   {t("blog.allTags")}
-                </Badge>
+                </button>
                 {allTags.map((tag) => (
-                  <Badge
+                  <button
                     key={tag}
                     onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                    variant={activeTag === tag ? "default" : "outline"}
-                    className="cursor-pointer select-none px-3 py-1 rounded-full"
+                    className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                      activeTag === tag
+                        ? "bg-accent text-white border-accent"
+                        : "bg-card/50 border-border text-muted hover:text-highlight hover:border-accent"
+                    }`}
                   >
                     {tag}
-                  </Badge>
+                  </button>
                 ))}
               </div>
             )}
@@ -157,7 +160,8 @@ export function BlogList({ posts }: { posts: Post[] }) {
           <Link
             href={`/blog/${featured.slug}`}
             className="group grid md:grid-cols-[1.1fr_1fr] overflow-hidden rounded-2xl border border-border bg-card/50 hover:border-accent transition-all duration-300 glow-hover"
-          >            {featured.image && (
+          >
+            {featured.image && (
               <div className="relative aspect-[16/10] md:aspect-auto md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-border">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -206,46 +210,44 @@ export function BlogList({ posts }: { posts: Post[] }) {
               return (
                 <StaggerItem
                   key={post.slug}
-                  className="overflow-hidden"
+                  className="overflow-hidden rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
                 >
                   <Link href={`/blog/${post.slug}`} className="group flex h-full flex-col">
-                    <Card className="flex h-full flex-col overflow-hidden border-border bg-card/50 transition-all duration-300 hover:border-accent glow-hover group-hover:bg-surface/50">
-                      {post.image && (
-                        <div className="relative aspect-video w-full overflow-hidden border-b border-border">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={post.image}
-                            alt={title}
-                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        </div>
-                      )}
-                      <CardContent className="flex flex-1 flex-col p-5">
-                        <div className="flex items-center justify-between gap-2">
-                          {post.tags[0] ? (
-                            <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-highlight">
-                              <Tag className="h-3 w-3" />
-                              {post.tags[0]}
-                            </span>
-                          ) : (
-                            <span />
-                          )}
-                          <span className="text-xs text-muted">
-                            {formatDate(post.date, lang)}
+                    {post.image && (
+                      <div className="relative aspect-video w-full overflow-hidden border-b border-border">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={post.image}
+                          alt={title}
+                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        {post.tags[0] ? (
+                          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-highlight">
+                            <Tag className="h-3 w-3" />
+                            {post.tags[0]}
                           </span>
-                        </div>
-                        <h3 className="mt-3 font-semibold text-lg text-foreground group-hover:text-highlight transition-colors leading-snug">
-                          {title}
-                        </h3>
-                        <p className="mt-2 text-sm text-muted line-clamp-2">
-                          {excerpt}
-                        </p>
-                        <div className="mt-auto pt-4 flex items-center gap-1.5 text-xs text-muted">
-                          <Clock className="h-3 w-3" />
-                          {post.readingTime} {t("blog.readingTime")}
-                        </div>
-                      </CardContent>
-                    </Card>
+                        ) : (
+                          <span />
+                        )}
+                        <span className="text-xs text-muted">
+                          {formatDate(post.date, lang)}
+                        </span>
+                      </div>
+                      <h3 className="mt-3 font-semibold text-lg text-foreground group-hover:text-highlight transition-colors leading-snug">
+                        {title}
+                      </h3>
+                      <p className="mt-2 text-sm text-muted line-clamp-2">
+                        {excerpt}
+                      </p>
+                      <div className="mt-auto pt-4 flex items-center gap-1.5 text-xs text-muted">
+                        <Clock className="h-3 w-3" />
+                        {post.readingTime} {t("blog.readingTime")}
+                      </div>
+                    </div>
                   </Link>
                 </StaggerItem>
               );

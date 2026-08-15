@@ -7,8 +7,6 @@ import { useI18n, formatDate } from "@/lib/i18n";
 import type { Project } from "@/lib/projects";
 import { Calendar, Clock, ArrowLeft, Tag, ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 export function ProjectDetailView({ project }: { project: Project }) {
   const { lang, t } = useI18n();
@@ -52,47 +50,38 @@ export function ProjectDetailView({ project }: { project: Project }) {
           {project.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-4">
               {project.tags.map((tag) => (
-                <Badge
+                <span
                   key={tag}
-                  variant="outline"
-                  className="gap-1 rounded-full bg-accent/20 text-highlight"
+                  className="flex items-center gap-1 px-2.5 py-0.5 text-xs rounded-full bg-accent/20 text-highlight border border-accent/30"
                 >
                   <Tag className="h-2.5 w-2.5" />
                   {tag}
-                </Badge>
+                </span>
               ))}
             </div>
           )}
           <div className="flex flex-wrap gap-3 mt-6">
             {project.demo && (
-              <Button
-                render={
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                }
-                className="glow-hover"
+              <a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-white text-sm font-medium hover:bg-highlight/80 transition-all duration-200 glow-hover"
               >
                 <ExternalLink className="h-4 w-4" />
                 {t("portfolio.demo")}
-              </Button>
+              </a>
             )}
             {project.github && (
-              <Button
-                render={
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                }
-                variant="outline"
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border text-foreground text-sm font-medium hover:bg-surface hover:border-accent transition-all duration-200"
               >
                 <FaGithub className="h-4 w-4" />
                 {t("portfolio.code")}
-              </Button>
+              </a>
             )}
           </div>
         </header>

@@ -3,8 +3,6 @@
 import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Code2,
   PenTool,
@@ -87,38 +85,26 @@ export function AboutContent() {
 
       <FadeIn delay={0.1}>
         <Stagger className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <StaggerItem className="group">
-            <Card className="border-border bg-card/50">
-              <CardContent className="flex items-center gap-3 p-4">
-                <MapPin className="h-5 w-5 text-highlight" />
-                <div>
-                  <p className="text-xs text-muted">{t("about.location")}</p>
-                  <p className="text-sm font-medium">Semarang, Indonesia</p>
-                </div>
-              </CardContent>
-            </Card>
+          <StaggerItem className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
+            <MapPin className="h-5 w-5 text-highlight" />
+            <div>
+              <p className="text-xs text-muted">{t("about.location")}</p>
+              <p className="text-sm font-medium">Semarang, Indonesia</p>
+            </div>
           </StaggerItem>
-          <StaggerItem className="group">
-            <Card className="border-border bg-card/50">
-              <CardContent className="flex items-center gap-3 p-4">
-                <Phone className="h-5 w-5 text-highlight" />
-                <div>
-                  <p className="text-xs text-muted">{t("about.whatsapp")}</p>
-                  <p className="text-sm font-medium">+62 851-5859-9235</p>
-                </div>
-              </CardContent>
-            </Card>
+          <StaggerItem className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
+            <Phone className="h-5 w-5 text-highlight" />
+            <div>
+              <p className="text-xs text-muted">{t("about.whatsapp")}</p>
+              <p className="text-sm font-medium">+62 851-5859-9235</p>
+            </div>
           </StaggerItem>
-          <StaggerItem className="group">
-            <Card className="border-border bg-card/50">
-              <CardContent className="flex items-center gap-3 p-4">
-                <Mail className="h-5 w-5 text-highlight" />
-                <div>
-                  <p className="text-xs text-muted">{t("about.email")}</p>
-                  <p className="text-sm font-medium break-all">work.andrefirmansah@gmail.com</p>
-                </div>
-              </CardContent>
-            </Card>
+          <StaggerItem className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
+            <Mail className="h-5 w-5 text-highlight" />
+            <div>
+              <p className="text-xs text-muted">{t("about.email")}</p>
+              <p className="text-sm font-medium break-all">work.andrefirmansah@gmail.com</p>
+            </div>
           </StaggerItem>
         </Stagger>
       </FadeIn>
@@ -132,14 +118,12 @@ export function AboutContent() {
             {skills.map((item) => {
               const Icon = item.icon;
               return (
-                <StaggerItem key={item.label}>
-                  <Badge
-                    variant="outline"
-                    className="h-auto gap-2 rounded-full px-4 py-2 text-sm text-muted hover:text-highlight hover:border-accent"
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.label}
-                  </Badge>
+                <StaggerItem
+                  key={item.label}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 text-sm text-muted hover:text-highlight hover:border-accent transition-all duration-200"
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
                 </StaggerItem>
               );
             })}
@@ -196,15 +180,11 @@ export function AboutContent() {
             {experiences.map((item, i) => {
               const Icon = item.icon;
               return (
-                <StaggerItem key={i}>
-                  <Card className="border-border bg-card/50">
-                    <CardContent className="flex items-start gap-3 p-4">
-                      <Icon className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
-                      <p className="text-sm text-foreground/90 leading-relaxed">
-                        {t(item.textKey)}
-                      </p>
-                    </CardContent>
-                  </Card>
+                <StaggerItem key={i} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/50">
+                  <Icon className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
+                  <p className="text-sm text-foreground/90 leading-relaxed">
+                    {t(item.textKey)}
+                  </p>
                 </StaggerItem>
               );
             })}
@@ -217,15 +197,13 @@ export function AboutContent() {
           <h2 className="text-2xl font-bold mb-6">
             <span className="text-foreground">{t("about.address")}</span>
           </h2>
-          <Card className="border-border bg-card/50">
-            <CardContent className="flex items-start gap-3 p-4">
-              <Home className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
-              <p className="text-sm text-foreground/90 leading-relaxed">
-                Jl. Gajah Barat IV, RT 04 RW IX, Kel. Pandean Lamper, Kec.
-                Gayamsari, Kota Semarang.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card/50">
+            <Home className="h-5 w-5 text-highlight mt-0.5 shrink-0" />
+            <p className="text-sm text-foreground/90 leading-relaxed">
+              Jl. Gajah Barat IV, RT 04 RW IX, Kel. Pandean Lamper, Kec.
+              Gayamsari, Kota Semarang.
+            </p>
+          </div>
         </section>
       </FadeIn>
     </div>

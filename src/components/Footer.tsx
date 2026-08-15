@@ -8,7 +8,6 @@ import { MusicWidget } from "./MusicWidget";
 import { useI18n } from "@/lib/i18n";
 import { springTransition } from "@/lib/motion";
 import { SOCIAL } from "@/lib/site";
-import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 
 type SocialItem = {
@@ -61,11 +60,13 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-3">
             {socials.map((s) => (
-              <Button
+              <Link
                 key={s.label}
-                render={<Link href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} />}
-                variant="ghost"
-                className="text-muted hover:text-highlight"
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                className="p-2 rounded-lg text-muted hover:text-highlight hover:bg-surface transition-all duration-200"
               >
                 <motion.span
                   whileHover={{ y: -2, scale: 1.15 }}
@@ -74,23 +75,23 @@ export function Footer() {
                 >
                   {s.renderIcon("h-4 w-4")}
                 </motion.span>
-              </Button>
+              </Link>
             ))}
-            <Button
-              render={<Link href="/admin" aria-label={t("footer.admin")} />}
-              variant="ghost"
-              className="text-muted/50 hover:text-highlight"
+            <Link
+              href="/admin"
+              aria-label={t("footer.admin")}
+              className="p-2 rounded-lg text-muted/50 hover:text-highlight hover:bg-surface transition-all duration-200"
             >
               <Lock className="h-4 w-4" />
-            </Button>
-            <Button
-              render={<Link href="/api-docs" aria-label={t("footer.apiDocs")} />}
-              variant="ghost"
-              className="text-muted/50 hover:text-highlight"
+            </Link>
+            <Link
+              href="/api-docs"
+              aria-label={t("footer.apiDocs")}
+              className="p-2 rounded-lg text-muted/50 hover:text-highlight hover:bg-surface transition-all duration-200"
             >
               <Code2 className="h-4 w-4" />
               {t("footer.apiDocs")}
-            </Button>
+            </Link>
           </div>
         </div>
       </div>

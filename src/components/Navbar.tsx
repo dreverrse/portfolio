@@ -8,21 +8,13 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 import {
   Home,
   User,
   Briefcase,
   FileText,
   Menu,
+  X,
   Globe,
   MessageSquare,
 } from "lucide-react";
@@ -39,15 +31,14 @@ function LanguageToggle() {
   const { lang, setLang, t } = useI18n();
   const next: "id" | "en" = lang === "id" ? "en" : "id";
   return (
-    <Button
+    <button
       onClick={() => setLang(next)}
       aria-label={t("lang.switch")}
-      variant="ghost"
-      className="text-muted"
+      className="flex items-center gap-1 p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
     >
       <Globe className="h-4 w-4" />
       <span className="text-xs font-semibold">{lang.toUpperCase()}</span>
-    </Button>
+    </button>
   );
 }
 
@@ -78,15 +69,12 @@ export function Navbar() {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 return (
-                  <Button
+                  <Link
                     key={item.href}
-                    render={<Link href={item.href} />}
-                    variant="ghost"
+                    href={item.href}
                     className={cn(
-                      "relative",
-                      isActive
-                        ? "text-highlight"
-                        : "text-muted"
+                      "relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200",
+                      isActive ? "text-highlight" : "text-muted hover:text-foreground hover:bg-surface"
                     )}
                   >
                     {isActive && (
@@ -98,7 +86,7 @@ export function Navbar() {
                     )}
                     <Icon className="relative h-4 w-4" />
                     <span className="relative">{t(item.labelKey)}</span>
-                  </Button>
+                  </Link>
                 );
               })}
             </div>
@@ -106,44 +94,39 @@ export function Navbar() {
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ThemeToggle />
-              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-                <SheetTrigger
-                  render={
-                    <Button variant="ghost" className="md:hidden text-muted" />
-                  }
-                  aria-label={t("nav.toggleMenu")}
-                >
-                  <Menu className="h-5 w-5" />
-                </SheetTrigger>
-                <SheetContent side="right" className="w-72">
-                  <SheetHeader>
-                    <SheetTitle>dreverrse</SheetTitle>
-                  </SheetHeader>
-                  <Separator />
-                  <div className="space-y-1 px-1">
-                    {navItems.map((item) => {
-                      const Icon = item.icon;
-                      const isActive = pathname === item.href;
-                      return (
-                        <Button
-                          key={item.href}
-                          render={<Link href={item.href} onClick={() => setMobileOpen(false)} />}
-                          variant="ghost"
-                          className={cn(
-                            "w-full justify-start",
-                            isActive && "bg-accent/30 text-highlight"
-                          )}
-                        >
-                          <Icon className="h-4 w-4" />
-                          {t(item.labelKey)}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <button
+                className="md:hidden p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={t("nav.toggleMenu")}
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
             </div>
           </div>
+
+          {mobileOpen && (
+            <div className="md:hidden border-t border-border px-3 pb-3">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                      pathname === item.href
+                        ? "bg-accent/30 text-highlight"
+                        : "text-muted hover:text-foreground hover:bg-surface"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {t(item.labelKey)}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </motion.nav>
