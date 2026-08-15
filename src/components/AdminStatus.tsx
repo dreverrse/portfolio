@@ -9,6 +9,9 @@ import {
   XCircle,
   MinusCircle,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface IntegrationStatus {
   name: string;
@@ -19,11 +22,11 @@ interface IntegrationStatus {
 
 const statusStyles: Record<
   IntegrationStatus["status"],
-  { icon: typeof CheckCircle2; ring: string; label: string }
+  { icon: typeof CheckCircle2; variant: "default" | "destructive" | "secondary"; label: string }
 > = {
-  up: { icon: CheckCircle2, ring: "border-emerald-500/40 text-emerald-500", label: "Up" },
-  down: { icon: XCircle, ring: "border-red-500/40 text-red-500", label: "Down" },
-  disabled: { icon: MinusCircle, ring: "border-border text-muted", label: "Disabled" },
+  up: { icon: CheckCircle2, variant: "default", label: "Up" },
+  down: { icon: XCircle, variant: "destructive", label: "Down" },
+  disabled: { icon: MinusCircle, variant: "secondary", label: "Disabled" },
 };
 
 export function AdminStatus() {
@@ -60,14 +63,10 @@ export function AdminStatus() {
           <Activity className="h-5 w-5 text-highlight" />
           <h2 className="text-lg font-semibold">Status Integrasi</h2>
         </div>
-        <button
-          onClick={load}
-          disabled={loading}
-          className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm text-muted transition-colors hover:border-accent hover:text-foreground disabled:opacity-50"
-        >
+        <Button onClick={load} disabled={loading} variant="outline" size="sm">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
           Refresh
-        </button>
+        </Button>
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -82,26 +81,33 @@ export function AdminStatus() {
             const style = statusStyles[item.status];
             const Icon = style.icon;
             return (
-              <div
-                key={item.name}
-                className={`flex items-center justify-between gap-3 rounded-xl border bg-card/50 p-4 ${style.ring}`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className="h-5 w-5 shrink-0" />
-                  <div>
-                    <p className="font-medium">{item.name}</p>
-                    {item.error && (
-                      <p className="text-xs text-muted">{item.error}</p>
-                    )}
+              <Card key={item.name} className="border-border bg-card/50">
+                <CardContent className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Icon
+                      className={
+                        item.status === "up"
+                          ? "h-5 w-5 shrink-0 text-emerald-500"
+                          : item.status === "down"
+                            ? "h-5 w-5 shrink-0 text-red-500"
+                            : "h-5 w-5 shrink-0 text-muted"
+                      }
+                    />
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      {item.error && (
+                        <p className="text-xs text-muted">{item.error}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold">{style.label}</p>
-                  <p className="text-xs text-muted">
-                    {item.status === "up" ? `${item.latencyMs} ms` : "—"}
-                  </p>
-                </div>
-              </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant={style.variant}>{style.label}</Badge>
+                    <p className="text-xs text-muted">
+                      {item.status === "up" ? `${item.latencyMs} ms` : "—"}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>

@@ -8,6 +8,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { springTransition } from "@/lib/motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface Message {
   role: "user" | "assistant";
@@ -249,13 +251,15 @@ export function WaifuWidget() {
               <p className="text-sm font-semibold text-foreground">Katou Megumi</p>
               <p className="text-xs text-muted">{t("waifu.online")}</p>
             </div>
-            <button
+            <Button
               onClick={clearChat}
               aria-label={t("waifu.delete")}
-              className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
+              variant="ghost"
+              size="icon-sm"
+              className="text-muted hover:text-foreground"
             >
               <Trash2 className="h-4 w-4" />
-            </button>
+            </Button>
           </header>
 
           <div className="flex h-80 flex-col gap-3 overflow-y-auto px-4 py-4">
@@ -295,20 +299,21 @@ export function WaifuWidget() {
             }}
             className="flex items-center gap-2 border-t border-border p-3"
           >
-            <input
+            <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t("waifu.placeholder")}
-              className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+              className="flex-1"
             />
-            <button
+            <Button
               type="submit"
               disabled={loading || !input.trim()}
               aria-label={t("waifu.send")}
-              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-accent text-white hover:bg-highlight/80 transition-colors disabled:opacity-40"
+              size="icon"
+              className="h-9 w-9 flex-shrink-0"
             >
               <Send className="h-4 w-4" />
-            </button>
+            </Button>
           </form>
         </motion.div>
         )}

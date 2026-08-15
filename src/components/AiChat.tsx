@@ -3,18 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Trash2, Loader2, MessageSquare } from "lucide-react";
 import { PostContent } from "@/components/PostContent";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
-
-const inputClass =
-  "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors placeholder:text-muted/60 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none";
-const btnPrimary =
-  "inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50";
-const btnGhost =
-  "inline-flex items-center gap-2 rounded-xl border border-border px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:border-accent hover:text-foreground";
 
 export function AiChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -81,46 +77,48 @@ export function AiChat() {
           </div>
         </div>
         {messages.length > 0 && (
-          <button onClick={clearChat} className={btnGhost}>
+          <Button onClick={clearChat} variant="outline" size="sm">
             <Trash2 className="h-4 w-4" />
             Bersihkan
-          </button>
+          </Button>
         )}
       </div>
 
-      <div className="space-y-4 rounded-2xl border border-border bg-card/50 p-4 max-h-[60vh] overflow-y-auto">
-        {messages.length === 0 && !loading && (
-          <p className="py-12 text-center text-sm text-muted">
-            Mulai percakapan dengan Big Pickle.
-          </p>
-        )}
+      <Card className="border-border bg-card/50">
+        <CardContent className="max-h-[60vh] space-y-4 overflow-y-auto">
+          {messages.length === 0 && !loading && (
+            <p className="py-12 text-center text-sm text-muted">
+              Mulai percakapan dengan Big Pickle.
+            </p>
+          )}
 
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
-          >
+          {messages.map((m, i) => (
             <div
-              className={
-                m.role === "user"
-                  ? "max-w-[85%] rounded-2xl bg-accent px-4 py-2.5 text-sm text-white whitespace-pre-wrap"
-                  : "max-w-[85%] rounded-2xl border border-border bg-background px-4 py-3"
-              }
+              key={i}
+              className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
             >
-              {m.role === "user" ? m.content : <PostContent content={m.content} />}
+              <div
+                className={
+                  m.role === "user"
+                    ? "max-w-[85%] rounded-2xl bg-accent px-4 py-2.5 text-sm text-white whitespace-pre-wrap"
+                    : "max-w-[85%] rounded-2xl border border-border bg-background px-4 py-3"
+                }
+              >
+                {m.role === "user" ? m.content : <PostContent content={m.content} />}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {loading && (
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Big Pickle sedang mengetik…
-          </div>
-        )}
+          {loading && (
+            <div className="flex items-center gap-2 text-sm text-muted">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Big Pickle sedang mengetik…
+            </div>
+          )}
 
-        <div ref={bottomRef} />
-      </div>
+          <div ref={bottomRef} />
+        </CardContent>
+      </Card>
 
       {error && (
         <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-500">
@@ -129,18 +127,18 @@ export function AiChat() {
       )}
 
       <form onSubmit={handleSubmit} className="mt-4 flex gap-2">
-        <textarea
+        <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className={`${inputClass} resize-none flex-1`}
+          className="resize-none flex-1"
           rows={2}
           placeholder="Tulis pesan untuk Big Pickle..."
           disabled={loading}
         />
-        <button type="submit" disabled={loading || !input.trim()} className={btnPrimary}>
+        <Button type="submit" disabled={loading || !input.trim()}>
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           <span className="hidden sm:inline">Kirim</span>
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -9,6 +9,25 @@ import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { AdminStatus } from "@/components/AdminStatus";
 import type { StoredPost } from "@/lib/posts-store";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Plus,
   Pencil,
@@ -58,17 +77,6 @@ async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   return data as T;
 }
 
-const inputClass =
-  "w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted/60 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors";
-
-const labelClass = "block text-sm font-medium text-muted mb-1.5";
-
-const btnPrimary =
-  "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50";
-
-const btnGhost =
-  "inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium text-muted hover:text-foreground hover:border-accent transition-colors";
-
 export function AdminApp({
   initiallyAuthenticated,
   initialPosts,
@@ -92,6 +100,7 @@ export function AdminApp({
   const [preview, setPreview] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [tab, setTab] = useState<AdminTab>("posts");
+  const [deleteDialog, setDeleteDialog] = useState<StoredPost | null>(null);
 
   const loadPosts = useCallback(async () => {
     setLoadingPosts(true);
@@ -200,7 +209,7 @@ export function AdminApp({
   }
 
   async function handleDelete(slug: string) {
-    if (!window.confirm("Yakin ingin menghapus artikel ini?")) return;
+    setDeleteDialog(null);
     setDeleting(slug);
     setError("");
     try {
@@ -211,6 +220,12 @@ export function AdminApp({
     } finally {
       setDeleting(null);
     }
+  }
+
+  function closeEditor() {
+    setEditing(null);
+    setIsNew(false);
+    setPreview(false);
   }
 
   if (!authenticated) {
@@ -234,167 +249,135 @@ export function AdminApp({
         </div>
         <div className="flex items-center gap-2">
           {!isNew && (
-            <button onClick={startCreate} className={btnPrimary}>
+            <Button onClick={startCreate}>
               <Plus className="h-4 w-4" />
               Tulis Artikel
-            </button>
+            </Button>
           )}
-          <button onClick={handleLogout} className={btnGhost}>
+          <Button onClick={handleLogout} variant="outline">
             <LogOut className="h-4 w-4" />
             Logout
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="mb-8 flex flex-wrap gap-2">
-        {TABS.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setTab(id)}
-            className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-              tab === id
-                ? "border-accent bg-accent/10 text-highlight"
-                : "border-border text-muted hover:border-accent hover:text-foreground"
-            }`}
-          >
-            <Icon className="h-4 w-4" />
-            {label}
-          </button>
-        ))}
-      </div>
+      <Tabs value={tab} onValueChange={(v) => setTab(v as AdminTab)} className="mb-8">
+        <TabsList className="h-auto w-full flex-wrap">
+          {TABS.map(({ id, label, icon: Icon }) => (
+            <TabsTrigger key={id} value={id}>
+              <Icon className="h-4 w-4" />
+              {label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      {tab === "posts" && (
-        <>
+        <TabsContent value="posts">
           {(isNew || editing) && (
             <form
               onSubmit={handleSave}
-              className="rounded-2xl border border-border bg-card/50 p-6 space-y-5 mb-10"
+              className="mb-10 space-y-5"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">
-                  {isNew ? "Tulis Artikel Baru" : `Edit: ${editing?.title}`}
-                </h2>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPreview(!preview)}
-                    className={btnGhost}
-                  >
-                    {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    {preview ? "Tulis" : "Pratinjau"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditing(null);
-                      setIsNew(false);
-                    }}
-                    className={btnGhost}
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    Batal
-                  </button>
-                </div>
-              </div>
-
-              {preview ? (
-                <div className="rounded-xl border border-border bg-background p-6">
-                  <h1 className="text-2xl sm:text-3xl font-bold">{form.title || "Tanpa Judul"}</h1>
-                  <p className="text-sm text-muted mt-2">{form.date}</p>
-                  <div className="mt-4">
-                    <PostContent content={form.content || "Belum ada isi artikel."} />
+              <Card className="border-border bg-card/50">
+                <CardHeader className="flex flex-row items-center justify-between gap-2">
+                  <CardTitle>
+                    {isNew ? "Tulis Artikel Baru" : `Edit: ${editing?.title}`}
+                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      onClick={() => setPreview(!preview)}
+                      variant="outline"
+                      size="sm"
+                    >
+                      {preview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {preview ? "Tulis" : "Pratinjau"}
+                    </Button>
+                    <Button type="button" onClick={closeEditor} variant="outline" size="sm">
+                      <ArrowLeft className="h-4 w-4" />
+                      Batal
+                    </Button>
                   </div>
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <label htmlFor="title" className={labelClass}>
-                      Judul *
-                    </label>
-                    <input
-                      id="title"
-                      value={form.title}
-                      onChange={(e) => setForm({ ...form, title: e.target.value })}
-                      className={inputClass}
-                      placeholder="Judul artikel"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="date" className={labelClass}>
-                        Tanggal
-                      </label>
-                      <input
-                        id="date"
-                        type="date"
-                        value={form.date}
-                        onChange={(e) => setForm({ ...form, date: e.target.value })}
-                        className={inputClass}
-                        required
-                      />
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  {preview ? (
+                    <div className="rounded-xl border border-border bg-background p-6">
+                      <h1 className="text-2xl sm:text-3xl font-bold">{form.title || "Tanpa Judul"}</h1>
+                      <p className="text-sm text-muted mt-2">{form.date}</p>
+                      <div className="mt-4">
+                        <PostContent content={form.content || "Belum ada isi artikel."} />
+                      </div>
                     </div>
-                    <div>
-                      <label htmlFor="tags" className={labelClass}>
-                        Tag (pisahkan dengan koma)
-                      </label>
-                      <input
-                        id="tags"
-                        value={form.tags}
-                        onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                        className={inputClass}
-                        placeholder="contoh: programming, tutorial"
-                      />
-                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="title">Judul *</Label>
+                        <Input
+                          id="title"
+                          value={form.title}
+                          onChange={(e) => setForm({ ...form, title: e.target.value })}
+                          placeholder="Judul artikel"
+                          required
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <Label htmlFor="date">Tanggal</Label>
+                          <Input
+                            id="date"
+                            type="date"
+                            value={form.date}
+                            onChange={(e) => setForm({ ...form, date: e.target.value })}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="tags">Tag (pisahkan dengan koma)</Label>
+                          <Input
+                            id="tags"
+                            value={form.tags}
+                            onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                            placeholder="contoh: programming, tutorial"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="excerpt">Ringkasan</Label>
+                        <Textarea
+                          id="excerpt"
+                          value={form.excerpt}
+                          onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+                          rows={2}
+                          placeholder="Ringkasan singkat artikel (opsional)"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="content">Isi Artikel *</Label>
+                        <RichTextEditor
+                          key={editing?.slug ?? (isNew ? "new" : "none")}
+                          value={form.content}
+                          onChange={(content) => setForm({ ...form, content })}
+                          placeholder="Tulis isi artikel di sini..."
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {error && <p className="text-sm text-red-500">{error}</p>}
+
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" onClick={closeEditor} variant="outline">
+                      Batal
+                    </Button>
+                    <Button type="submit" disabled={saving}>
+                      {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                      {isNew ? "Publish Artikel" : "Simpan Perubahan"}
+                    </Button>
                   </div>
-
-                  <div>
-                    <label htmlFor="excerpt" className={labelClass}>
-                      Ringkasan
-                    </label>
-                    <textarea
-                      id="excerpt"
-                      value={form.excerpt}
-                      onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-                      className={`${inputClass} resize-y`}
-                      rows={2}
-                      placeholder="Ringkasan singkat artikel (opsional)"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="content" className="text-sm font-medium text-muted mb-1.5 block">
-                      Isi Artikel *
-                    </label>
-                    <RichTextEditor
-                      key={editing?.slug ?? (isNew ? "new" : "none")}
-                      value={form.content}
-                      onChange={(content) => setForm({ ...form, content })}
-                      placeholder="Tulis isi artikel di sini..."
-                    />
-                  </div>
-                </>
-              )}
-
-              {error && <p className="text-sm text-red-500">{error}</p>}
-
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditing(null);
-                    setIsNew(false);
-                  }}
-                  className={btnGhost}
-                >
-                  Batal
-                </button>
-                <button type="submit" className={btnPrimary} disabled={saving}>
-                  {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isNew ? "Publish Artikel" : "Simpan Perubahan"}
-                </button>
-              </div>
+                </CardContent>
+              </Card>
             </form>
           )}
 
@@ -409,61 +392,101 @@ export function AdminApp({
           ) : posts.length === 0 && !isNew && !editing ? (
             <div className="text-center py-16 rounded-xl border border-border bg-card/30">
               <p className="text-muted text-lg">Belum ada artikel.</p>
-              <button onClick={startCreate} className={`${btnPrimary} mt-4`}>
+              <Button onClick={startCreate} className="mt-4">
                 <Plus className="h-4 w-4" />
                 Tulis Artikel Pertama
-              </button>
+              </Button>
             </div>
           ) : (
             <div className="space-y-3">
               {posts.map((post) => (
-                <div
+                <Card
                   key={post.slug}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-xl border border-border bg-card/50"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-border bg-card/50"
                 >
-                  <div className="min-w-0">
-                    <h3 className="font-semibold truncate">{post.title}</h3>
-                    <p className="text-xs text-muted mt-1">
-                      {new Date(post.date).toLocaleDateString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                      {post.tags.length > 0 &&
-                        ` · ${post.tags.map((t) => `#${t}`).join(" ")}`}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => startEdit(post)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted hover:text-highlight hover:border-accent transition-colors"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(post.slug)}
-                      disabled={deleting === post.slug}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-red-400 hover:border-red-500 transition-colors disabled:opacity-50"
-                    >
-                      {deleting === post.slug ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-3.5 w-3.5" />
-                      )}
-                      Hapus
-                    </button>
-                  </div>
-                </div>
+                  <CardContent className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-semibold truncate">{post.title}</p>
+                      <p className="text-xs text-muted mt-1">
+                        {new Date(post.date).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                        {post.tags.length > 0 &&
+                          ` · ${post.tags.map((t) => `#${t}`).join(" ")}`}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button
+                        onClick={() => startEdit(post)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        Edit
+                      </Button>
+                      <Button
+                        onClick={() => setDeleteDialog(post)}
+                        disabled={deleting === post.slug}
+                        variant="outline"
+                        size="sm"
+                        className="text-red-400 hover:border-red-500"
+                      >
+                        {deleting === post.slug ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-3.5 w-3.5" />
+                        )}
+                        Hapus
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
-        </>
-      )}
+        </TabsContent>
 
-      {tab === "ai" && <AiAssistantPanel onUseDraft={handleUseDraft} />}
-      {tab === "dashboard" && <AdminDashboard />}
-      {tab === "status" && <AdminStatus />}
+        <TabsContent value="ai">
+          <AiAssistantPanel onUseDraft={handleUseDraft} />
+        </TabsContent>
+        <TabsContent value="dashboard">
+          <AdminDashboard />
+        </TabsContent>
+        <TabsContent value="status">
+          <AdminStatus />
+        </TabsContent>
+      </Tabs>
+
+      <Dialog
+        open={deleteDialog !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteDialog(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Hapus artikel?</DialogTitle>
+            <DialogDescription>
+              Yakin ingin menghapus artikel &ldquo;{deleteDialog?.title}&rdquo;? Tindakan ini tidak bisa dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialog(null)}>
+              Batal
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={deleting !== null}
+              onClick={() => deleteDialog && handleDelete(deleteDialog.slug)}
+            >
+              {deleting && <Loader2 className="h-4 w-4 animate-spin" />}
+              Hapus
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

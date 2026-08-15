@@ -5,6 +5,8 @@ import { FadeIn } from "@/components/FadeIn";
 import { GitHubStats } from "@/components/GitHubStats";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowRight,
   PenTool,
@@ -52,19 +54,16 @@ export function HomeContent() {
 
         <FadeIn delay={0.15}>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-medium text-sm hover:bg-highlight/80 transition-all duration-200 glow-hover"
+            <Button
+              render={<Link href="/portfolio" />}
+              className="glow-hover"
             >
               {t("home.viewPortfolio")}
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-medium text-sm hover:bg-surface hover:border-accent transition-all duration-200"
-            >
+            </Button>
+            <Button render={<Link href="/about" />} variant="outline">
               {t("home.aboutMe")}
-            </Link>
+            </Button>
           </div>
         </FadeIn>
 
@@ -81,11 +80,15 @@ export function HomeContent() {
               return (
                 <StaggerItem
                   key={skill.label}
-                  className="group p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
+                  className="group"
                 >
-                  <Icon className="h-8 w-8 text-highlight mb-3 group-hover:scale-110 transition-transform duration-300" />
-                  <h3 className="font-semibold text-foreground">{skill.label}</h3>
-                  <p className="text-sm text-muted mt-1">{t(skill.descKey)}</p>
+                  <Card className="h-full border-border bg-card/50 transition-all duration-300 hover:border-accent glow-hover group-hover:bg-surface/50">
+                    <CardContent className="p-5">
+                      <Icon className="h-8 w-8 text-highlight mb-3 group-hover:scale-110 transition-transform duration-300" />
+                      <h3 className="font-semibold text-foreground">{skill.label}</h3>
+                      <p className="text-sm text-muted mt-1">{t(skill.descKey)}</p>
+                    </CardContent>
+                  </Card>
                 </StaggerItem>
               );
             })}
@@ -103,13 +106,13 @@ export function HomeContent() {
           <p className="text-muted mb-6 max-w-md mx-auto">
             {t("home.collabDesc")}
           </p>
-          <Link
-            href="mailto:work.andrefirmansah@gmail.com"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-medium text-sm hover:bg-highlight/80 transition-all duration-200 glow-hover"
+          <Button
+            render={<Link href="mailto:work.andrefirmansah@gmail.com" />}
+            className="glow-hover"
           >
             {t("home.contact")}
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </Button>
         </section>
       </FadeIn>
     </div>

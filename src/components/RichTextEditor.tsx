@@ -8,6 +8,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { Markdown } from "@tiptap/markdown";
 import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Bold,
   Braces,
@@ -49,23 +50,23 @@ function ToolbarButton({
   disabled,
 }: ToolbarButtonProps) {
   return (
-    <button
+    <Button
       type="button"
       title={label}
       aria-label={label}
       aria-pressed={active}
       disabled={disabled}
+      variant="ghost"
+      size="icon-sm"
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 w-8 items-center justify-center rounded-md text-muted transition-colors",
-        "hover:bg-surface hover:text-foreground",
-        "disabled:opacity-40 disabled:pointer-events-none",
+        "text-muted",
         active && "bg-accent/20 text-accent"
       )}
     >
       <Icon className="h-4 w-4" />
-    </button>
+    </Button>
   );
 }
 

@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { Code2, Play, Loader2, Check, Copy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface Endpoint {
   method: string;
@@ -77,10 +80,6 @@ const ENDPOINTS: Endpoint[] = [
   },
 ];
 
-const methodColor: Record<string, string> = {
-  GET: "bg-emerald-500/15 text-emerald-500",
-};
-
 export function ApiDocs() {
   const [results, setResults] = useState<Record<number, unknown>>({});
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -127,20 +126,17 @@ export function ApiDocs() {
 
       <div className="space-y-6">
         {ENDPOINTS.map((endpoint, index) => (
-          <div
-            key={endpoint.path}
-            className="overflow-hidden rounded-2xl border border-border bg-card/50"
-          >
+          <Card key={endpoint.path} className="overflow-hidden border-border bg-card/50">
             <div className="flex flex-wrap items-center gap-3 border-b border-border p-4">
-              <span className={`rounded px-2 py-0.5 font-mono text-xs font-bold ${methodColor[endpoint.method]}`}>
+              <Badge className="bg-emerald-500/15 font-mono text-emerald-500 hover:bg-emerald-500/15">
                 {endpoint.method}
-              </span>
+              </Badge>
               <code className="font-mono text-sm">{endpoint.path}</code>
               <span className="ml-auto flex items-center gap-2">
-                <button
+                <Button
                   onClick={() => tryEndpoint(index, endpoint)}
                   disabled={loadingId === index}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  size="sm"
                 >
                   {loadingId === index ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -148,10 +144,11 @@ export function ApiDocs() {
                     <Play className="h-3.5 w-3.5" />
                   )}
                   Coba
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => copyExample(index, endpoint)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-accent hover:text-foreground"
+                  variant="outline"
+                  size="sm"
                 >
                   {copied === index ? (
                     <Check className="h-3.5 w-3.5" />
@@ -159,11 +156,11 @@ export function ApiDocs() {
                     <Copy className="h-3.5 w-3.5" />
                   )}
                   Salin
-                </button>
+                </Button>
               </span>
             </div>
 
-            <div className="p-4 space-y-4">
+            <CardContent className="space-y-4">
               <p className="text-sm text-muted">{endpoint.description}</p>
 
               <details className="group">
@@ -186,8 +183,8 @@ export function ApiDocs() {
               {errors[index] && (
                 <p className="text-sm text-red-500">{errors[index]}</p>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

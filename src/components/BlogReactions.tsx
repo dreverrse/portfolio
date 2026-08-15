@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { REACTION_OPTIONS } from "@/lib/blog-engagement";
 import { Smile } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const USER_KEY = "blog_user_id";
 
@@ -95,20 +97,20 @@ export function BlogReactions({ slug }: { slug: string }) {
         {REACTION_OPTIONS.map((reaction) => {
           const active = mine.includes(reaction);
           return (
-            <button
+            <Button
               key={reaction}
               onClick={() => handleClick(reaction)}
               disabled={!!busy}
               aria-pressed={active}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm transition-all duration-200 ${
-                active
-                  ? "border-accent bg-accent/20 text-highlight"
-                  : "border-border bg-card/50 hover:border-accent/50"
-              } disabled:opacity-60`}
+              variant={active ? "default" : "outline"}
+              className={cn(
+                "rounded-full",
+                active && "bg-accent text-white hover:bg-accent/80 border-accent"
+              )}
             >
               <span className="text-base leading-none">{reaction}</span>
               <span className="text-xs font-medium">{counts[reaction] || 0}</span>
-            </button>
+            </Button>
           );
         })}
       </div>

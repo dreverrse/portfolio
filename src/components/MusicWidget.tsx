@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Music, ExternalLink } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Track {
   name: string;
@@ -42,27 +44,31 @@ export function MusicWidget() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50 animate-pulse">
-        <div className="h-12 w-12 rounded-lg bg-surface" />
-        <div className="flex-1 space-y-2">
-          <div className="h-3 w-32 rounded bg-surface" />
-          <div className="h-3 w-24 rounded bg-surface" />
-        </div>
-      </div>
+      <Card className="border-border bg-card/50">
+        <CardContent className="flex items-center gap-3 p-4">
+          <Skeleton className="h-12 w-12" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-3 w-32" />
+            <Skeleton className="h-3 w-24" />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!track) {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card/50">
-        <div className="h-12 w-12 rounded-lg bg-surface flex items-center justify-center">
-          <Music className="h-5 w-5 text-muted" />
-        </div>
-        <div>
-          <p className="text-sm text-muted">{t("music.empty")}</p>
-          <p className="text-xs text-muted/60">{t("music.hint")}</p>
-        </div>
-      </div>
+      <Card className="border-border bg-card/50">
+        <CardContent className="flex items-center gap-3 p-4">
+          <div className="h-12 w-12 rounded-lg bg-surface flex items-center justify-center">
+            <Music className="h-5 w-5 text-muted" />
+          </div>
+          <div>
+            <p className="text-sm text-muted">{t("music.empty")}</p>
+            <p className="text-xs text-muted/60">{t("music.hint")}</p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 

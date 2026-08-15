@@ -7,6 +7,8 @@ import { useI18n } from "@/lib/i18n";
 import type { Project } from "@/lib/projects";
 import { ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function PortfolioContent({ projects }: { projects: Project[] }) {
   const { t } = useI18n();
@@ -27,52 +29,57 @@ export function PortfolioContent({ projects }: { projects: Project[] }) {
           {projects.map((project) => (
             <StaggerItem
               key={project.slug}
-              className="group flex flex-col p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
+              className="group flex"
             >
-              <div className="flex-1">
-                <Link href={`/portfolio/${project.slug}`} className="block">
-                  <h3 className="font-semibold text-foreground group-hover:text-highlight transition-colors">
-                    {project.title}
-                  </h3>
-                </Link>
-                <p className="text-sm text-muted mt-2 leading-relaxed">
-                  {project.excerpt}
-                </p>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-0.5 text-xs rounded-full bg-accent/20 text-highlight border border-accent/30"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-4 flex items-center gap-3 pt-3 border-t border-border">
-                {project.demo && (
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-highlight transition-colors"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    {t("portfolio.demo")}
-                  </a>
-                )}
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-highlight transition-colors"
-                  >
-                    <FaGithub className="h-3.5 w-3.5" />
-                    {t("portfolio.code")}
-                  </a>
-                )}
-              </div>
+              <Card className="flex flex-col border-border bg-card/50 transition-all duration-300 hover:border-accent glow-hover group-hover:bg-surface/50">
+                <CardContent className="flex flex-1 flex-col p-5">
+                  <div className="flex-1">
+                    <Link href={`/portfolio/${project.slug}`} className="block">
+                      <h3 className="font-semibold text-foreground group-hover:text-highlight transition-colors">
+                        {project.title}
+                      </h3>
+                    </Link>
+                    <p className="text-sm text-muted mt-2 leading-relaxed">
+                      {project.excerpt}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {project.tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className="rounded-full bg-accent/20 text-highlight"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="mt-4 flex items-center gap-3 pt-3 border-t border-border">
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-highlight transition-colors"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        {t("portfolio.demo")}
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-highlight transition-colors"
+                      >
+                        <FaGithub className="h-3.5 w-3.5" />
+                        {t("portfolio.code")}
+                      </a>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </StaggerItem>
           ))}
         </Stagger>

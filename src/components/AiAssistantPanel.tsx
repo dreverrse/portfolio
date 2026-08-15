@@ -3,6 +3,11 @@
 import { useState, type FormEvent } from "react";
 import { Sparkles, Loader2, Check, FileText } from "lucide-react";
 import { PostContent } from "@/components/PostContent";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type AiAction = "draft" | "excerptTags" | "rewrite" | "translate";
 
@@ -12,13 +17,6 @@ const ACTIONS: { id: AiAction; label: string; hint: string }[] = [
   { id: "rewrite", label: "Rewrite", hint: "Konten → perbaikan sesuai instruksi" },
   { id: "translate", label: "Translate", hint: "Slug → terjemahan Inggris penuh" },
 ];
-
-const inputClass =
-  "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors placeholder:text-muted/60 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none";
-const btnPrimary =
-  "inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50";
-const btnGhost =
-  "inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted transition-colors hover:border-accent hover:text-foreground";
 
 interface DraftShape {
   title?: string;
@@ -86,135 +84,137 @@ export function AiAssistantPanel({
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleGenerate} className="rounded-2xl border border-border bg-card/50 p-6 space-y-4">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-highlight" />
-          <h2 className="text-lg font-semibold">AI Content Assistant</h2>
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-muted">Action</label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {ACTIONS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                onClick={() => setAction(a.id)}
-                className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
-                  action === a.id
-                    ? "border-accent bg-accent/10"
-                    : "border-border text-muted hover:border-accent"
-                }`}
-              >
-                <span className="font-medium text-foreground block">{a.label}</span>
-                <span className="text-xs">{a.hint}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {action === "draft" && (
-          <div>
-            <label htmlFor="ai-topic" className="mb-1.5 block text-sm font-medium text-muted">Topik</label>
-            <textarea
-              id="ai-topic"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className={`${inputClass} resize-y`}
-              rows={3}
-              placeholder="Contoh: Cara deploy aplikasi Next.js ke Vercel"
-              required
-            />
-          </div>
-        )}
-
-        {action === "excerptTags" && (
-          <div>
-            <label htmlFor="ai-content" className="mb-1.5 block text-sm font-medium text-muted">Konten artikel</label>
-            <textarea
-              id="ai-content"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className={`${inputClass} resize-y`}
-              rows={8}
-              placeholder="Tempel isi artikel di sini..."
-              required
-            />
-          </div>
-        )}
-
-        {action === "rewrite" && (
-          <>
-            <div>
-              <label htmlFor="ai-content" className="mb-1.5 block text-sm font-medium text-muted">Konten artikel</label>
-              <textarea
-                id="ai-content"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className={`${inputClass} resize-y`}
-                rows={8}
-                required
-              />
+      <form onSubmit={handleGenerate} className="space-y-4">
+        <Card className="border-border bg-card/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-highlight" />
+              AI Content Assistant
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-1.5">
+              <Label>Action</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {ACTIONS.map((a) => (
+                  <Button
+                    key={a.id}
+                    type="button"
+                    onClick={() => setAction(a.id)}
+                    variant={action === a.id ? "default" : "outline"}
+                    className="h-auto justify-start flex-col items-start px-3 py-2 text-left"
+                  >
+                    <span className="font-medium block">{a.label}</span>
+                    <span className="text-xs text-muted-foreground">{a.hint}</span>
+                  </Button>
+                ))}
+              </div>
             </div>
-            <div>
-              <label htmlFor="ai-instruction" className="mb-1.5 block text-sm font-medium text-muted">Instruksi (opsional)</label>
-              <input
-                id="ai-instruction"
-                value={instruction}
-                onChange={(e) => setInstruction(e.target.value)}
-                className={inputClass}
-                placeholder="Contoh: jadikan lebih ringkas dan mudah dipahami"
-              />
-            </div>
-          </>
-        )}
 
-        {action === "translate" && (
-          <div>
-            <label htmlFor="ai-slug" className="mb-1.5 block text-sm font-medium text-muted">Slug artikel</label>
-            <input
-              id="ai-slug"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              className={inputClass}
-              placeholder="contoh: deploy-vercel"
-              required
-            />
-          </div>
-        )}
+            {action === "draft" && (
+              <div className="space-y-1.5">
+                <Label htmlFor="ai-topic">Topik</Label>
+                <Textarea
+                  id="ai-topic"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="resize-y"
+                  rows={3}
+                  placeholder="Contoh: Cara deploy aplikasi Next.js ke Vercel"
+                  required
+                />
+              </div>
+            )}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+            {action === "excerptTags" && (
+              <div className="space-y-1.5">
+                <Label htmlFor="ai-content">Konten artikel</Label>
+                <Textarea
+                  id="ai-content"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="resize-y"
+                  rows={8}
+                  placeholder="Tempel isi artikel di sini..."
+                  required
+                />
+              </div>
+            )}
 
-        <button type="submit" disabled={loading} className={btnPrimary}>
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-          {loading ? "Memproses..." : "Generate"}
-        </button>
+            {action === "rewrite" && (
+              <>
+                <div className="space-y-1.5">
+                  <Label htmlFor="ai-content">Konten artikel</Label>
+                  <Textarea
+                    id="ai-content"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="resize-y"
+                    rows={8}
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="ai-instruction">Instruksi (opsional)</Label>
+                  <Input
+                    id="ai-instruction"
+                    value={instruction}
+                    onChange={(e) => setInstruction(e.target.value)}
+                    placeholder="Contoh: jadikan lebih ringkas dan mudah dipahami"
+                  />
+                </div>
+              </>
+            )}
+
+            {action === "translate" && (
+              <div className="space-y-1.5">
+                <Label htmlFor="ai-slug">Slug artikel</Label>
+                <Input
+                  id="ai-slug"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  placeholder="contoh: deploy-vercel"
+                  required
+                />
+              </div>
+            )}
+
+            {error && <p className="text-sm text-red-500">{error}</p>}
+
+            <Button type="submit" disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              {loading ? "Memproses..." : "Generate"}
+            </Button>
+          </CardContent>
+        </Card>
       </form>
 
       {result !== null && (
-        <div className="rounded-2xl border border-border bg-card/50 p-6">
-          {isDraft ? (
-            <>
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-xl font-bold">{draft.title}</h3>
-                  <p className="mt-1 text-sm text-muted">{draft.excerpt}</p>
+        <Card className="border-border bg-card/50">
+          <CardContent className="pt-6">
+            {isDraft ? (
+              <>
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl font-bold">{draft.title}</h3>
+                    <p className="mt-1 text-sm text-muted">{draft.excerpt}</p>
+                  </div>
+                  <Button onClick={applyDraft} variant="outline">
+                    <Check className="h-4 w-4" />
+                    Pakai di Editor
+                  </Button>
                 </div>
-                <button onClick={applyDraft} className={btnGhost}>
-                  <Check className="h-4 w-4" />
-                  Pakai di Editor
-                </button>
-              </div>
-              <div className="mt-4 rounded-xl border border-border bg-background p-6">
-                <PostContent content={draft.content || ""} />
-              </div>
-            </>
-          ) : (
-            <pre className="whitespace-pre-wrap rounded-xl border border-border bg-background p-4 text-sm">
-              {JSON.stringify(result, null, 2)}
-            </pre>
-          )}
-        </div>
+                <div className="mt-4 rounded-xl border border-border bg-background p-6">
+                  <PostContent content={draft.content || ""} />
+                </div>
+              </>
+            ) : (
+              <pre className="whitespace-pre-wrap rounded-xl border border-border bg-background p-4 text-sm">
+                {JSON.stringify(result, null, 2)}
+              </pre>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {action === "translate" && (
