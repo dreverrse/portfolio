@@ -1,0 +1,31 @@
+---
+title: "KyleBot"
+date: "2026-08-14"
+excerpt: "Asisten AI multi-platform yang berjalan di Cloudflare Workers — chat AI Telegram + Discord, notifikasi berita viral, dashboard web real-time, dan integrasi Google Calendar."
+tags: ["Cloudflare Workers", "TypeScript", "D1", "Telegram Bot API", "Discord API"]
+demo: "https://kylebot.andrekusuma388.workers.dev"
+github: "https://github.com/dreverrse/kylebot"
+---
+
+## Latar Belakang
+
+KyleBot lahir dari kebutuhan satu bot yang bisa melayani chat AI, memantau berita viral, dan mengelola agenda tanpa harus berpindah-pindah aplikasi. Alih-alih bergantung pada satu server mahal, ia dirancang untuk berjalan di platform serverless.
+
+## Masalah
+
+Bot AI biasanya butuh server terus-menerus, mahal, dan sulit dirawat. Selain itu, banyak fitur terpisah-pisah: chat AI di satu tempat, notifikasi berita di tempat lain, kalender di tempat lain lagi.
+
+## Solusi
+
+Sebuah bot serverless di Cloudflare Workers dengan basis data D1 yang menjalankan semua fitur dari satu kode:
+
+- **Chat AI** di Telegram dan Discord dengan multi-provider model.
+- **Notifikasi berita viral** dengan ringkasan gaya obrolan santai dari AI, dikirim proaktif via cron.
+- **Transkripsi pesan suara** otomatis.
+- **Dashboard web real-time** untuk memantau statistik dan mengirim pesan langsung ke pengguna.
+- **Integrasi Google Calendar** untuk melihat dan membuat acara langsung dari chat.
+- **Integrasi Discord penuh**: command slash, verifikasi signature Ed25519, dan konfigurasi server via API.
+
+## Hasil
+
+Satu bot yang berjalan 24/7 tanpa server, melayani ribuan percakapan AI, mengirim notifikasi berita otomatis, dan mengelola kalender — semuanya dari chat Telegram maupun Discord.
