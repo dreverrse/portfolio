@@ -1,0 +1,185 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API Publik — Portfolio",
+    "description": "Public read-only API untuk konten situs ini. Tidak memerlukan API key.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "/" }
+  ],
+  "paths": {
+    "/api/v1/posts": {
+      "get": {
+        "summary": "Daftar artikel blog (ringkas)",
+        "description": "Mengembalikan semua artikel blog tanpa isi konten lengkap.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/PostSummary" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/posts/{slug}": {
+      "get": {
+        "summary": "Satu artikel lengkap",
+        "description": "Mengembalikan satu artikel lengkap berdasarkan slug. 404 jika tidak ditemukan.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "deploy-vercel"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/PostFull" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artikel tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": false },
+                    "error": { "type": "string", "example": "Artikel tidak ditemukan" },
+                    "status": { "type": "number", "example": 404 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stats": {
+      "get": {
+        "summary": "Statistik publik",
+        "description": "Ringkasan statistik publik: jumlah post, reaksi, komentar, dan data GitHub.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "posts": { "type": "number", "example": 10 },
+                        "reactions": { "type": "number", "example": 42 },
+                        "comments": { "type": "number", "example": 7 },
+                        "github": {
+                          "type": "object",
+                          "properties": {
+                            "followers": { "type": "number", "example": 5 },
+                            "publicRepos": { "type": "number", "example": 20 },
+                            "totalStars": { "type": "number", "example": 12 },
+                            "topLanguages": { "type": "array", "items": { "type": "string" }, "example": ["TypeScript"] }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/site/status": {
+      "get": {
+        "summary": "Status integrasi",
+        "description": "Status kesehatan integrasi eksternal situs.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "integrations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": { "type": "string", "example": "GitHub" },
+                              "status": { "type": "string", "example": "up" },
+                              "latencyMs": { "type": "number", "example": 120 }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostSummary": {
+        "type": "object",
+        "properties": {
+          "slug": { "type": "string", "example": "deploy-vercel" },
+          "title": { "type": "string", "example": "Contoh Judul" },
+          "excerpt": { "type": "string", "example": "Ringkasan artikel" },
+          "tags": { "type": "array", "items": { "type": "string" }, "example": ["nextjs", "tutorial"] },
+          "date": { "type": "string", "example": "2026-01-01" },
+          "readingTime": { "type": "number", "example": 4 }
+        }
+      },
+      "PostFull": {
+        "allOf": [
+          { "$ref": "#/components/schemas/PostSummary" },
+          {
+            "type": "object",
+            "properties": {
+              "content": { "type": "string", "example": "# Isi markdown\n\nParagraf..." }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@lottiefiles/dotlottie-web": "^0.79.0",
+    "@scalar/api-reference-react": "^0.9.63",
     "@supabase/supabase-js": "^2.112.0",
     "@tiptap/extension-image": "^3.29.2",
     "@tiptap/extension-placeholder": "^3.29.2",
