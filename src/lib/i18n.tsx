@@ -23,7 +23,6 @@ const translations = {
     "footer.madeWith": "Dibuat dengan",
     "footer.by": "oleh",
     "footer.admin": "Admin",
-    "footer.apiDocs": "API",
     "home.welcome": "Selamat datang di ruangku",
     "home.hello": "Halo, saya",
     "home.tagline":
@@ -97,10 +96,10 @@ const translations = {
     "blog.commentErrSend": "Gagal mengirim komentar.",
     "music.empty": "Belum ada lagu yang diputar",
     "music.hint": "Nanti muncul di sini lewat Last.fm",
-    "waifu.aria": "Chat dengan Katou Megumi",
-    "waifu.online": "online · waifu AI",
+    "waifu.aria": "Chat dengan KyleBot",
+    "waifu.online": "online · asisten AI",
     "waifu.delete": "Hapus chat",
-    "waifu.typing": "Megumi sedang mengetik",
+    "waifu.typing": "KyleBot sedang mengetik",
     "waifu.placeholder": "Ketik pesan...",
     "waifu.send": "Kirim pesan",
     "waifu.errApi": "Gagal memanggil API",
@@ -110,7 +109,7 @@ const translations = {
     "waifu.greeting.afternoon": "Selamat sore",
     "waifu.greeting.night": "Selamat malam",
     "waifu.greeting.text":
-      "{part}, aku Megumi. Bosen nggak di sini? Kita ngobrol aja kalau kamu mau.",
+      "{part}, aku KyleBot. Ada yang bisa aku bantu? Aku siap menemani dan bantu jawab pertanyaanmu.",
     "notfound.title": "Halaman tidak ditemukan",
     "notfound.desc":
       "Halaman yang kamu cari kayaknya tersesat, atau emang belum pernah ada di sini. Jangan khawatir, yang penting kamu ketemu.",
@@ -130,7 +129,6 @@ const translations = {
     "footer.madeWith": "Made with",
     "footer.by": "by",
     "footer.admin": "Admin",
-    "footer.apiDocs": "API",
     "home.welcome": "Welcome to my space",
     "home.hello": "Hello, I'm",
     "home.tagline":
@@ -203,10 +201,10 @@ const translations = {
     "blog.commentErrSend": "Failed to send comment.",
     "music.empty": "No song currently playing",
     "music.hint": "It will show up here via Last.fm",
-    "waifu.aria": "Chat with Katou Megumi",
-    "waifu.online": "online · waifu AI",
+    "waifu.aria": "Chat with KyleBot",
+    "waifu.online": "online · AI assistant",
     "waifu.delete": "Delete chat",
-    "waifu.typing": "Megumi is typing",
+    "waifu.typing": "KyleBot is typing",
     "waifu.placeholder": "Type a message...",
     "waifu.send": "Send message",
     "waifu.errApi": "Failed to call API",
@@ -216,7 +214,7 @@ const translations = {
     "waifu.greeting.afternoon": "Good evening",
     "waifu.greeting.night": "Good night",
     "waifu.greeting.text":
-      "{part}, I'm Megumi. Bored around here? We can chat if you want.",
+      "{part}, I'm KyleBot. Anything I can help with? I'm here to chat and answer your questions.",
     "notfound.title": "Page not found",
     "notfound.desc":
       "The page you're looking for seems lost, or never existed. Don't worry — the important thing is that you found me.",

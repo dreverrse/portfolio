@@ -114,7 +114,7 @@ function getTimePart(): string {
   return "malam";
 }
 
-const STORAGE_KEY = "waifu-chat";
+const STORAGE_KEY = "kylebot-chat";
 
 export function WaifuWidget() {
   const { t } = useI18n();
@@ -222,7 +222,7 @@ export function WaifuWidget() {
           </span>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src="/avatars/waifu-bubble.jpg" alt="" className="h-full w-full object-cover" />
+          <img src="/avatars/kylebot.jpg" alt="" className="h-full w-full object-cover" />
         )}
       </motion.button>
 
@@ -239,14 +239,14 @@ export function WaifuWidget() {
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/avatars/megumi-icon.jpg"
-                alt="Katou Megumi"
+                src="/avatars/kylebot.jpg"
+                alt="KyleBot"
                 className="h-10 w-10 rounded-full object-cover"
               />
               <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-accent border-2 border-background" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground">Katou Megumi</p>
+              <p className="text-sm font-semibold text-foreground">KyleBot</p>
               <p className="text-xs text-muted">{t("waifu.online")}</p>
             </div>
             <button
