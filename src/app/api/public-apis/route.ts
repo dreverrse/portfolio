@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPublicApis } from "@/lib/public-apis";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q")?.toLowerCase() || "";

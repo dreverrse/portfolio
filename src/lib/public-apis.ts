@@ -1,6 +1,5 @@
 const README_URL =
   "https://raw.githubusercontent.com/public-apis/public-apis/master/README.md";
-const CACHE_TTL_MS = 60 * 60 * 1000;
 
 export interface PublicApi {
   category: string;
@@ -11,9 +10,6 @@ export interface PublicApi {
   https: string;
   cors: string;
 }
-
-let cache: { apis: PublicApi[]; categories: string[]; fetchedAt: number } | null =
-  null;
 
 function extractUrl(cell: string): { name: string; url: string } {
   const linkMatch = cell.match(/\[([^\]]+)\]\(([^)]+)\)/);
@@ -78,27 +74,19 @@ export async function getPublicApis(): Promise<{
   apis: PublicApi[];
   categories: string[];
 }> {
-  const now = Date.now();
-  if (cache && now - cache.fetchedAt <= CACHE_TTL_MS) {
-    return { apis: cache.apis, categories: cache.categories };
-  }
-
   try {
     const res = await fetch(README_URL, {
       next: { revalidate: 3600 },
       signal: AbortSignal.timeout(15000),
     });
-    if (!res.ok) return cache ? { apis: cache.apis, categories: cache.categories } : { apis: [], categories: [] };
+    if (!res.ok) return { apis: [], categories: [] };
 
     const text = await res.text();
     const apis = parseReadme(text);
     const categories = [...new Set(apis.map((a) => a.category))].sort();
 
-    cache = { apis, categories, fetchedAt: now };
     return { apis, categories };
   } catch {
-    return cache
-      ? { apis: cache.apis, categories: cache.categories }
-      : { apis: [], categories: [] };
+    return { apis: [], categories: [] };
   }
 }
