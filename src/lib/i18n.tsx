@@ -116,6 +116,15 @@ const translations = {
     "notfound.home": "Kembali ke Beranda",
     "notfound.portfolio": "Lihat Portfolio",
     "backtotop.aria": "Kembali ke atas",
+    "nav.apis": "APIs",
+    "apis.title": "Direktori Public APIs",
+    "apis.description":
+      "Kumpulan API gratis dari komunitas — Animals, Anime, Crypto, Weather, dan banyak lagi.",
+    "apis.searchPlaceholder": "Cari API…",
+    "apis.searchEmpty": "Tidak ada API yang cocok dengan pencarian.",
+    "apis.allCategories": "Semua",
+    "apis.noAuth": "Gratis",
+    "apis.requiresAuth": "Perlu API Key",
   },
   en: {
     "lang.switch": "Switch to Indonesian",
@@ -221,6 +230,15 @@ const translations = {
     "notfound.home": "Back to Home",
     "notfound.portfolio": "View Portfolio",
     "backtotop.aria": "Back to top",
+    "nav.apis": "APIs",
+    "apis.title": "Public API Directory",
+    "apis.description":
+      "A curated list of free APIs from the community — Animals, Anime, Crypto, Weather, and many more.",
+    "apis.searchPlaceholder": "Search APIs…",
+    "apis.searchEmpty": "No APIs match your search.",
+    "apis.allCategories": "All",
+    "apis.noAuth": "Free",
+    "apis.requiresAuth": "Requires API Key",
   },
 } satisfies Record<Lang, Record<string, string>>;
 

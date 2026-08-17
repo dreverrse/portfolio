@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Globe,
+  Code2,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/about", labelKey: "nav.about", icon: User },
   { href: "/portfolio", labelKey: "nav.portfolio", icon: Briefcase },
   { href: "/blog", labelKey: "nav.blog", icon: FileText },
+  { href: "/apis", labelKey: "nav.apis", icon: Code2 },
 ];
 
 function LanguageToggle() {
