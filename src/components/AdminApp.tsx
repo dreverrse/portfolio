@@ -8,7 +8,7 @@ import { LoginCard } from "@/components/LoginCard";
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { AdminStatus } from "@/components/AdminStatus";
-import { ApiDocs } from "@/components/ApiDocs";
+import { ApiDirectory } from "@/components/pages/ApiDirectory";
 import type { StoredPost } from "@/lib/posts-store";
 import {
   Plus,
@@ -41,7 +41,7 @@ const TABS: { id: AdminTab; label: string; icon: typeof FileText }[] = [
   { id: "ai", label: "AI Assistant", icon: Sparkles },
   { id: "dashboard", label: "Dashboard", icon: BarChart3 },
   { id: "status", label: "Status", icon: Activity },
-  { id: "api", label: "API Docs", icon: Code2 },
+  { id: "api", label: "APIs", icon: Code2 },
 ];
 
 const EMPTY_FORM: PostForm = {
@@ -467,7 +467,7 @@ export function AdminApp({
       {tab === "ai" && <AiAssistantPanel onUseDraft={handleUseDraft} />}
       {tab === "dashboard" && <AdminDashboard />}
       {tab === "status" && <AdminStatus />}
-      {tab === "api" && <ApiDocs />}
+      {tab === "api" && <ApiDirectory />}
     </div>
   );
 }

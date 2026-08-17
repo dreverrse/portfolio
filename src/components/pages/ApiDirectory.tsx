@@ -1,22 +1,43 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import type { PublicApi } from "@/lib/public-apis";
-import { Search, ExternalLink, Shield, Globe, Lock } from "lucide-react";
+import { Search, ExternalLink, Shield, Globe, Lock, Loader2 } from "lucide-react";
 
-export function ApiDirectory({
-  apis,
-  categories,
-}: {
-  apis: PublicApi[];
-  categories: string[];
-}) {
+interface ApiDirectoryProps {
+  apis?: PublicApi[];
+  categories?: string[];
+}
+
+export function ApiDirectory({ apis: initialApis, categories: initialCategories }: ApiDirectoryProps) {
   const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const [apis, setApis] = useState<PublicApi[]>(initialApis ?? []);
+  const [categories, setCategories] = useState<string[]>(initialCategories ?? []);
+  const [loading, setLoading] = useState(initialApis === undefined);
+
+  useEffect(() => {
+    if (initialApis !== undefined) return;
+    let cancelled = false;
+    fetch("/api/public-apis")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data?.ok) {
+          setApis(data.data.apis);
+          setCategories(data.data.categories);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [initialApis]);
 
   const filtered = useMemo(() => {
     let list = apis;
@@ -34,24 +55,32 @@ export function ApiDirectory({
     return list;
   }, [apis, query, activeCategory]);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20 text-muted">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
+    <div>
       <FadeIn>
-        <div className="mb-12">
+        <div className="mb-8">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">
             APIs
           </span>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+          <h1 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
             {t("apis.title")}
           </h1>
-          <p className="mt-4 text-lg text-muted max-w-2xl leading-relaxed">
+          <p className="mt-3 text-base text-muted max-w-2xl leading-relaxed">
             {t("apis.description")}
           </p>
         </div>
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="mb-8 space-y-4">
+        <div className="mb-6 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
             <input
