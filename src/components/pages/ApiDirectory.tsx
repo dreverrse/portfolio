@@ -1,24 +1,19 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import type { PublicApi } from "@/lib/public-apis";
-import { Search, ExternalLink, Shield, Globe, Lock, Loader2 } from "lucide-react";
+import { ExternalLink, Shield, Globe, Lock, Loader2 } from "lucide-react";
 
 interface ApiDirectoryProps {
   apis?: PublicApi[];
-  categories?: string[];
 }
 
-export function ApiDirectory({ apis: initialApis, categories: initialCategories }: ApiDirectoryProps) {
+export function ApiDirectory({ apis: initialApis }: ApiDirectoryProps) {
   const { t } = useI18n();
-  const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
   const [apis, setApis] = useState<PublicApi[]>(initialApis ?? []);
-  const [categories, setCategories] = useState<string[]>(initialCategories ?? []);
   const [loading, setLoading] = useState(initialApis === undefined);
 
   useEffect(() => {
@@ -29,7 +24,6 @@ export function ApiDirectory({ apis: initialApis, categories: initialCategories 
       .then((data) => {
         if (!cancelled && data?.ok) {
           setApis(data.data.apis);
-          setCategories(data.data.categories);
         }
       })
       .catch(() => {})
@@ -38,22 +32,6 @@ export function ApiDirectory({ apis: initialApis, categories: initialCategories 
       });
     return () => { cancelled = true; };
   }, [initialApis]);
-
-  const filtered = useMemo(() => {
-    let list = apis;
-    if (activeCategory) {
-      list = list.filter((a) => a.category === activeCategory);
-    }
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
-      list = list.filter(
-        (a) =>
-          a.name.toLowerCase().includes(q) ||
-          a.description.toLowerCase().includes(q)
-      );
-    }
-    return list;
-  }, [apis, query, activeCategory]);
 
   if (loading) {
     return (
@@ -79,62 +57,10 @@ export function ApiDirectory({ apis: initialApis, categories: initialCategories 
         </div>
       </FadeIn>
 
-      <FadeIn delay={0.1}>
-        <div className="mb-6 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("apis.searchPlaceholder")}
-              className="w-full rounded-xl border border-border bg-card/50 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
-            />
-          </div>
-          {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveCategory(null)}
-                className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                  activeCategory === null
-                    ? "bg-accent text-white border-accent"
-                    : "bg-card/50 border-border text-muted hover:text-highlight hover:border-accent"
-                }`}
-              >
-                {t("apis.allCategories")}
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() =>
-                    setActiveCategory(activeCategory === cat ? null : cat)
-                  }
-                  className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                    activeCategory === cat
-                      ? "bg-accent text-white border-accent"
-                      : "bg-card/50 border-border text-muted hover:text-highlight hover:border-accent"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </FadeIn>
-
-      {filtered.length === 0 && (
-        <FadeIn delay={0.15}>
-          <div className="text-center py-16 rounded-xl border border-border bg-card/30">
-            <p className="text-muted text-lg">{t("apis.searchEmpty")}</p>
-          </div>
-        </FadeIn>
-      )}
-
-      {filtered.length > 0 && (
-        <FadeIn delay={0.15}>
+      {apis.length > 0 && (
+        <FadeIn delay={0.1}>
           <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((api) => (
+            {apis.map((api) => (
               <StaggerItem
                 key={`${api.category}-${api.name}`}
                 className="group p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"

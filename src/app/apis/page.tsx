@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ApisPage() {
-  const { apis, categories } = await getPublicApis();
+  const { apis } = await getPublicApis();
 
   return (
     <>
@@ -54,7 +54,7 @@ export default async function ApisPage() {
           ),
         }}
       />
-      <ApiDirectory apis={apis} categories={categories} />
+      <ApiDirectory apis={apis} />
     </>
   );
 }
