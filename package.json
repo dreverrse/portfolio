@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "gen:apis": "node scripts/gen-public-apis.mjs",
+    "prebuild": "node scripts/gen-public-apis.mjs",
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",

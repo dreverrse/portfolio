@@ -27,10 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
-
-export default async function ApisPage() {
-  const { apis } = await getPublicApis();
+export default function ApisPage() {
+  const { apis } = getPublicApis();
 
   return (
     <>
@@ -42,8 +40,7 @@ export default async function ApisPage() {
               "@context": "https://schema.org",
               "@type": "CollectionPage",
               name: `APIs | ${SITE_NAME}`,
-              description:
-                "Kumpulan API gratis dari komunitas.",
+              description: "Kumpulan API gratis dari komunitas.",
               url: `${SITE_URL}/apis`,
               isPartOf: {
                 "@type": "WebSite",
