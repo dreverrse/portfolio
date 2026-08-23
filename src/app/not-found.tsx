@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FadeIn } from "@/components/FadeIn";
 import { useI18n } from "@/lib/i18n";
 import { Home, ArrowRight } from "lucide-react";
 import LottiePlayer from "@/components/LottiePlayer";
-import { ShinyButton } from "@/components/ui/shiny-button";
 
 export default function NotFound() {
   const { t } = useI18n();
-  const router = useRouter();
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-20 sm:py-32">
@@ -45,12 +42,13 @@ export default function NotFound() {
 
         <FadeIn delay={0.15}>
           <div className="relative mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
-            <ShinyButton onClick={() => router.push("/")}>
-              <span className="inline-flex items-center gap-2">
-                <Home className="h-4 w-4" />
-                {t("notfound.home")}
-              </span>
-            </ShinyButton>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-medium text-sm hover:bg-highlight/80 transition-all duration-200 glow-hover"
+            >
+              <Home className="h-4 w-4" />
+              {t("notfound.home")}
+            </Link>
             <Link
               href="/portfolio"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-border text-foreground font-medium text-sm hover:bg-surface hover:border-accent transition-all duration-200"
