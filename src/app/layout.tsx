@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/lib/i18n";
 import { WaifuWidget } from "@/components/WaifuWidget";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
+import ConstellationGrid from "@/components/ui/constellation-grid";
 import { Analytics } from "@vercel/analytics/react";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 import { escapeJsonLd } from "@/lib/utils";
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="min-h-full flex flex-col noise-bg">
+        <ConstellationGrid />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

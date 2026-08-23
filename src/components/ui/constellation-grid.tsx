@@ -19,11 +19,12 @@ interface ConstellationGridProps {
 }
 
 /**
- * Latar mesh partikel interaktif (adaptasi dari 21st.dev).
- * - Hanya merender kanvas; konten overlay ditentukan halaman pemakai.
+ * Latar global mesh partikel interaktif (adaptasi dari 21st.dev).
+ * - Dipasang di RootLayout sebagai layer fixed -z-10 di semua halaman.
+ * - Kanvas transparan: warna latar situs (globals.css) terlihat menembus.
  * - Tema mengikuti class "light" pada <html> (mekanisme ThemeToggle situs).
- * - Wrapper pointer-events-none: klik tetap jalan, mouse didengar via window.
- * - Spasi grid lebih renggang di layar kecil demi performa.
+ * - Interaksi via window pointer events: mendukung mouse dan sentuh.
+ * - Spasi grid lebih renggang di layar kecil demi performa; DPR dibatasi 2.
  * - Menghormati prefers-reduced-motion (render statis tanpa animasi).
  */
 export default function ConstellationGrid({
@@ -36,7 +37,7 @@ export default function ConstellationGrid({
     const host = canvas?.parentElement;
     if (!canvas || !host) return;
 
-    const ctx = canvas.getContext("2d", { alpha: false });
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
     const rootEl = document.documentElement;
@@ -64,7 +65,7 @@ export default function ConstellationGrid({
 
     const initNodes = () => {
       nodes = [];
-      const spacing = width < 640 ? 80 : 55;
+      const spacing = width < 640 ? 90 : 55;
       const cols = Math.ceil(width / spacing) + 1;
       const rows = Math.ceil(height / spacing) + 1;
 
@@ -105,7 +106,6 @@ export default function ConstellationGrid({
     const palette = () => {
       const light = isLight();
       return {
-        bg: light ? "#f8fafc" : "#030407",
         node: light ? "15, 23, 42" : "255, 255, 255",
         accent: light ? "2, 132, 199" : "56, 189, 248",
         linkAlpha: light ? 0.08 : 0.18,
@@ -152,10 +152,9 @@ export default function ConstellationGrid({
     };
 
     const drawScene = () => {
-      const { bg, node, accent, linkAlpha } = palette();
+      const { node, accent, linkAlpha } = palette();
 
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
 
       const MAX_CONN_DIST = 75;
       const MAX_CONN_DIST_SQ = MAX_CONN_DIST * MAX_CONN_DIST;
@@ -235,14 +234,22 @@ export default function ConstellationGrid({
       rafId = requestAnimationFrame(render);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     };
 
-    const handleMouseLeave = () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
+    const handlePointerDown = (e: PointerEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+
+    // Sentuh: lepas titik gaya saat jari diangkat agar tidak "nyangkut".
+    const releasePointer = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") {
+        mouse.x = -1000;
+        mouse.y = -1000;
+      }
     };
 
     handleResize();
@@ -267,24 +274,28 @@ export default function ConstellationGrid({
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(host);
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerdown", handlePointerDown, { passive: true });
+    window.addEventListener("pointerup", releasePointer, { passive: true });
+    window.addEventListener("pointercancel", releasePointer, { passive: true });
     rafId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointerup", releasePointer);
+      window.removeEventListener("pointercancel", releasePointer);
     };
   }, []);
 
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
+      className={`pointer-events-none fixed inset-0 -z-10 overflow-hidden ${className}`}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 block cursor-crosshair" />
+      <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" />
     </div>
   );
 }
