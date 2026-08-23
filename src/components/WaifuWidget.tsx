@@ -116,7 +116,7 @@ function getTimePart(): string {
 
 const STORAGE_KEY = "kylebot-chat";
 const IDLE_HIDE_MS = 5000;
-const DOCK_OFFSET = 56;
+const DOCK_OFFSET = 88;
 const BLINK_CLOSED_MS = 150;
 const BLINK_NEXT_MIN_MS = 2200;
 const BLINK_NEXT_MAX_MS = 5000;
@@ -296,6 +296,28 @@ export function WaifuWidget() {
           <KawaiiFace peeking={docked} blink={blink} />
         )}
       </motion.button>
+
+      <AnimatePresence>
+        {docked && (
+          <motion.button
+            key="peek-tab"
+            onClick={toggleOpen}
+            aria-label={t("waifu.aria")}
+            initial={{ x: 24, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 24, opacity: 0 }}
+            transition={springTransition}
+            whileTap={{ scale: 0.92 }}
+            className="fixed bottom-5 right-0 z-[90] flex h-14 w-[18px] items-center rounded-l-full border-2 border-r-0 border-foreground/25 bg-secondary"
+          >
+            <motion.span
+              className="ml-1 block h-4 w-1.5 shrink-0 rounded-full bg-foreground"
+              animate={{ scaleY: blink ? 0.1 : 1 }}
+              transition={{ duration: 0.13 }}
+            />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {open && (
