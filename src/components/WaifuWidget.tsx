@@ -117,6 +117,53 @@ function getTimePart(): string {
 const STORAGE_KEY = "kylebot-chat";
 const IDLE_HIDE_MS = 5000;
 const DOCK_OFFSET = 42;
+const BLINK_CLOSED_MS = 150;
+const BLINK_NEXT_MIN_MS = 2200;
+const BLINK_NEXT_MAX_MS = 5000;
+
+// Wajah mini: cuma dua mata yang berkedip; melirik ke luar saat mengintip.
+function KawaiiFace({ peeking }: { peeking: boolean }) {
+  const [blink, setBlink] = useState(false);
+
+  useEffect(() => {
+    let closeTimer: ReturnType<typeof setTimeout>;
+    let nextTimer: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      const delay =
+        BLINK_NEXT_MIN_MS +
+        Math.random() * (BLINK_NEXT_MAX_MS - BLINK_NEXT_MIN_MS);
+      nextTimer = setTimeout(() => {
+        setBlink(true);
+        closeTimer = setTimeout(() => {
+          setBlink(false);
+          schedule();
+        }, BLINK_CLOSED_MS);
+      }, delay);
+    };
+    schedule();
+    return () => {
+      clearTimeout(nextTimer);
+      clearTimeout(closeTimer);
+    };
+  }, []);
+
+  return (
+    <motion.span
+      className="flex h-full w-full items-center justify-center gap-2 bg-secondary"
+      animate={{ x: peeking ? -6 : 0 }}
+      transition={springTransition}
+    >
+      {[0, 1].map((eye) => (
+        <motion.span
+          key={eye}
+          className="block h-5 w-2.5 rounded-full bg-foreground"
+          animate={{ scaleY: blink ? 0.1 : 1 }}
+          transition={{ duration: 0.13 }}
+        />
+      ))}
+    </motion.span>
+  );
+}
 
 export function WaifuWidget() {
   const { t } = useI18n();
@@ -232,8 +279,7 @@ export function WaifuWidget() {
             <X className="h-6 w-6" />
           </span>
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src="/avatars/kylebot.jpg" alt="" className="h-full w-full object-cover" />
+          <KawaiiFace peeking={docked} />
         )}
       </motion.button>
 
