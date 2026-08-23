@@ -115,10 +115,13 @@ function getTimePart(): string {
 }
 
 const STORAGE_KEY = "kylebot-chat";
+const IDLE_HIDE_MS = 5000;
+const DOCK_OFFSET = 42;
 
 export function WaifuWidget() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
+  const [docked, setDocked] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -146,6 +149,27 @@ export function WaifuWidget() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
+  // Sembunyikan tombol ke pinggir saat idle; muncul lagi saat ada aktivitas.
+  useEffect(() => {
+    if (open) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => setDocked(true), IDLE_HIDE_MS);
+    };
+    const wake = () => {
+      setDocked(false);
+      arm();
+    };
+    const events = ["pointermove", "pointerdown", "keydown", "scroll"] as const;
+    events.forEach((e) => window.addEventListener(e, wake, { passive: true }));
+    arm();
+    return () => {
+      clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, wake));
+    };
+  }, [open]);
+
   async function generateGreeting() {
     setLoading(true);
     try {
@@ -168,6 +192,7 @@ export function WaifuWidget() {
   }
 
   function toggleOpen() {
+    setDocked(false);
     if (!open && messages.length === 0) generateGreeting();
     setOpen(!open);
   }
@@ -208,9 +233,11 @@ export function WaifuWidget() {
     <>
       <motion.button
         onClick={toggleOpen}
+        onMouseEnter={() => setDocked(false)}
+        onFocus={() => setDocked(false)}
         aria-label={t("waifu.aria")}
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        animate={{ scale: 1, opacity: 1, x: docked ? DOCK_OFFSET : 0 }}
         transition={springTransition}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
