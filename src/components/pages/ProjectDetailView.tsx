@@ -66,7 +66,7 @@ export function ProjectDetailView({ project }: { project: Project }) {
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-white text-sm font-medium hover:bg-highlight/80 transition-all duration-200 glow-hover"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-all duration-200 glow-hover"
               >
                 <ExternalLink className="h-4 w-4" />
                 {t("portfolio.demo")}

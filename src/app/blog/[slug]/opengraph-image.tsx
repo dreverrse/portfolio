@@ -29,8 +29,8 @@ export default async function OpengraphImage({
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "64px 72px",
-          background: "#000000",
-          color: "#ffffff",
+          background: "#0a0a0a",
+          color: "#fafafa",
           fontFamily: "sans-serif",
         }}
       >
@@ -40,7 +40,7 @@ export default async function OpengraphImage({
             alignItems: "center",
             gap: 12,
             fontSize: 22,
-            color: "#0099ff",
+            color: "#fafafa",
             fontWeight: 600,
             letterSpacing: 2,
             textTransform: "uppercase",
@@ -51,7 +51,7 @@ export default async function OpengraphImage({
               width: 10,
               height: 10,
               borderRadius: 999,
-              background: "#0099ff",
+              background: "#fafafa",
             }}
           />
           Blog — {SITE_NAME}
@@ -71,7 +71,7 @@ export default async function OpengraphImage({
             <div
               style={{
                 fontSize: 26,
-                color: "#999999",
+                color: "#a1a1a1",
                 lineHeight: 1.4,
               }}
             >
@@ -80,7 +80,7 @@ export default async function OpengraphImage({
           )}
         </div>
 
-        <div style={{ fontSize: 22, color: "#555555" }}>
+        <div style={{ fontSize: 22, color: "#737373" }}>
           dreverrse.dev · Desainer & Developer
         </div>
       </div>

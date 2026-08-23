@@ -135,7 +135,7 @@ export function AdminDashboard() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-border/60">
                     <div
-                      className="h-full rounded-full bg-accent"
+                      className="h-full rounded-full bg-primary"
                       style={{ width: `${Math.round((score / maxScore) * 100)}%` }}
                     />
                   </div>

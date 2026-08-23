@@ -106,8 +106,8 @@ export default function ConstellationGrid({
     const palette = () => {
       const light = isLight();
       return {
-        node: light ? "15, 23, 42" : "255, 255, 255",
-        accent: light ? "2, 132, 199" : "56, 189, 248",
+        node: light ? "82, 82, 82" : "180, 180, 180",
+        accent: light ? "17, 17, 17" : "250, 250, 250",
         linkAlpha: light ? 0.08 : 0.18,
       };
     };

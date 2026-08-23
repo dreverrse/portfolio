@@ -61,7 +61,7 @@ function ToolbarButton({
         "inline-flex h-8 w-8 items-center justify-center rounded-md text-muted transition-colors",
         "hover:bg-surface hover:text-foreground",
         "disabled:opacity-40 disabled:pointer-events-none",
-        active && "bg-accent/20 text-accent"
+        active && "bg-accent text-accent-foreground"
       )}
     >
       <Icon className="h-4 w-4" />

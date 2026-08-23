@@ -83,10 +83,10 @@ export function MusicWidget() {
         {track.is_playing && (
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
             <div className="flex gap-0.5 items-end h-3">
-              <div className="w-0.5 bg-accent animate-pulse-glow" style={{ height: "60%", animationDelay: "0ms" }} />
-              <div className="w-0.5 bg-accent animate-pulse-glow" style={{ height: "100%", animationDelay: "150ms" }} />
-              <div className="w-0.5 bg-accent animate-pulse-glow" style={{ height: "40%", animationDelay: "300ms" }} />
-              <div className="w-0.5 bg-accent animate-pulse-glow" style={{ height: "80%", animationDelay: "450ms" }} />
+              <div className="w-0.5 bg-primary animate-pulse-glow" style={{ height: "60%", animationDelay: "0ms" }} />
+              <div className="w-0.5 bg-primary animate-pulse-glow" style={{ height: "100%", animationDelay: "150ms" }} />
+              <div className="w-0.5 bg-primary animate-pulse-glow" style={{ height: "40%", animationDelay: "300ms" }} />
+              <div className="w-0.5 bg-primary animate-pulse-glow" style={{ height: "80%", animationDelay: "450ms" }} />
             </div>
           </div>
         )}
@@ -94,7 +94,7 @@ export function MusicWidget() {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           {track.is_playing && (
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent animate-pulse-glow" />
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />
           )}
           <p className="text-sm font-medium truncate text-foreground group-hover:text-highlight transition-colors">
             {track.name}

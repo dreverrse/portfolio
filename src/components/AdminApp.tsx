@@ -67,7 +67,7 @@ const inputClass =
 const labelClass = "block text-sm font-medium text-muted mb-1.5";
 
 const btnPrimary =
-  "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50";
+  "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50";
 
 const btnGhost =
   "inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium text-muted hover:text-foreground hover:border-accent transition-colors";

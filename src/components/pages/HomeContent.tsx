@@ -55,7 +55,7 @@ export function HomeContent() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
             <Link
               href="/portfolio"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-medium text-sm hover:bg-highlight/80 transition-all duration-200 glow-hover"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-all duration-200 glow-hover"
             >
               {t("home.viewPortfolio")}
               <ArrowRight className="h-4 w-4" />

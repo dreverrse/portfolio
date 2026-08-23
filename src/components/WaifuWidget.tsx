@@ -217,7 +217,7 @@ export function WaifuWidget() {
         className="fixed bottom-5 right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
       >
         {open ? (
-          <span className="flex h-full w-full items-center justify-center bg-accent text-white">
+          <span className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
             <X className="h-6 w-6" />
           </span>
         ) : (
@@ -243,7 +243,7 @@ export function WaifuWidget() {
                 alt="KyleBot"
                 className="h-10 w-10 rounded-full object-cover"
               />
-              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-accent border-2 border-background" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-primary border-2 border-background" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-foreground">KyleBot</p>
@@ -268,7 +268,7 @@ export function WaifuWidget() {
                   className={cn(
                     "max-w-[80%] px-3.5 py-2 text-sm leading-relaxed",
                     m.role === "user"
-                      ? "rounded-2xl rounded-br-sm bg-accent text-white"
+                      ? "rounded-2xl rounded-br-sm bg-primary text-primary-foreground"
                       : "rounded-2xl rounded-bl-sm border border-border bg-surface text-foreground"
                   )}
                 >
@@ -305,7 +305,7 @@ export function WaifuWidget() {
               type="submit"
               disabled={loading || !input.trim()}
               aria-label={t("waifu.send")}
-              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-accent text-white hover:bg-highlight/80 transition-colors disabled:opacity-40"
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-40"
             >
               <Send className="h-4 w-4" />
             </button>

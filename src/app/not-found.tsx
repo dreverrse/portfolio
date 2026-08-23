@@ -30,7 +30,7 @@ export default function NotFound() {
               </span>
             </h1>
 
-            <p className="mt-4 font-mono text-sm text-accent tracking-widest uppercase">
+            <p className="mt-4 font-mono text-sm text-muted-foreground tracking-widest uppercase">
               {t("notfound.title")}
             </p>
 
@@ -44,7 +44,7 @@ export default function NotFound() {
           <div className="relative mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-medium text-sm hover:bg-highlight/80 transition-all duration-200 glow-hover"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-all duration-200 glow-hover"
             >
               <Home className="h-4 w-4" />
               {t("notfound.home")}
