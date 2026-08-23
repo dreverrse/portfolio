@@ -116,7 +116,7 @@ function getTimePart(): string {
 
 const STORAGE_KEY = "kylebot-chat";
 const IDLE_HIDE_MS = 5000;
-const DOCK_OFFSET = 42;
+const DOCK_OFFSET = 56;
 const BLINK_CLOSED_MS = 150;
 const BLINK_NEXT_MIN_MS = 2200;
 const BLINK_NEXT_MAX_MS = 5000;
@@ -159,7 +159,10 @@ function KawaiiFace({
 }) {
   return (
     <motion.span
-      className="flex h-full w-full items-center justify-center gap-2 rounded-full border-2 border-foreground/25 bg-secondary"
+      className={cn(
+        "flex h-full w-full items-center justify-center gap-2 rounded-full bg-secondary",
+        !peeking && "border-2 border-foreground/25"
+      )}
       animate={{ x: peeking ? -6 : 0 }}
       transition={springTransition}
     >
