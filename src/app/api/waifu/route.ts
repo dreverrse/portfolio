@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getClientIp, rateLimit } from "@/lib/ratelimit";
-import { chatOpenCodeZen } from "@/lib/opencode-zen";
+import { chatWithFallback } from "@/lib/chat-fallback";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -52,7 +52,7 @@ export async function GET(request: Request) {
   const p = valid.includes(part) ? part : "malam";
 
   try {
-    const reply = await chatOpenCodeZen(
+    const reply = await chatWithFallback(
       SYSTEM_PROMPT,
       [
         {
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const reply = await chatOpenCodeZen(SYSTEM_PROMPT, chatMessages);
+    const reply = await chatWithFallback(SYSTEM_PROMPT, chatMessages);
     return NextResponse.json({ reply });
   } catch (err) {
     return errorResponse(err);
