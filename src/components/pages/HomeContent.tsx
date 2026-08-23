@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import ConstellationGrid from "@/components/ui/constellation-grid";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { GitHubStats } from "@/components/GitHubStats";
 import { Stagger, StaggerItem } from "@/components/Stagger";
@@ -30,8 +31,7 @@ export function HomeContent() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-24">
       <section className="relative overflow-x-clip">
-        <div className="hidden sm:block absolute -top-32 -left-32 h-96 w-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="hidden sm:block absolute -bottom-32 -right-32 h-96 w-96 bg-highlight/5 rounded-full blur-3xl pointer-events-none" />
+        <ConstellationGrid className="[mask-image:linear-gradient(to_bottom,black_65%,transparent)]" />
 
         <FadeIn>
           <div className="relative">
