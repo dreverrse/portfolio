@@ -1,24 +1,14 @@
 import { ImageResponse } from "next/og";
-import { getPostBySlug } from "@/lib/blog";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 
-export const alt = "Artikel Blog Andre Kusuma Firmansah";
+export const alt = `${SITE_NAME} — Desainer & Developer`;
 export const size = {
   width: 1200,
   height: 630,
 };
 export const contentType = "image/png";
 
-export default async function OpengraphImage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  const title = post?.title || "Artikel tidak ditemukan";
-  const excerpt = post?.excerpt || "";
-
+export default function OpengraphImage() {
   return new ImageResponse(
     (
       <div
@@ -54,7 +44,7 @@ export default async function OpengraphImage({
               background: "#fafafa",
             }}
           />
-          Blog — {SITE_NAME}
+          Portfolio — {SITE_NAME}
         </div>
 
         <div
@@ -64,20 +54,12 @@ export default async function OpengraphImage({
             gap: 16,
           }}
         >
-          <div style={{ fontSize: 56, fontWeight: 700, lineHeight: 1.15 }}>
-            {title.length > 80 ? `${title.slice(0, 80)}…` : title}
+          <div style={{ fontSize: 68, fontWeight: 700, lineHeight: 1.1 }}>
+            {SITE_NAME}
           </div>
-          {excerpt && (
-            <div
-              style={{
-                fontSize: 26,
-                color: "#a1a1a1",
-                lineHeight: 1.4,
-              }}
-            >
-              {excerpt.length > 140 ? `${excerpt.slice(0, 140)}…` : excerpt}
-            </div>
-          )}
+          <div style={{ fontSize: 28, color: "#a1a1a1", lineHeight: 1.4 }}>
+            {SITE_DESCRIPTION}
+          </div>
         </div>
 
         <div style={{ fontSize: 22, color: "#737373" }}>
