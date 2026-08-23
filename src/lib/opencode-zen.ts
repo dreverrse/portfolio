@@ -18,10 +18,10 @@ export async function chatOpenCodeZen(
   options: OpenCodeZenOptions = {}
 ): Promise<string> {
   const apiKey = process.env.OPENCODE_ZEN_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      "Server belum dikonfigurasi. Tambahkan OPENCODE_ZEN_API_KEY di .env.local"
-    );
+  // Key bersifat opsional: endpoint Zen saat ini juga menerima request tanpa auth.
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (apiKey) {
+    headers.Authorization = `Bearer ${apiKey}`;
   }
 
   const model = process.env.OPENCODE_ZEN_MODEL || "big-pickle";
@@ -30,10 +30,7 @@ export async function chatOpenCodeZen(
   try {
     res = await fetch(OPENCODE_ZEN_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers,
       cache: "no-store",
       body: JSON.stringify({
         model,
