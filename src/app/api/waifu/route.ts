@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { getClientIp, rateLimit } from "@/lib/ratelimit";
+import { chatOpenCodeZen } from "@/lib/opencode-zen";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX = 10;
 
-const WORKER_URL = process.env.KYLEBOT_WORKER_URL ?? "https://kylebot.andrekusuma388.workers.dev";
+const SYSTEM_PROMPT = `Kamu adalah KyleBot, asisten AI di website portfolio Andre Kusuma Firmansah (dreverrse.my.id), seorang desainer & developer.
+Bicaralah dengan ramah, santai, dan singkat (maksimal 3-4 kalimat). Jawab dalam bahasa yang dipakai pengguna.
+Fokus membantu pertanyaan seputar Andre, portofolio, blog, proyek, dan pertanyaan umum ringan.
+Kontak resmi jika diminta: email work.andrefirmansah@gmail.com, GitHub https://github.com/dreverrse, Instagram https://instagram.com/dreverrse, X/Twitter https://twitter.com/dreverrse, WhatsApp https://wa.me/6285158599235.
+Jangan mengarang data pribadi yang tidak kamu ketahui; arahkan ke halaman About, Portfolio, atau kontak di atas.`;
 
 async function rateLimitResponse(request: Request): Promise<NextResponse | null> {
   const result = await rateLimit(getClientIp(request), {
@@ -30,6 +35,13 @@ interface ChatMessage {
   content: string;
 }
 
+function errorResponse(err: unknown): NextResponse {
+  return NextResponse.json(
+    { error: err instanceof Error ? err.message : "Gagal memanggil AI. Coba lagi nanti." },
+    { status: 502 }
+  );
+}
+
 export async function GET(request: Request) {
   const blocked = await rateLimitResponse(request);
   if (blocked) return blocked;
@@ -40,22 +52,20 @@ export async function GET(request: Request) {
   const p = valid.includes(part) ? part : "malam";
 
   try {
-    const res = await fetch(`${WORKER_URL}/api/webchat?part=${p}`, {
-      cache: "no-store",
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || typeof data.reply !== "string") {
-      return NextResponse.json(
-        { error: data.error ?? "Gagal terhubung ke layanan AI. Coba lagi nanti." },
-        { status: res.status >= 500 ? 502 : res.status }
-      );
-    }
-    return NextResponse.json({ reply: data.reply });
-  } catch {
-    return NextResponse.json(
-      { error: "Gagal terhubung ke layanan AI. Coba lagi nanti." },
-      { status: 502 }
+    const reply = await chatOpenCodeZen(
+      SYSTEM_PROMPT,
+      [
+        {
+          role: "user",
+          content:
+            `Sapa pengunjung dengan ucapan selamat ${p}, perkenalkan dirimu sebagai KyleBot, lalu tawarkan bantuan singkat.`,
+        },
+      ],
+      { maxTokens: 150 }
     );
+    return NextResponse.json({ reply });
+  } catch (err) {
+    return errorResponse(err);
   }
 }
 
@@ -91,24 +101,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const res = await fetch(`${WORKER_URL}/api/webchat`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ messages: chatMessages }),
-      cache: "no-store",
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || typeof data.reply !== "string") {
-      return NextResponse.json(
-        { error: data.error ?? "Gagal terhubung ke layanan AI. Coba lagi nanti." },
-        { status: res.status >= 500 ? 502 : res.status }
-      );
-    }
-    return NextResponse.json({ reply: data.reply });
-  } catch {
-    return NextResponse.json(
-      { error: "Gagal terhubung ke layanan AI. Coba lagi nanti." },
-      { status: 502 }
-    );
+    const reply = await chatOpenCodeZen(SYSTEM_PROMPT, chatMessages);
+    return NextResponse.json({ reply });
+  } catch (err) {
+    return errorResponse(err);
   }
 }
