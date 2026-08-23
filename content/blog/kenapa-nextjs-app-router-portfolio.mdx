@@ -1,0 +1,49 @@
+---
+title: "Kenapa Saya Memilih Next.js App Router untuk Portfolio"
+date: "2026-04-02"
+excerpt: "Evaluasi jujur setelah setahun memakai App Router untuk situs pribadi: server components, metadata API, file conventions, dan kapan framework lain masih lebih masuk akal."
+tags: ["nextjs", "react", "web-dev", "opini"]
+---
+
+Portfolio pribadi sering dianggap proyek yang tidak perlu dipikirkan — HTML statis pun cukup. Tapi justru karena sederhananya, pilihan framework jadi terasa jujur: tidak ada tim, tidak ada legacy, hanya kebutuhan nyata. Ini alasan saya jatuh ke Next.js App Router.
+
+## Server components mengubah cara berpikir
+
+Fitur yang paling mengubah pola pikir saya adalah default-nya server component. Data fetching tinggal `await` langsung di komponen:
+
+```tsx
+export default async function Page() {
+  const posts = await getAllPosts();
+  return <BlogList posts={posts} />;
+}
+```
+
+Tidak ada efek, tidak ada state loading, tidak ada bundle JavaScript untuk pekerjaan yang seharusnya di server. Interaktivitas tetap ada di tempat yang memang butuh — tombol tema, widget chat, form komentar — masing-masing ditandai `"use client"` secara sadar.
+
+## Metadata sebagai first-class citizen
+
+Untuk situs portfolio, SEO bukan bonus melainkan inti. App Router mengekspornya begitu saja:
+
+```tsx
+export const metadata: Metadata = {
+  title: { default: "Andre Kusuma Firmansah", template: "%s | Andre" },
+};
+```
+
+Ditambah konvensi file seperti `sitemap.ts`, `robots.ts`, `rss.xml`, dan `opengraph-image.tsx`, semua kebutuhan discoverability terselesaikan tanpa pustaka tambahan. Hal-hal kecil seperti ini yang membuat developer experience-nya terasa dirancang oleh orang yang pernah membangun website sungguhan.
+
+## Yang mengganggu (dan cara saya menerimanya)
+
+Kejujuran juga berarti membahas sisi buruknya:
+
+1. **Mental model baru.** Perbedaan render di server vs client sempat bikin bug misterius — state yang hilang, hook yang error. Setelah beberapa minggu, aturan praktisnya sederhana: mulai dari server, naikkan ke client hanya saat dibutuhkan.
+2. **Caching yang opsi-nya banyak.** Strategi revalidate dan dynamic vs static butuh waktu untuk benar-benar dipahami, bukan ditebak.
+3. **Ekosistem tutorial cepat basi.** Pola dari dua tahun lama bisa jadi anti-pattern hari ini. Dokumentasi resmi layak jadi sumber pertama, bukan blog acak — termasuk blog ini.
+
+## Kapan sebaiknya tidak pakai
+
+Kalau situsmu benar-benar brosur statis tanpa data dinamis sama sekali, Astro atau bahkan HTML murni lebih ringan. Kalau produkmu adalah dashboard SPA kompleks dengan state global rumit, Vite plus React polos kadang lebih lugas. App Router bersinar di tengahnya: konten yang harus terindeks, bercampur interaksi yang harus hidup.
+
+## Penutup
+
+Framework terbaik adalah yang menghilangkan pekerjaan yang tidak kamu mau lakukan. Bagi saya, itu berarti SEO otomatis, gambar share dinamis, dan deploy tanpa konfigurasi. Portfolio ini hidup buktinya — kamu sedang membacanya dari hasil kerja semua keputusan di atas.

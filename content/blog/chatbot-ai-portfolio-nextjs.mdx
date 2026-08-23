@@ -1,0 +1,52 @@
+---
+title: "Menambahkan Chatbot AI ke Website Portfolio"
+date: "2026-06-15"
+excerpt: "Pengalaman membangun asisten chat berbasis LLM di portfolio: arsitektur route handler, system prompt yang jujur, rate limiting, sampai detail mikro seperti animasi mata berkedip."
+tags: ["ai", "nextjs", "chatbot", "openrouter"]
+---
+
+Chatbot di website sering terasa seperti gimmick: kotak putih generik yang menjawab dengan basa-basi. Saya ingin yang sebaliknya — karakter kecil yang hidup, tahu konteks situs, dan tidak menguras kantong. Ini catatan implementasinya.
+
+## Arsitektur minimal
+
+Semua logika AI hidup di satu route handler. Browser mengirim riwayat percakapan, server menyisipkan system prompt, meneruskan ke penyedia LLM, lalu mengembalikan satu balasan:
+
+```ts
+const res = await fetch(`${BASE_URL}/chat/completions`, {
+  method: "POST",
+  headers: { Authorization: `Bearer ${process.env.LLM_API_KEY}` },
+  body: JSON.stringify({
+    model: MODEL,
+    messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+  }),
+});
+```
+
+Kunci API tidak pernah menyentuh client. Route juga wajib diproteksi rate limiting — tanpa itu, satu pengguna iseng bisa membakar kuota bulanan dalam semalam.
+
+## System prompt yang jujur
+
+Bagian tersulit justru menulis prompt. Prompt awal saya terlalu panjang dan bot-nya sok tahu. Yang berhasil justru pendek dan spesifik: siapa pemilik situs, apa yang boleh dibahas, dan instruksi eksplisit untuk menjawab singkat dalam Bahasa Indonesia serta menyertakan tautan saat relevan.
+
+Detail kecil lain yang berdampak besar: simpan riwayat di `localStorage` supaya percakapan bertahan antar kunjungan, tapi sediakan tombol hapus. Privasi pengunjung bukan fitur tambahan.
+
+## Fallback itu wajib
+
+Penyedia LLM bisa timeout, kuota bisa habis. Karena itu sapaan pertama pun punya jalur cadangan statis:
+
+```ts
+try {
+  const data = await res.json();
+  setMessages([{ role: "assistant", content: data.reply }]);
+} catch {
+  setMessages([{ role: "assistant", content: greetingFallback }]);
+}
+```
+
+Percakapan yang gagal dengan pesan error teknis terasa lebih buruk daripada tidak ada chatbot sama sekali.
+
+## Detail yang membuatnya terasa hidup
+
+Fitur paling banyak dikomentari pengunjung justru bukan kualitas jawabannya, melainkan tombolnya: dua mata yang berkedip dengan interval acak, lalu menyembunyikan diri di pinggir layar ketika tidak digunakan. Implementasinya hanya beberapa baris state dan `scaleY`, tetapi efeknya besar — halaman terasa punya penghuni.
+
+Pelajaran utamanya: karakter lebih penting daripada kecerdasan. Pengunjung memaafkan jawaban yang biasa saja, tapi tidak akan memaafkan widget yang mengganggu.

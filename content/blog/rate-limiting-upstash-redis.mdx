@@ -1,0 +1,64 @@
+---
+title: "Rate Limiting API dengan Upstash Redis"
+date: "2026-05-10"
+excerpt: "Melindungi endpoint API dari penyalahgunaan memakai Upstash Redis dan @upstash/ratelimit: pola sliding window, strategi limit per endpoint, dan penanganan respons 429 di sisi client."
+tags: ["api", "redis", "keamanan", "backend"]
+---
+
+API publik tanpa pembatas adalah undangan terbuka. Satu skrip loop sederhana bisa menghabiskan kuota layanan pihak ketiga yang kamu pakai di belakangnya. Untuk aplikasi serverless di Vercel, kombinasi Upstash Redis dan pustaka `@upstash/ratelimit` adalah cara paling ringan memasang rem.
+
+## Setup dasar
+
+Pola implementasinya hanya beberapa baris:
+
+```ts
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, "60 s"),
+});
+```
+
+Di dalam route handler, cek sebelum pekerjaan berat dilakukan:
+
+```ts
+const ip = req.headers.get("x-forwarded-for") ?? "anonim";
+const { success } = await ratelimit.limit(ip);
+
+if (!success) {
+  return NextResponse.json(
+    { error: "Terlalu banyak permintaan" },
+    { status: 429 }
+  );
+}
+```
+
+Sliding window dipilih daripada fixed window karena lebih adil — pengguna tidak bisa menembak batas tepat di pergantian menit.
+
+## Limit berbeda per jenis endpoint
+
+Tidak semua endpoint berbahaya sama. Strategi yang saya pakai:
+
+- **Endpoint murah** (ambil data publik): longgar, misal 60 permintaan per menit.
+- **Endpoint mahal** (proxy ke LLM atau API berbayar): ketat, misal 5-10 per menit.
+- **Endpoint autentikasi**: paling ketat, plus penalti bertingkat untuk percobaan gagal berulang.
+
+Kuncinya memisahkan instance `Ratelimit` per kategori dengan prefiks key berbeda, sehingga limit satu endpoint tidak ikut menggerus jatah endpoint lain.
+
+## Jangan lupa sisi client
+
+Respons `429` harus ditangani dengan sopan. Minimal, tampilkan pesan yang manusiawi dan matikan tombol kirim sementara:
+
+```ts
+if (!res.ok) {
+  throw new Error(data?.error || "Coba lagi sebentar lagi");
+}
+```
+
+Yang sering terlupa: rate limiter butuh dua environment variable (`UPSTASH_REDIS_REST_URL` dan token-nya) yang wajib dikonfigurasi ulang di setiap environment deployment. Error paling membingungkan yang pernah saya temui bukan limit yang terlalu ketat, melainkan limiter yang diam-diam tidak aktif karena env var kosong.
+
+## Ukur dulu, batasi kemudian
+
+Sebelum menetapkan angka, lihat pola pemakaian normal. Batas yang lebih rendah dari perilaku pengguna sah akan menciptakan bug semu yang sulit dilacak. Mulai dari angka longgar, turunkan pelan-pelan sambil memantau jumlah respons 429 di log.

@@ -1,0 +1,58 @@
+---
+title: "Membangun Sistem Warna Monokrom dengan Token OKLCH"
+date: "2026-08-20"
+excerpt: "Kenapa saya rombak seluruh warna website ke palet netral berbasis OKLCH, dan bagaimana satu blok CSS variable bisa mengatur mode gelap, terang, dan aksen sekaligus."
+tags: ["css", "design-system", "tailwind", "warna"]
+---
+
+Warna aksen itu licik. Awalnya satu biru untuk tombol CTA, lalu muncul di link, di border fokus, di badge, sampai akhirnya seluruh halaman bergantung pada satu warna yang tidak pernah dirancang sebagai sistem. Bulan lalu saya memutuskan menghapus semuanya dan mulai dari nol dengan palet monokrom.
+
+## Kenapa OKLCH, bukan HEX
+
+OKLCH adalah ruang warna perseptual: angka lightness-nya benar-benar terasa konsisten di mata. Dua warna dengan lightness `0.7` akan tampak sama terangnya meski hue-nya beda — sesuatu yang tidak bisa dijamin oleh HEX atau HSL.
+
+```css
+--background: oklch(0.145 0 0);
+--foreground: oklch(0.985 0 0);
+--primary: oklch(0.92 0 0);
+```
+
+Perhatikan komponen kromatiknya: `0`. Palet monokrom artinya semua warna dibangun hanya dari tangga lightness. Hasilnya kontras yang bisa dihitung, bukan dikira.
+
+## Satu sumber kebenaran
+
+Struktur yang saya pakai sederhana: definisikan token sekali di `:root` (mode gelap), timpa di `html.light`, lalu petakan ke Tailwind lewat `@theme inline`:
+
+```css
+@theme inline {
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+```
+
+Setelah pemetaan ini, `bg-primary`, `text-muted-foreground`, dan teman-temannya otomatis ikut berganti saat tema berubah. Tidak ada lagi `text-gray-500` tersebar di dua puluh file.
+
+## Jebakan yang saya temui
+
+Ada dua jebakan klasik saat migrasi ke sistem token:
+
+1. **Token ganda dengan makna berbeda.** Di CSS mentah saya punya `var(--muted)` yang dipakai sebagai warna teks redup, padahal di banyak design system `muted` adalah warna *latar*. Memaksa token kanonik malah merusak tampilan. Solusinya: jadikan alias yang jelas, `--muted: var(--muted-foreground)`, supaya maksud aslinya tersimpan.
+2. **Aksen dekoratif yang lolos.** Badge `bg-accent/20` masih aman dipertahankan karena dengan palet netral ia otomatis menjadi abu transparan. Yang harus diburu justru `#0099ff` yang tersembunyi di file OG image dan utilitas canvas.
+
+## Konversi hex untuk fallback
+
+Beberapa konteks seperti gambar OG dinamis tidak mengenal `oklch()`. Konversi manualnya mudah diingat:
+
+```txt
+oklch(0.145 0 0) ≈ #0a0a0a
+oklch(0.205 0 0) ≈ #171717
+oklch(0.556 0 0) ≈ #737373
+oklch(0.985 0 0) ≈ #fafafa
+```
+
+## Hasil akhir
+
+Palet monokrom membuat hierarki bekerja lewat *lightness* dan tipografi, bukan warna. Konten kode tetap boleh berwarna — syntax highlighting adalah satu-satunya pengecualian yang saya izinkan, karena di situ warna memang membawa informasi.
+
+Kalau kamu ingin mencoba, langkah pertamanya bukan memilih warna, tapi menghitung: berapa banyak nilai hex unik yang ada di projectmu sekarang. Angkanya biasanya mengejutkan.

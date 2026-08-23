@@ -1,0 +1,73 @@
+---
+title: "OG Image Dinamis di Next.js dengan ImageResponse"
+date: "2026-07-28"
+excerpt: "Cara membuat gambar preview share otomatis untuk setiap halaman dan artikel memakai konvensi opengraph-image.tsx, tanpa tools desain dan tanpa server render terpisah."
+tags: ["nextjs", "seo", "opengraph", "metadata"]
+---
+
+Saat link dibagikan ke WhatsApp atau X, preview gambarnya sering menentukan diklik atau tidaknya. Masalahnya, membuat gambar cover manual untuk setiap artikel itu melelahkan dan cepat usang. Di Next.js App Router ada cara yang jauh lebih elegan: file konvensi `opengraph-image.tsx`.
+
+## Konvensi file-based metadata
+
+Letakkan file `opengraph-image.tsx` di dalam folder route. Next.js akan merendernya menjadi PNG dan menyuntikkan tag `og:image` secara otomatis:
+
+```txt
+app/
+├── opengraph-image.tsx        → gambar untuk seluruh situs
+└── blog/
+    └── [slug]/
+        └── opengraph-image.tsx → gambar per artikel
+```
+
+Isi filenya komponen JSX biasa yang dirender oleh `ImageResponse`:
+
+```tsx
+import { ImageResponse } from "next/og";
+
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+
+export default function OgImage() {
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex" }}>
+        <h1>Judul di sini</h1>
+      </div>
+    ),
+    { ...size }
+  );
+}
+```
+
+## Dinamis per slug
+
+Untuk rute dinamis, parameternya tinggal diambil dari props:
+
+```tsx
+export default async function OpengraphImage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+
+  return new ImageResponse(/* JSX pakai post.title */, { ...size });
+}
+```
+
+Gambar dirender sekali saat build lalu dicache dengan hash — biayanya nyaris nol di runtime.
+
+## Tiga hal yang perlu diwaspadai
+
+**Pertama, gaya inline saja.** `ImageResponse` bukan browser penuh; semua styling harus berupa objek `style`, dan layout memakai flexbox.
+
+**Kedua, hati-hati override eksplisit.** Kalau `generateMetadata` mendefinisikan `openGraph.images`, nilai itu *mengalahkan* file konvensi. Ini penyebab umum kenapa og:image dinamis tidak muncul padahal filenya sudah ada — biasanya masih ada field gambar statis dari template lama.
+
+**Ketiga, fallback hex.** Karena hasil akhirnya raster, token CSS seperti `var(--background)` tidak bisa dipakai; tulis nilai heksadesimal langsung. Saya menyimpan pasangan konversi dari palet OKLCH agar kartu OG tetap konsisten dengan tema situs.
+
+## Bonus twitter card
+
+File `opengraph-image.tsx` juga mengisi `twitter:image`. Jadi satu file, dua platform. Untuk kartu khusus Twitter yang berbeda, tersedia juga `twitter-image.tsx` dengan pola yang sama.
+
+Setelah dipasang, cek hasilnya lewat validator seperti PostInspector atau cukup view-source halamanmu dan pastikan meta `og:image` menunjuk ke route baru.
