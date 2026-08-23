@@ -272,7 +272,7 @@ export function WaifuWidget() {
         transition={springTransition}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        className="fixed bottom-5 right-8 sm:right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
+        className="fixed bottom-12 right-12 sm:right-8 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
       >
         {open ? (
           <span className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
@@ -290,7 +290,7 @@ export function WaifuWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={springTransition}
-            className="fixed bottom-24 right-8 sm:right-5 z-[90] flex w-[calc(100vw-4rem)] sm:w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-card/95 shadow-2xl shadow-accent/10 backdrop-blur-xl"
+            className="fixed bottom-28 right-12 sm:right-8 z-[90] flex w-[calc(100vw-6rem)] sm:w-[calc(100vw-4rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-card/95 shadow-2xl shadow-accent/10 backdrop-blur-xl"
           >
           <header className="flex items-center gap-3 border-b border-border bg-surface/50 px-4 py-3">
             <div className="relative">
