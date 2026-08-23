@@ -159,7 +159,7 @@ function KawaiiFace({
 }) {
   return (
     <motion.span
-      className="flex h-full w-full items-center justify-center gap-2 border-2 border-foreground/25 bg-secondary"
+      className="flex h-full w-full items-center justify-center gap-2 rounded-full border-2 border-foreground/25 bg-secondary"
       animate={{ x: peeking ? -6 : 0 }}
       transition={springTransition}
     >
