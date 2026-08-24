@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
@@ -16,6 +16,11 @@ const navItems = [
   { href: "/portfolio", labelKey: "nav.portfolio", icon: Briefcase },
   { href: "/blog", labelKey: "nav.blog", icon: FileText },
 ];
+
+function isActiveRoute(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 function LanguageToggle() {
   const { lang, setLang, t } = useI18n();
@@ -35,7 +40,21 @@ function LanguageToggle() {
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setMobileOpen(false);
+  }
   const { t } = useI18n();
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
 
   return (
     <motion.nav
@@ -57,20 +76,21 @@ export function Navbar() {
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href;
+                const isActive = isActiveRoute(pathname, item.href);
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200",
-                      isActive ? "text-highlight" : "text-muted hover:text-foreground hover:bg-surface"
+                      isActive ? "text-foreground" : "text-muted hover:text-foreground hover:bg-surface"
                     )}
                   >
                     {isActive && (
                       <motion.span
                         layoutId="nav-pill"
-                        className="absolute inset-0 rounded-lg bg-accent/30"
+                        className="absolute inset-0 rounded-lg bg-accent"
                         transition={{ type: "spring", stiffness: 350, damping: 30 }}
                       />
                     )}
@@ -88,25 +108,46 @@ export function Navbar() {
                 className="md:hidden p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label={t("nav.toggleMenu")}
+                aria-expanded={mobileOpen}
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
           </div>
 
-          {mobileOpen && (
-            <div className="md:hidden border-t border-border px-3 pb-3">
+          <AnimatePresence>
+            {mobileOpen && (
+              <>
+                <motion.div
+                  key="nav-overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="fixed inset-0 -z-10 md:hidden"
+                  onClick={() => setMobileOpen(false)}
+                />
+                <motion.div
+                  key="nav-mobile"
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: EASE }}
+                  className="md:hidden border-t border-border px-3 pb-3"
+                >
               {navItems.map((item) => {
                 const Icon = item.icon;
+                const isActive = isActiveRoute(pathname, item.href);
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200",
-                      pathname === item.href
-                        ? "bg-accent/30 text-highlight"
+                      isActive
+                        ? "bg-accent text-foreground"
                         : "text-muted hover:text-foreground hover:bg-surface"
                     )}
                   >
@@ -115,8 +156,10 @@ export function Navbar() {
                   </Link>
                 );
               })}
-            </div>
-          )}
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </motion.nav>

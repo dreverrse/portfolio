@@ -5,8 +5,29 @@ import { FadeIn } from "@/components/FadeIn";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { GitHubStats } from "@/components/GitHubStats";
 import { Stagger, StaggerItem } from "@/components/Stagger";
-import { useI18n } from "@/lib/i18n";
+import { formatDate, useI18n } from "@/lib/i18n";
+import { SOCIAL } from "@/lib/site";
+import {
+  FaGithub,
+  FaInstagram,
+  FaWhatsapp,
+  FaXTwitter,
+} from "react-icons/fa6";
 import { PiArrowRightBold as ArrowRight, PiCodeBold as Code2, PiFileCodeBold as FileCode2, PiLayoutBold as Layout, PiPaletteBold as Palette, PiPenNibBold as PenTool } from "react-icons/pi";
+
+interface LatestPost {
+  slug: string;
+  title: string;
+  date: string;
+  readingTime: number;
+}
+
+const socialLinks = [
+  { href: SOCIAL.github, label: "GitHub", Icon: FaGithub },
+  { href: SOCIAL.twitter, label: "Twitter/X", Icon: FaXTwitter },
+  { href: SOCIAL.instagram, label: "Instagram", Icon: FaInstagram },
+  { href: SOCIAL.whatsapp, label: "WhatsApp", Icon: FaWhatsapp },
+];
 
 const skills = [
   { icon: Palette, label: "Adobe Photoshop", descKey: "skill.photoshop" },
@@ -17,8 +38,12 @@ const skills = [
   { icon: Layout, label: "WordPress", descKey: "skill.wordpress" },
 ];
 
-export function HomeContent() {
-  const { t } = useI18n();
+export function HomeContent({
+  latestPosts = [],
+}: {
+  latestPosts?: LatestPost[];
+}) {
+  const { t, lang } = useI18n();
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-24">
@@ -60,6 +85,22 @@ export function HomeContent() {
               {t("home.aboutMe")}
             </Link>
           </div>
+
+          <div className="mt-6 flex items-center gap-2">
+            {socialLinks.map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                title={label}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted hover:text-foreground hover:border-accent transition-colors"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
         </FadeIn>
 
       </section>
@@ -83,6 +124,41 @@ export function HomeContent() {
                 </StaggerItem>
               );
             })}
+          </Stagger>
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.35}>
+        <section className="mt-24">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-2xl font-bold">
+              <span className="text-foreground">{t("home.latestTitle")}</span>
+            </h2>
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-foreground"
+            >
+              {t("home.viewAll")}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {latestPosts.map((post) => (
+              <StaggerItem key={post.slug} className="h-full">
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="block h-full p-5 rounded-xl border border-border bg-card/50 hover:bg-surface/50 hover:border-accent transition-all duration-300 glow-hover"
+                >
+                  <p className="text-xs text-muted mb-2">
+                    {formatDate(post.date, lang)} · {post.readingTime}{" "}
+                    {t("blog.readingTime")}
+                  </p>
+                  <h3 className="font-semibold text-foreground leading-snug">
+                    {post.title}
+                  </h3>
+                </Link>
+              </StaggerItem>
+            ))}
           </Stagger>
         </section>
       </FadeIn>
