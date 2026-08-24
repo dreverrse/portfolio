@@ -44,7 +44,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={isLight ? t("theme.dark") : t("theme.light")}
-      className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
+      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span

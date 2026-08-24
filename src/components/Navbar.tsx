@@ -89,7 +89,7 @@ export function Navbar() {
             <div className="flex items-center gap-1">
               <ThemeToggle />
               <button
-                className="md:hidden p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
+                className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label={t("nav.toggleMenu")}
                 aria-expanded={mobileOpen}
