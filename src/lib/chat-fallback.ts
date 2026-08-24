@@ -10,6 +10,19 @@ function errText(err: unknown): string {
   return err instanceof Error ? err.message : "gagal tidak diketahui";
 }
 
+const ZEN_FAILURE_THRESHOLD = 3;
+const ZEN_COOLDOWN_MS = 5 * 60 * 1000;
+
+let zenConsecutiveFailures = 0;
+let zenLastFailureAt = 0;
+
+function zenShouldSkip(): boolean {
+  return (
+    zenConsecutiveFailures >= ZEN_FAILURE_THRESHOLD &&
+    Date.now() - zenLastFailureAt < ZEN_COOLDOWN_MS
+  );
+}
+
 export async function chatWithFallback(
   systemPrompt: string,
   messages: OpenCodeZenMessage[],
@@ -17,10 +30,18 @@ export async function chatWithFallback(
 ): Promise<string> {
   const errors: string[] = [];
 
-  try {
-    return await chatOpenCodeZen(systemPrompt, messages, options);
-  } catch (err) {
-    errors.push(`Zen: ${errText(err)}`);
+  if (zenShouldSkip()) {
+    errors.push("Zen: dilewati sementara karena sering gagal");
+  } else {
+    try {
+      const reply = await chatOpenCodeZen(systemPrompt, messages, options);
+      zenConsecutiveFailures = 0;
+      return reply;
+    } catch (err) {
+      zenConsecutiveFailures += 1;
+      zenLastFailureAt = Date.now();
+      errors.push(`Zen: ${errText(err)}`);
+    }
   }
 
   if (!process.env.OPENROUTER_API_KEY) {
