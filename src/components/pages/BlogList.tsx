@@ -55,20 +55,13 @@ export function BlogList({ posts }: { posts: Post[] }) {
     };
   }, [lang, posts]);
 
-  const allTags = Array.from(
-    new Set(posts.flatMap((p) => p.tags))
-  ).sort();
-
   const [query, setQuery] = useState("");
-  const [activeTag, setActiveTag] = useState<string | null>(null);
 
   const filtered = posts.filter((post) => {
     const { title, excerpt } = localized(post, translations, lang);
     const haystack = `${title} ${excerpt} ${post.tags.join(" ")}`.toLowerCase();
     const q = query.trim().toLowerCase();
-    const matchesQuery = q === "" || haystack.includes(q);
-    const matchesTag = activeTag === null || post.tags.includes(activeTag);
-    return matchesQuery && matchesTag;
+    return q === "" || haystack.includes(q);
   });
 
   const [featured, ...rest] = filtered;
@@ -77,10 +70,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
       <FadeIn>
         <div className="mb-12">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-highlight">
-            Blog
-          </span>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
             {t("nav.blog")}
           </h1>
           <p className="mt-4 text-lg text-muted max-w-2xl leading-relaxed">
@@ -102,33 +92,6 @@ export function BlogList({ posts }: { posts: Post[] }) {
                 className="w-full rounded-xl border border-border bg-card/50 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
               />
             </div>
-            {allTags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setActiveTag(null)}
-                  className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                    activeTag === null
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card/50 border-border text-muted hover:text-highlight hover:border-accent"
-                  }`}
-                >
-                  {t("blog.allTags")}
-                </button>
-                {allTags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                    className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                      activeTag === tag
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card/50 border-border text-muted hover:text-highlight hover:border-accent"
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </FadeIn>
       )}
