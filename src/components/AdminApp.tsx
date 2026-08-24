@@ -8,9 +8,8 @@ import { LoginCard } from "@/components/LoginCard";
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { AdminStatus } from "@/components/AdminStatus";
-import { ApiDirectory } from "@/components/pages/ApiDirectory";
 import type { StoredPost } from "@/lib/posts-store";
-import { PiArrowLeftBold as ArrowLeft, PiChartBarBold as BarChart3, PiCodeBold as Code2, PiEyeBold as Eye, PiEyeSlashBold as EyeOff, PiFileTextBold as FileText, PiPencilSimpleBold as Pencil, PiPlusBold as Plus, PiPulseBold as Activity, PiSignOutBold as LogOut, PiSparkleBold as Sparkles, PiSpinnerBallBold as Loader2, PiTrashBold as Trash2 } from "react-icons/pi";
+import { PiArrowLeftBold as ArrowLeft, PiChartBarBold as BarChart3, PiEyeBold as Eye, PiEyeSlashBold as EyeOff, PiFileTextBold as FileText, PiPencilSimpleBold as Pencil, PiPlusBold as Plus, PiPulseBold as Activity, PiSignOutBold as LogOut, PiSparkleBold as Sparkles, PiSpinnerBallBold as Loader2, PiTrashBold as Trash2 } from "react-icons/pi";
 
 interface PostForm {
   title: string;
@@ -20,14 +19,13 @@ interface PostForm {
   content: string;
 }
 
-type AdminTab = "posts" | "ai" | "dashboard" | "status" | "api";
+type AdminTab = "posts" | "ai" | "dashboard" | "status";
 
 const TABS: { id: AdminTab; label: string; icon: typeof FileText }[] = [
   { id: "posts", label: "Posts", icon: FileText },
   { id: "ai", label: "AI Assistant", icon: Sparkles },
   { id: "dashboard", label: "Dashboard", icon: BarChart3 },
   { id: "status", label: "Status", icon: Activity },
-  { id: "api", label: "APIs", icon: Code2 },
 ];
 
 const EMPTY_FORM: PostForm = {
@@ -453,7 +451,6 @@ export function AdminApp({
       {tab === "ai" && <AiAssistantPanel onUseDraft={handleUseDraft} />}
       {tab === "dashboard" && <AdminDashboard />}
       {tab === "status" && <AdminStatus />}
-      {tab === "api" && <ApiDirectory />}
     </div>
   );
 }
