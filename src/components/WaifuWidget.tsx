@@ -294,24 +294,24 @@ export function WaifuWidget() {
 
   return (
     <>
-      <motion.button
-        onClick={toggleOpen}
-        aria-label={t("waifu.aria")}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1, x: docked ? DOCK_OFFSET : 0 }}
-        transition={springTransition}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        className="fixed top-[calc(50%-1.75rem)] right-8 sm:right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
-      >
-        {open ? (
-          <span className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
-            <X className="h-6 w-6" />
-          </span>
-        ) : (
-          <KawaiiFace peeking={docked} blink={blink} />
+      <AnimatePresence>
+        {!open && (
+          <motion.button
+            key="fab"
+            onClick={toggleOpen}
+            aria-label={t("waifu.aria")}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1, x: docked ? DOCK_OFFSET : 0 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={springTransition}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            className="fixed top-[calc(50%-1.75rem)] right-8 sm:right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
+          >
+            <KawaiiFace peeking={docked} blink={blink} />
+          </motion.button>
         )}
-      </motion.button>
+      </AnimatePresence>
 
       <AnimatePresence>
         {docked && (
@@ -362,6 +362,13 @@ export function WaifuWidget() {
               <p className="text-sm font-semibold text-foreground">KyleBot</p>
               <p className="text-xs text-muted">{t("waifu.online")}</p>
             </div>
+            <button
+              onClick={() => setOpen(false)}
+              aria-label={t("waifu.close")}
+              className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
             <button
               onClick={clearChat}
               aria-label={t("waifu.delete")}

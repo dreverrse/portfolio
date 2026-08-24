@@ -32,6 +32,7 @@ export async function chatOpenCodeZen(
       method: "POST",
       headers,
       cache: "no-store",
+      signal: AbortSignal.timeout(6000),
       body: JSON.stringify({
         model,
         messages: [{ role: "system", content: systemPrompt }, ...messages],
