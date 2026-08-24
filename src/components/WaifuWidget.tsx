@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { springTransition } from "@/lib/motion";
+import { ThinkingOrb } from "@/components/ui/thinking-orbs";
 
 interface Message {
   role: "user" | "assistant";
@@ -183,6 +184,21 @@ export function WaifuWidget() {
   const [open, setOpen] = useState(false);
   const [docked, setDocked] = useState(false);
   const blink = useBlink();
+  const [isLight, setIsLight] = useState(
+    () =>
+      typeof document !== "undefined" &&
+      document.documentElement.classList.contains("light")
+  );
+
+  // Situs memakai class `light` pada <html>, sedangkan auto-detect orb
+  // hanya mengenali `dark`; pantau perubahan class secara manual.
+  useEffect(() => {
+    const root = document.documentElement;
+    const sync = () => setIsLight(root.classList.contains("light"));
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
   const [messages, setMessages] = useState<Message[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -375,9 +391,16 @@ export function WaifuWidget() {
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="rounded-2xl rounded-bl-sm border border-border bg-surface px-3.5 py-2 text-sm text-muted">
-                  {t("waifu.typing")}
-                  <span className="animate-pulse">…</span>
+                <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-secondary/50 py-1.5 pl-2 pr-4">
+                  <ThinkingOrb
+                    state="composing"
+                    size={20}
+                    theme={isLight ? "light" : "dark"}
+                  />
+                  <span className="text-sm text-muted">
+                    {t("waifu.typing")}
+                    <span className="animate-pulse">…</span>
+                  </span>
                 </div>
               </div>
             )}
