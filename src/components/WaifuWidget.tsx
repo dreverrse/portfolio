@@ -286,7 +286,7 @@ export function WaifuWidget() {
         transition={springTransition}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        className="fixed bottom-5 right-8 sm:right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
+        className="fixed top-[calc(50%-1.75rem)] right-8 sm:right-5 z-[90] h-14 w-14 overflow-hidden rounded-full shadow-lg shadow-accent/30"
       >
         {open ? (
           <span className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
@@ -308,7 +308,7 @@ export function WaifuWidget() {
             exit={{ x: 24, opacity: 0 }}
             transition={springTransition}
             whileTap={{ scale: 0.92 }}
-            className="fixed bottom-5 right-0 z-[90] flex h-14 w-[18px] items-center rounded-l-full border-2 border-r-0 border-foreground/25 bg-secondary"
+            className="fixed top-[calc(50%-1.75rem)] right-0 z-[90] flex h-14 w-[18px] items-center rounded-l-full border-2 border-r-0 border-foreground/25 bg-secondary"
           >
             <motion.span
               className="ml-1 block h-4 w-1.5 shrink-0 rounded-full bg-foreground"
