@@ -1,14 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  Activity,
-  Loader2,
-  RefreshCw,
-  CheckCircle2,
-  XCircle,
-  MinusCircle,
-} from "lucide-react";
+import { PiArrowsClockwiseBold as RefreshCw, PiCheckCircleBold as CheckCircle2, PiMinusCircleBold as MinusCircle, PiPulseBold as Activity, PiSpinnerBallBold as Loader2, PiXCircleBold as XCircle } from "react-icons/pi";
 
 interface IntegrationStatus {
   name: string;

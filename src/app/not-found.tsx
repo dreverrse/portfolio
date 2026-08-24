@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { useI18n } from "@/lib/i18n";
-import { Home, ArrowRight } from "lucide-react";
+import { PiArrowRightBold as ArrowRight, PiHouseBold as Home } from "react-icons/pi";
 import LottiePlayer from "@/components/LottiePlayer";
 
 export default function NotFound() {

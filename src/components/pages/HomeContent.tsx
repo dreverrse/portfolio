@@ -6,14 +6,7 @@ import { ShinyButton } from "@/components/ui/shiny-button";
 import { GitHubStats } from "@/components/GitHubStats";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
-import {
-  ArrowRight,
-  PenTool,
-  FileCode2,
-  Code2,
-  Layout,
-  Palette,
-} from "lucide-react";
+import { PiArrowRightBold as ArrowRight, PiCodeBold as Code2, PiFileCodeBold as FileCode2, PiLayoutBold as Layout, PiPaletteBold as Palette, PiPenNibBold as PenTool } from "react-icons/pi";
 
 const skills = [
   { icon: Palette, label: "Adobe Photoshop", descKey: "skill.photoshop" },

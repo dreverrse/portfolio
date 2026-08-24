@@ -10,21 +10,7 @@ import { AdminDashboard } from "@/components/AdminDashboard";
 import { AdminStatus } from "@/components/AdminStatus";
 import { ApiDirectory } from "@/components/pages/ApiDirectory";
 import type { StoredPost } from "@/lib/posts-store";
-import {
-  Plus,
-  Pencil,
-  Trash2,
-  LogOut,
-  Eye,
-  EyeOff,
-  Loader2,
-  ArrowLeft,
-  FileText,
-  Sparkles,
-  BarChart3,
-  Activity,
-  Code2,
-} from "lucide-react";
+import { PiArrowLeftBold as ArrowLeft, PiChartBarBold as BarChart3, PiCodeBold as Code2, PiEyeBold as Eye, PiEyeSlashBold as EyeOff, PiFileTextBold as FileText, PiPencilSimpleBold as Pencil, PiPlusBold as Plus, PiPulseBold as Activity, PiSignOutBold as LogOut, PiSparkleBold as Sparkles, PiSpinnerBallBold as Loader2, PiTrashBold as Trash2 } from "react-icons/pi";
 
 interface PostForm {
   title: string;

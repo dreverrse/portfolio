@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { REACTION_OPTIONS } from "@/lib/blog-engagement";
-import { Smile } from "lucide-react";
+import { PiSmileyBold as Smile } from "react-icons/pi";
 
 const USER_KEY = "blog_user_id";
 

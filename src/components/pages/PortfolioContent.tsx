@@ -5,7 +5,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import type { Project } from "@/lib/projects";
-import { ExternalLink } from "lucide-react";
+import { PiArrowSquareOutBold as ExternalLink } from "react-icons/pi";
 import { FaGithub } from "react-icons/fa6";
 
 export function PortfolioContent({ projects }: { projects: Project[] }) {

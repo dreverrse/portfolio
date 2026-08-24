@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
-import { ExternalLink, Mail, Send, X, Trash2 } from "lucide-react";
+import { PiArrowSquareOutBold as ExternalLink, PiEnvelopeBold as Mail, PiPaperPlaneRightBold as Send, PiTrashBold as Trash2, PiXBold as X } from "react-icons/pi";
 import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";

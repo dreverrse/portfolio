@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getPublicApis } from "@/lib/public-apis";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { escapeJsonLd } from "@/lib/utils";
-import { ExternalLink, Shield, Globe, Lock } from "lucide-react";
+import { PiArrowSquareOutBold as ExternalLink, PiGlobeBold as Globe, PiLockKeyBold as Lock, PiShieldCheckBold as Shield } from "react-icons/pi";
 
 export const metadata: Metadata = {
   title: "APIs",

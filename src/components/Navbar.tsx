@@ -8,15 +8,7 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import {
-  Home,
-  User,
-  Briefcase,
-  FileText,
-  Menu,
-  X,
-  Globe,
-} from "lucide-react";
+import { PiBriefcaseBold as Briefcase, PiFileTextBold as FileText, PiGlobeBold as Globe, PiHouseBold as Home, PiListBold as Menu, PiUserBold as User, PiXBold as X } from "react-icons/pi";
 
 const navItems = [
   { href: "/", labelKey: "nav.home", icon: Home },

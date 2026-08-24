@@ -5,7 +5,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { PostContent } from "@/components/PostContent";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Project } from "@/lib/projects";
-import { Calendar, Clock, ArrowLeft, Tag, ExternalLink } from "lucide-react";
+import { PiArrowLeftBold as ArrowLeft, PiArrowSquareOutBold as ExternalLink, PiCalendarBold as Calendar, PiClockBold as Clock, PiTagBold as Tag } from "react-icons/pi";
 import { FaGithub } from "react-icons/fa6";
 
 export function ProjectDetailView({ project }: { project: Project }) {

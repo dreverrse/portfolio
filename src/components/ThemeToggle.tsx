@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
+import { PiMoonBold as Moon, PiSunBold as Sun } from "react-icons/pi";
 import { useI18n } from "@/lib/i18n";
 import { EASE } from "@/lib/motion";
 

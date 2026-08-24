@@ -1,17 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  BarChart3,
-  FolderOpen,
-  Heart,
-  MessageSquare,
-  Languages,
-  Users,
-  Music,
-  Loader2,
-  RefreshCw,
-} from "lucide-react";
+import { PiArrowsClockwiseBold as RefreshCw, PiChartBarBold as BarChart3, PiChatTextBold as MessageSquare, PiFolderOpenBold as FolderOpen, PiHeartBold as Heart, PiMusicNotesBold as Music, PiSpinnerBallBold as Loader2, PiTranslateBold as Languages, PiUsersBold as Users } from "react-icons/pi";
 
 interface TopPost {
   slug: string;

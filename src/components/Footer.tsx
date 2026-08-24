@@ -1,7 +1,7 @@
 "use client";
 
 import { FaGithub, FaInstagram, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
-import { Heart, Mail, Lock } from "lucide-react";
+import { PiEnvelopeBold as Mail, PiHeartBold as Heart, PiLockKeyBold as Lock } from "react-icons/pi";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MusicWidget } from "./MusicWidget";

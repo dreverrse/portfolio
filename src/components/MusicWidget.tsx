@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Music, ExternalLink } from "lucide-react";
+import { PiArrowSquareOutBold as ExternalLink, PiMusicNotesBold as Music } from "react-icons/pi";
 import { useI18n } from "@/lib/i18n";
 
 interface Track {

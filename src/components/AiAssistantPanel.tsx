@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Sparkles, Loader2, Check, FileText } from "lucide-react";
+import { PiCheckBold as Check, PiFileTextBold as FileText, PiSparkleBold as Sparkles, PiSpinnerBallBold as Loader2 } from "react-icons/pi";
 import { PostContent } from "@/components/PostContent";
 
 type AiAction = "draft" | "excerptTags" | "rewrite" | "translate";

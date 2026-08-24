@@ -6,7 +6,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
-import { ArrowRight, Calendar, Clock, Search, Tag } from "lucide-react";
+import { PiArrowRightBold as ArrowRight, PiCalendarBold as Calendar, PiClockBold as Clock, PiMagnifyingGlassBold as Search, PiTagBold as Tag } from "react-icons/pi";
 
 interface PostTranslation {
   title?: string;

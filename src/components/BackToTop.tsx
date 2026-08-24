@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp } from "lucide-react";
+import { PiArrowUpBold as ArrowUp } from "react-icons/pi";
 import { useI18n } from "@/lib/i18n";
 import { springTransition } from "@/lib/motion";
 

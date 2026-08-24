@@ -8,7 +8,7 @@ import { BlogReactions } from "@/components/BlogReactions";
 import { BlogComments } from "@/components/BlogComments";
 import { useI18n, formatDate } from "@/lib/i18n";
 import type { Post } from "@/lib/blog";
-import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
+import { PiArrowLeftBold as ArrowLeft, PiCalendarBold as Calendar, PiClockBold as Clock, PiTagBold as Tag } from "react-icons/pi";
 
 interface PostTranslation {
   title?: string;

@@ -3,20 +3,7 @@
 import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
-import {
-  Code2,
-  PenTool,
-  FileCode2,
-  Layout,
-  MapPin,
-  Mail,
-  Phone,
-  Award,
-  Users,
-  Briefcase,
-  Home,
-  Palette,
-} from "lucide-react";
+import { PiBriefcaseBold as Briefcase, PiCodeBold as Code2, PiEnvelopeBold as Mail, PiFileCodeBold as FileCode2, PiHouseBold as Home, PiLayoutBold as Layout, PiMapPinBold as MapPin, PiMedalBold as Award, PiPaletteBold as Palette, PiPenNibBold as PenTool, PiPhoneBold as Phone, PiUsersBold as Users } from "react-icons/pi";
 
 const skills = [
   { icon: Palette, label: "Adobe Photoshop" },

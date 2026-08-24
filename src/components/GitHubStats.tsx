@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FadeIn } from "@/components/FadeIn";
 import { useI18n } from "@/lib/i18n";
 import { FaGithub } from "react-icons/fa6";
-import { Star, Users, FolderGit2, Code2 } from "lucide-react";
+import { PiCodeBold as Code2, PiFolderBold as FolderGit2, PiStarBold as Star, PiUsersBold as Users } from "react-icons/pi";
 
 interface GitHubStatsData {
   followers: number;

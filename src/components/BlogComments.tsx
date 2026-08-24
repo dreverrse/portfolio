@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useI18n, formatDate } from "@/lib/i18n";
-import { MessageSquare, Send } from "lucide-react";
+import { PiChatTextBold as MessageSquare, PiPaperPlaneRightBold as Send } from "react-icons/pi";
 import type { BlogComment } from "@/lib/blog-engagement";
 
 const MAX_NAME_LENGTH = 30;

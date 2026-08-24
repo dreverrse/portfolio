@@ -8,23 +8,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { Markdown } from "@tiptap/markdown";
 import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
-import {
-  Bold,
-  Braces,
-  Heading1,
-  Heading2,
-  Heading3,
-  Image as ImageIcon,
-  Italic,
-  Link as LinkIcon,
-  List,
-  ListOrdered,
-  Quote,
-  Redo2,
-  RemoveFormatting,
-  Undo2,
-  Underline,
-} from "lucide-react";
+import { PiArrowClockwiseBold as Redo2, PiArrowCounterClockwiseBold as Undo2, PiBracketsCurlyBold as Braces, PiEraserBold as RemoveFormatting, PiImageBold as ImageIcon, PiLinkBold as LinkIcon, PiListBulletsBold as List, PiListNumbersBold as ListOrdered, PiQuotesBold as Quote, PiTextBBold as Bold, PiTextHOneBold as Heading1, PiTextHThreeBold as Heading3, PiTextHTwoBold as Heading2, PiTextItalicBold as Italic, PiTextUnderlineBold as Underline } from "react-icons/pi";
 
 interface RichTextEditorProps {
   value: string;

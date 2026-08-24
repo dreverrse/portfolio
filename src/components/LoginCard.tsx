@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Lock, Loader2 } from "lucide-react";
+import { PiLockKeyBold as Lock, PiSpinnerBallBold as Loader2 } from "react-icons/pi";
 import { DURATION, EASE } from "@/lib/motion";
 
 export function LoginCard({

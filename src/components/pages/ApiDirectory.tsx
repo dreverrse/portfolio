@@ -5,7 +5,7 @@ import { FadeIn } from "@/components/FadeIn";
 import { Stagger, StaggerItem } from "@/components/Stagger";
 import { useI18n } from "@/lib/i18n";
 import type { PublicApi } from "@/lib/public-apis";
-import { ExternalLink, Shield, Globe, Lock, Loader2 } from "lucide-react";
+import { PiArrowSquareOutBold as ExternalLink, PiGlobeBold as Globe, PiLockKeyBold as Lock, PiShieldCheckBold as Shield, PiSpinnerBallBold as Loader2 } from "react-icons/pi";
 
 interface ApiDirectoryProps {
   apis?: PublicApi[];
