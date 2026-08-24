@@ -8,7 +8,7 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { PiBriefcaseBold as Briefcase, PiFileTextBold as FileText, PiGlobeBold as Globe, PiHouseBold as Home, PiListBold as Menu, PiUserBold as User, PiXBold as X } from "react-icons/pi";
+import { PiBriefcaseBold as Briefcase, PiFileTextBold as FileText, PiHouseBold as Home, PiListBold as Menu, PiUserBold as User, PiXBold as X } from "react-icons/pi";
 
 const navItems = [
   { href: "/", labelKey: "nav.home", icon: Home },
@@ -20,21 +20,6 @@ const navItems = [
 function isActiveRoute(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-function LanguageToggle() {
-  const { lang, setLang, t } = useI18n();
-  const next: "id" | "en" = lang === "id" ? "en" : "id";
-  return (
-    <button
-      onClick={() => setLang(next)}
-      aria-label={t("lang.switch")}
-      className="flex items-center gap-1 p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"
-    >
-      <Globe className="h-4 w-4" />
-      <span className="text-xs font-semibold">{lang.toUpperCase()}</span>
-    </button>
-  );
 }
 
 export function Navbar() {
@@ -102,7 +87,6 @@ export function Navbar() {
             </div>
 
             <div className="flex items-center gap-1">
-              <LanguageToggle />
               <ThemeToggle />
               <button
                 className="md:hidden p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors"

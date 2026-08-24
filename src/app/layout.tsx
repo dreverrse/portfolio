@@ -70,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");var l=t==="light";document.documentElement.classList.toggle("light",l);var lg=localStorage.getItem("lang");if(lg==="en"||lg==="id"){document.documentElement.lang=lg;}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");var l=t==="light";document.documentElement.classList.toggle("light",l);}catch(e){}})();`,
           }}
         />
       </head>

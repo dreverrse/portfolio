@@ -29,7 +29,7 @@ const translations = {
       "Desainer yang berfokus pada desain logo dan penggemar pemrograman. Saya menguasai HTML, CSS, dan C++, serta terbiasa menggunakan Adobe Photoshop, Adobe Illustrator, dan WordPress.",
     "home.viewPortfolio": "Lihat Portfolio",
     "home.aboutMe": "Tentang Saya",
-    "home.skills": "Keahlian",
+    "home.skills": "Skills",
     "home.latestTitle": "Artikel Terbaru",
     "home.viewAll": "Lihat semua",
     "skill.photoshop": "Desain grafis dan manipulasi gambar",
@@ -45,11 +45,11 @@ const translations = {
     "home.profileAlt": "Foto profil Andre",
     "about.title": "Tentang Saya",
     "about.intro":
-      "Nama saya Andre Kusuma Firmansah, biasa dipanggil Andre. Saya memiliki keahlian dalam bidang desain, terutama desain logo. Saya juga menguasai beberapa bahasa pemrograman di antaranya HTML, CSS, dan C++.",
+      "Nama saya Andre Kusuma Firmansah, biasa dipanggil Andre. Keahlian utama saya di bidang desain, terutama logo design. Saya juga familiar dengan beberapa bahasa pemrograman seperti HTML, CSS, dan C++.",
     "about.location": "Lokasi",
     "about.whatsapp": "WhatsApp",
     "about.email": "Email",
-    "about.skills": "Keahlian",
+    "about.skills": "Skills",
     "about.education": "Pendidikan",
     "about.jobs": "Pekerjaan",
     "about.experience": "Pengalaman",
@@ -77,7 +77,7 @@ const translations = {
     "github.repos": "Repositori",
     "github.stars": "Total Stars",
     "github.followers": "Followers",
-    "github.languages": "Bahasa",
+    "github.languages": "Languages",
     "blog.readMore": "Baca selengkapnya",
     "blog.empty": "Belum ada artikel.",
     "blog.emptySub": "Buat artikel baru di folder content/blog/",
@@ -269,12 +269,6 @@ function subscribe(callback: () => void) {
 }
 
 function getSnapshot(): Lang {
-  try {
-    const saved = window.localStorage.getItem(LANG_KEY);
-    if (saved === "en" || saved === "id") return saved;
-  } catch {
-    // ignore
-  }
   return "id";
 }
 
